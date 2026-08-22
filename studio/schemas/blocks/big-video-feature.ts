@@ -82,6 +82,26 @@ export default defineType({
           ),
     }),
     defineField({
+      name: "videoPublishedAt",
+      title: "Video Publish Date",
+      type: "date",
+      description:
+        "Optional. Used for VideoObject structured data when this video should appear in search results.",
+    }),
+    defineField({
+      name: "videoDuration",
+      title: "Video Duration",
+      type: "string",
+      description:
+        "Optional ISO 8601 duration for structured data, such as PT2M30S.",
+      validation: (rule) =>
+        rule.custom((value) =>
+          !value || /^PT(?=\d)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.test(value)
+            ? true
+            : "Use an ISO 8601 duration such as PT2M30S",
+        ),
+    }),
+    defineField({
       name: "thumbnailImage",
       title: "Thumbnail Image",
       type: "image",

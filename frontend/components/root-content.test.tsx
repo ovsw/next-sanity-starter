@@ -5,7 +5,13 @@ import type { BlogPostSidebar } from "@/components/post-sidebar/model";
 import { RootContentView } from "./root-content";
 
 vi.mock("@/components/video-json-ld", () => ({
-  default: function MockVideoJsonLd() {
+  default: function MockVideoJsonLd({
+    postBody,
+  }: {
+    postBody?: readonly unknown[];
+  }) {
+    if (!postBody?.length) return null;
+
     return (
       <script
         dangerouslySetInnerHTML={{
@@ -174,6 +180,23 @@ describe("RootContentView", () => {
       <RootContentView content={page} perspective="published" stega={false} />,
     );
     expect(jsonLdNodesByType(container, "BlogPosting")).toHaveLength(0);
+  });
+
+  it("passes post body videos to VideoObject JSON-LD", () => {
+    const videoPost = {
+      ...post,
+      body: [{ _type: "youtube", url: "https://youtu.be/abc123def45" }],
+    } as unknown as NonNullable<POST_QUERY_RESULT>;
+
+    const { container } = render(
+      <RootContentView
+        content={videoPost}
+        perspective="published"
+        stega={false}
+      />,
+    );
+
+    expect(jsonLdNodesByType(container, "VideoObject")).toHaveLength(1);
   });
 
   it("does not emit donor loan structured data for pages or posts", () => {

@@ -1,4 +1,4 @@
-import { defineArrayMember, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 import { SquarePlay } from "lucide-react";
 import { YouTubePreview } from "../../previews/youtube-preview";
 
@@ -49,12 +49,59 @@ export default defineType({
       title: "YouTube",
       icon: SquarePlay,
       fields: [
-        {
+        defineField({
           name: "videoId",
           title: "Video ID",
           type: "string",
           description: "YouTube Video ID",
-        },
+        }),
+        defineField({
+          name: "title",
+          type: "string",
+          description:
+            "Optional. Used as the VideoObject name for structured data.",
+        }),
+        defineField({
+          name: "description",
+          type: "text",
+          rows: 3,
+          description: "Optional VideoObject description.",
+        }),
+        defineField({
+          name: "publishedAt",
+          title: "Video Publish Date",
+          type: "date",
+          description:
+            "Optional. Required with a title for VideoObject structured data.",
+        }),
+        defineField({
+          name: "duration",
+          title: "Video Duration",
+          type: "string",
+          description:
+            "Optional ISO 8601 duration for structured data, such as PT2M30S.",
+          validation: (rule) =>
+            rule.custom((value) =>
+              !value || /^PT(?=\d)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.test(value)
+                ? true
+                : "Use an ISO 8601 duration such as PT2M30S",
+            ),
+        }),
+        defineField({
+          name: "thumbnailImage",
+          title: "Thumbnail Image",
+          type: "image",
+          description:
+            "Optional. The YouTube thumbnail is used when this is empty.",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alternative Text",
+              type: "string",
+            }),
+          ],
+        }),
       ],
       preview: {
         select: {

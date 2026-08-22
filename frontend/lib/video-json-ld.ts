@@ -1,6 +1,5 @@
 import { stegaClean } from "next-sanity";
 import { getYouTubeVideoId, isYouTubeVideoId } from "@/lib/youtube-video-id";
-import type { YouTubeVideoMetadata } from "@/lib/youtube-metadata";
 
 export type VideoObjectJsonLd = {
   "@context": "https://schema.org";
@@ -11,29 +10,79 @@ export type VideoObjectJsonLd = {
   uploadDate: string;
   duration?: string;
   embedUrl: string;
-  author: {
-    "@type": "Person";
+  publisher: {
+    "@type": "Organization";
     "@id": string;
   };
 };
 
+export type AuthoredVideoMetadata = {
+  description?: string | null;
+  duration?: string | null;
+  publishedAt?: string | null;
+  thumbnailUrl?: string | null;
+  title?: string | null;
+  videoId: string;
+};
+
+function getString(value: unknown) {
+  return typeof value === "string" ? stegaClean(value)?.trim() || null : null;
+}
+
+function getImageUrl(image: unknown) {
+  if (!image || typeof image !== "object") return null;
+  const imageRecord = image as Record<string, unknown>;
+  const asset = imageRecord.asset;
+  const resolvedAsset = imageRecord.resolvedAsset;
+
+  if (asset && typeof asset === "object") {
+    const url = (asset as Record<string, unknown>).url;
+    if (typeof url === "string") return stegaClean(url)?.trim() || null;
+  }
+  if (resolvedAsset && typeof resolvedAsset === "object") {
+    const url = (resolvedAsset as Record<string, unknown>).url;
+    if (typeof url === "string") return stegaClean(url)?.trim() || null;
+  }
+
+  return null;
+}
+
+function getFallbackThumbnailUrl(videoId: string) {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+function addVideo(
+  videos: AuthoredVideoMetadata[],
+  videoIndexById: Map<string, number>,
+  source: AuthoredVideoMetadata,
+) {
+  const existingIndex = videoIndexById.get(source.videoId);
+  if (existingIndex !== undefined) {
+    const existing = videos[existingIndex];
+    videos[existingIndex] = {
+      ...existing,
+      description: existing.description ?? source.description,
+      duration: existing.duration ?? source.duration,
+      publishedAt: existing.publishedAt ?? source.publishedAt,
+      thumbnailUrl: existing.thumbnailUrl ?? source.thumbnailUrl,
+      title: existing.title ?? source.title,
+    };
+    return;
+  }
+
+  videoIndexById.set(source.videoId, videos.length);
+  videos.push(source);
+}
+
 // Walks page-builder blocks and portable-text bodies for every YouTube video
-// the page renders: `videoFeature`/`bigVideoFeature` youtubeUrl fields plus
-// portable-text `youtube` nodes (which store either a `url` or a bare
-// `videoId` depending on the schema). Returns distinct IDs in render order.
-export function collectYouTubeVideoIds(
+// the page renders. Returns distinct videos in render order, using authored
+// metadata only; no API key or remote metadata lookup is needed.
+export function collectAuthoredVideoMetadata(
   blocks: readonly unknown[],
   postBody?: readonly unknown[],
-): string[] {
-  const ids: string[] = [];
-  const seen = new Set<string>();
-
-  const add = (videoId: string | null) => {
-    if (videoId && !seen.has(videoId)) {
-      seen.add(videoId);
-      ids.push(videoId);
-    }
-  };
+): AuthoredVideoMetadata[] {
+  const videos: AuthoredVideoMetadata[] = [];
+  const videoIndexById = new Map<string, number>();
 
   const walk = (value: unknown) => {
     if (Array.isArray(value)) {
@@ -49,16 +98,37 @@ export function collectYouTubeVideoIds(
       (type === "videoFeature" || type === "bigVideoFeature") &&
       typeof node.youtubeUrl === "string"
     ) {
-      add(getYouTubeVideoId(stegaClean(node.youtubeUrl)));
+      const videoId = getYouTubeVideoId(stegaClean(node.youtubeUrl));
+      if (videoId) {
+        addVideo(videos, videoIndexById, {
+          description: getString(node.description),
+          duration: getString(node.videoDuration),
+          publishedAt: getString(node.videoPublishedAt),
+          thumbnailUrl: getImageUrl(node.thumbnailImage),
+          title: getString(node.title),
+          videoId,
+        });
+      }
     }
 
     if (type === "youtube") {
+      let videoId: string | null = null;
       if (typeof node.url === "string") {
-        add(getYouTubeVideoId(stegaClean(node.url)));
+        videoId = getYouTubeVideoId(stegaClean(node.url));
       }
       if (typeof node.videoId === "string") {
-        const videoId = stegaClean(node.videoId)?.trim();
-        if (isYouTubeVideoId(videoId)) add(videoId);
+        const candidate = stegaClean(node.videoId)?.trim();
+        if (isYouTubeVideoId(candidate)) videoId = candidate;
+      }
+      if (videoId) {
+        addVideo(videos, videoIndexById, {
+          description: getString(node.description),
+          duration: getString(node.duration),
+          publishedAt: getString(node.publishedAt),
+          thumbnailUrl: getImageUrl(node.thumbnailImage),
+          title: getString(node.title),
+          videoId,
+        });
       }
       return;
     }
@@ -69,35 +139,39 @@ export function collectYouTubeVideoIds(
   walk(blocks);
   if (postBody) walk(postBody);
 
-  return ids;
+  return videos;
 }
 
-// Builds one VideoObject from fetched YouTube metadata. The author is a bare
-// reference to the site-wide Person entity (person-json-ld.ts) — never a
-// duplicate of its data. Returns null instead of emitting invalid schema when
-// a required field (name, thumbnailUrl, uploadDate) is missing.
+export const collectYouTubeVideoIds = (
+  blocks: readonly unknown[],
+  postBody?: readonly unknown[],
+) => collectAuthoredVideoMetadata(blocks, postBody).map(({ videoId }) => videoId);
+
+// Builds one VideoObject from editor-authored metadata. Returns null instead
+// of emitting invalid schema when required search-visible fields are missing.
 export function createVideoObjectJsonLd(
-  metadata: YouTubeVideoMetadata,
+  metadata: AuthoredVideoMetadata,
   siteUrl: string,
 ): VideoObjectJsonLd | null {
-  const name = metadata.title.trim();
-  if (!name || !metadata.thumbnailUrl || !metadata.publishedAt) return null;
+  const name = metadata.title?.trim() || "";
+  if (!name || !metadata.publishedAt) return null;
 
-  const description = metadata.description.trim();
+  const description = metadata.description?.trim() || "";
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  const thumbnailUrl = metadata.thumbnailUrl || getFallbackThumbnailUrl(metadata.videoId);
 
   return {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name,
     ...(description ? { description } : {}),
-    thumbnailUrl: metadata.thumbnailUrl,
+    thumbnailUrl,
     uploadDate: metadata.publishedAt,
     ...(metadata.duration ? { duration: metadata.duration } : {}),
     embedUrl: `https://www.youtube-nocookie.com/embed/${metadata.videoId}`,
-    author: {
-      "@type": "Person",
-      "@id": `${normalizedSiteUrl}/#jimmy`,
+    publisher: {
+      "@type": "Organization",
+      "@id": `${normalizedSiteUrl}/#organization`,
     },
   };
 }

@@ -25,6 +25,8 @@ export const videoFeatureQuery = groq`
       )
     },
     youtubeUrl,
+    videoPublishedAt,
+    videoDuration,
     thumbnailImage {
       ${imageQuery}
     }
