@@ -3,6 +3,8 @@ import test from "node:test";
 
 import {
   blocksField,
+  contentBlocksField,
+  contentPageBuilderBlockTypes,
   legacyBlockTypes,
   pageBuilderBlockTypes,
 } from "./schemas/blocks/page-builder.ts";
@@ -30,6 +32,13 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
 });
 
 test("blogIndex uses the singleton configuration", () => {
+  assert.deepEqual(
+    contentBlocksField.of
+      .filter(({ hidden }) => !hidden)
+      .map(({ type }) => type),
+    [...contentPageBuilderBlockTypes],
+  );
+  assert.equal(contentPageBuilderBlockTypes.includes("hero"), false);
   assert.equal(singletonDocumentTypes.has("blogIndex"), true);
   assert.equal(singletonDocumentActions.has("duplicate"), false);
   assert.equal(singletonDocumentActions.has("delete"), false);

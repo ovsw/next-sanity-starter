@@ -29,9 +29,6 @@ export const pageBuilderQuery = `
   blocks[]{
     _key,
     _type,
-    sectionNav{
-      navLabel
-    },
     ${homeHeroQuery},
     ${loanFeatureCardsQuery},
     ${videoFeatureQuery},

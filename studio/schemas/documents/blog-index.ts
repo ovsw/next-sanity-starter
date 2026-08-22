@@ -1,6 +1,6 @@
 import { Newspaper } from "lucide-react";
 import { defineField, defineType } from "sanity";
-import { blocksField } from "../blocks/page-builder";
+import { contentBlocksField } from "../blocks/page-builder";
 import meta from "../blocks/shared/meta";
 
 export default defineType({
@@ -31,7 +31,7 @@ export default defineType({
           )
           .warning(),
     }),
-    blocksField,
+    contentBlocksField,
     meta,
   ],
   preview: {

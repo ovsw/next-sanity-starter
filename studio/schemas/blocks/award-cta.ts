@@ -1,6 +1,5 @@
 import { Award } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "awardCta",
@@ -35,7 +34,6 @@ export default defineType({
         "Add one or more clickable buttons that visitors can use to learn about the award",
       of: [defineArrayMember({ type: "button" })],
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { highlight: "highlight", title: "title" },

@@ -1,6 +1,5 @@
 import { Megaphone } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "ctaBanner",
@@ -47,7 +46,6 @@ export default defineType({
       of: [defineArrayMember({ type: "button" })],
       validation: (rule) => rule.required().min(1).max(2),
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "title" },

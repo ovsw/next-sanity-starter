@@ -100,13 +100,11 @@ const componentMap: Partial<{
 };
 
 export default function Blocks({
-  anchorIds,
   blocks,
   documentId,
   documentType = "page",
   stega,
 }: {
-  anchorIds?: Record<string, string>;
   blocks: Block[];
   documentId: string;
   documentType?: "blogIndex" | "homePage" | "page";
@@ -177,11 +175,9 @@ export default function Blocks({
               ? { dataAttribute }
               : {};
 
-        const anchorId = anchorIds?.[block._key];
         return (
           <div
             data-sanity={dataSanity}
-            id={anchorId}
             key={block._key}
           >
             <Component {...block} {...editingProps} />

@@ -811,14 +811,6 @@
             "name": "button"
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -945,14 +937,6 @@
             "name": "simpleRichText"
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -1050,14 +1034,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -1108,14 +1084,6 @@
                 "name": "button"
               }
             }
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -1212,14 +1180,6 @@
                 }
               }
             }
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -1514,14 +1474,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -1558,14 +1510,6 @@
           "value": {
             "type": "inline",
             "name": "richTextContent"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -1836,14 +1780,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -1997,14 +1933,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -2170,14 +2098,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -2331,14 +2251,6 @@
           "value": {
             "type": "inline",
             "name": "address"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -2641,14 +2553,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -2949,14 +2853,6 @@
           "value": {
             "type": "inline",
             "name": "youtubeButton"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -3298,14 +3194,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -3402,14 +3290,6 @@
                 }
               }
             }
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -3680,14 +3560,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -3828,14 +3700,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -3938,14 +3802,6 @@
                 "name": "faq.reference"
               }
             }
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -4068,14 +3924,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -4097,14 +3945,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -4142,14 +3982,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -4451,14 +4283,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -4600,14 +4424,6 @@
           "value": {
             "type": "inline",
             "name": "helpCard"
-          },
-          "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
           },
           "optional": true
         }
@@ -5586,14 +5402,6 @@
             }
           },
           "optional": true
-        },
-        "sectionNav": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "section-nav"
-          },
-          "optional": true
         }
       }
     }
@@ -6518,29 +6326,6 @@
           "optional": true
         },
         "href": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        }
-      }
-    }
-  },
-  {
-    "name": "section-nav",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "section-nav"
-          }
-        },
-        "navLabel": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
@@ -8100,21 +7885,6 @@
           "of": {
             "type": "union",
             "of": [
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "hero"
-                }
-              },
               {
                 "type": "object",
                 "attributes": {
@@ -9753,13 +9523,6 @@
         "value": {
           "type": "inline",
           "name": "slug"
-        },
-        "optional": true
-      },
-      "showQuickNav": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "boolean"
         },
         "optional": true
       },

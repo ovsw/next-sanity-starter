@@ -4,8 +4,6 @@ import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
 import FaqPageJsonLd from "@/components/faq-json-ld";
 import VideoJsonLd from "@/components/video-json-ld";
 import { siteUrl } from "@/lib/site-url";
-import QuickNav from "@/components/quick-nav";
-import { createQuickNavModel } from "@/lib/quick-nav";
 import PostHero from "@/components/blocks/post-hero";
 import {
   createPostBodyModel,
@@ -32,11 +30,9 @@ function PageContent({
   stega: boolean;
 }) {
   const blocks = page.blocks ?? [];
-  const quickNav = createQuickNavModel(blocks, page.showQuickNav !== false);
-  const heroBlocks = blocks.slice(0, quickNav.heroCount);
-  const contentBlocks = blocks.slice(quickNav.heroCount);
-  const isRichTextOnlyPage =
-    blocks.length > 0 && blocks.every((block) => block._type === "richTextBlock");
+  const needsTitleHeader =
+    !["hero", "homeHero", "pageHeader"].includes(blocks[0]?._type) &&
+    stegaClean(page.title)?.trim();
   const rootDataAttribute = stega
     ? (path: "description" | "title") =>
         createDataAttribute({
@@ -53,7 +49,7 @@ function PageContent({
     <>
       <FaqPageJsonLd blocks={blocks} />
       <VideoJsonLd blocks={blocks} siteUrl={siteUrl} />
-      {isRichTextOnlyPage && stegaClean(page.title)?.trim() ? (
+      {needsTitleHeader ? (
         <header>
           <h1 data-sanity={rootDataAttribute?.("title")}>{page.title}</h1>
           {stegaClean(page.description)?.trim() ? (
@@ -63,18 +59,8 @@ function PageContent({
           ) : null}
         </header>
       ) : null}
-      {heroBlocks.length > 0 ? (
-        <Blocks
-          blocks={heroBlocks}
-          documentId={page._id}
-          perspective={perspective}
-          stega={stega}
-        />
-      ) : null}
-      {quickNav.showQuickNav ? <QuickNav items={quickNav.items} /> : null}
       <Blocks
-        anchorIds={quickNav.anchorIdByKey}
-        blocks={contentBlocks}
+        blocks={blocks}
         documentId={page._id}
         perspective={perspective}
         stega={stega}

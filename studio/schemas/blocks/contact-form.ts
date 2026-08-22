@@ -1,6 +1,5 @@
 import { Mail } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 type OfficeHoursRow = {
   days?: string;
@@ -179,7 +178,6 @@ export default defineType({
         "The message shown when a visitor tries to submit before online delivery is connected",
       validation: (rule) => rule.required().max(240),
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "title" },

@@ -10,7 +10,6 @@ export const PAGE_QUERY = groq`
     title,
     description,
     "slug": slug.current,
-    showQuickNav,
     ${pageBuilderQuery},
     ${metaQuery},
   }

@@ -1,6 +1,5 @@
 import { LayoutTemplate } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "hero",
@@ -85,7 +84,6 @@ export default defineType({
         }),
       ],
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { media: "image", title: "title" },

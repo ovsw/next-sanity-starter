@@ -1,6 +1,5 @@
 import { UsersRound } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "teamMembers",
@@ -66,7 +65,6 @@ export default defineType({
           .min(1)
           .error("Add at least one team member to this section."),
     }),
-    sectionNavField(),
   ],
   preview: {
     select: {

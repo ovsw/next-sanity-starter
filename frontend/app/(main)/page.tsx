@@ -15,6 +15,7 @@ import { HOME_PAGE_QUERY_RESULT } from "@/sanity.types";
 import { HOME_PAGE_QUERY } from "@/sanity/queries/home-page";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { stegaClean } from "next-sanity";
 
 export async function generateMetadata() {
   const { data: page } = (await sanityFetchMetadata({
@@ -48,11 +49,23 @@ async function CachedIndexPage({ perspective, stega }: DynamicFetchOptions) {
     return MissingSanityPage({ document: "homePage", documentId: "homePage" });
   }
 
+  const hasLeadingHero = ["hero", "homeHero", "pageHeader"].includes(
+    page.blocks?.[0]?._type ?? "",
+  );
+
   return (
     <>
       <WebsiteJsonLd siteUrl={siteUrl} />
       <FaqPageJsonLd blocks={page.blocks ?? []} />
       <VideoJsonLd blocks={page.blocks ?? []} siteUrl={siteUrl} />
+      {!hasLeadingHero && stegaClean(page.title)?.trim() ? (
+        <header>
+          <h1>{page.title}</h1>
+          {stegaClean(page.description)?.trim() ? (
+            <p>{page.description}</p>
+          ) : null}
+        </header>
+      ) : null}
       <Blocks
         blocks={page.blocks ?? []}
         documentId={page._id}

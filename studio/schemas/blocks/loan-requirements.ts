@@ -1,6 +1,5 @@
 import { ListChecks } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 type EvidenceModule = { _type?: string };
 
@@ -257,7 +256,6 @@ export default defineType({
       description:
         "Optional action beside the closing note. Renders as a text link; the variant setting is ignored.",
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "title", chapters: "chapters" },

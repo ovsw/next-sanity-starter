@@ -91,6 +91,16 @@ function jsonLdNodesByType(container: HTMLElement, type: string) {
 }
 
 describe("RootContentView", () => {
+  it("renders the page title when no Hero provides the main heading", () => {
+    render(
+      <RootContentView content={page} perspective="published" stega={false} />,
+    );
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Ordinary page" }),
+    ).toBeInTheDocument();
+  });
+
   it("gates the post sidebar to post root content", () => {
     const { rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,

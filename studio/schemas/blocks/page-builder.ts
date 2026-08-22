@@ -6,6 +6,11 @@ export const generalPageBuilderBlockTypes = [
   "ctaBanner",
 ] as const;
 
+export const contentPageBuilderBlockTypes = [
+  "richTextBlock",
+  "ctaBanner",
+] as const;
+
 export const pageBuilderBlockTypes = generalPageBuilderBlockTypes;
 export const homePagePageBuilderBlockTypes = generalPageBuilderBlockTypes;
 
@@ -92,6 +97,9 @@ function createBlocksField(blockTypes: readonly PageBuilderBlockType[]) {
 }
 
 export const blocksField = createBlocksField(generalPageBuilderBlockTypes);
+export const contentBlocksField = createBlocksField(
+  contentPageBuilderBlockTypes,
+);
 export const homePageBlocksField = createBlocksField(
   homePagePageBuilderBlockTypes,
 );
