@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "setup": "node scripts/setup.mjs",
+    "seed": "pnpm --dir studio seed",
+    "unseed": "pnpm --dir studio unseed",
     "dev": "pnpm --parallel -r run dev",
     "dev:frontend": "pnpm --dir frontend dev",
     "dev:studio": "pnpm --dir studio dev",
