@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "components/PHX-Site-Header.dc.html",
+  "entry": "components/PHX-Site-Header.dc.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-07-20T13:51:33.360Z",
+  "updatedAt": "2026-07-20T13:51:33.360Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

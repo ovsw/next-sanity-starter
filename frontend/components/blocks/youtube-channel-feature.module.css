@@ -1,0 +1,56 @@
+@keyframes youtube-channel-scroll {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.frame {
+  position: absolute;
+  top: -90px;
+  right: max(2%, calc((100% - 1280px) / 2 - 40px));
+  bottom: -90px;
+  width: min(42%, 540px);
+  overflow: hidden;
+  transform: perspective(1700px) rotateX(8deg) rotateY(-16deg) rotateZ(3deg);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: var(--radius-frame);
+  background: #060a16;
+  box-shadow: -40px 50px 100px -30px rgb(0 0 0 / 75%);
+}
+
+.track {
+  animation: youtube-channel-scroll 70s linear infinite;
+  will-change: transform;
+}
+
+.mobileFrame {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .frame {
+    display: none;
+  }
+
+  .mobileFrame {
+    display: block;
+    width: 100%;
+    max-width: 770px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: var(--radius-frame);
+    background: #060a16;
+    box-shadow: 0 30px 70px -35px rgb(0 0 0 / 75%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation-play-state: paused;
+  }
+}

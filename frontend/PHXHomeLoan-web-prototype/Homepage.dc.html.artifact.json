@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "Homepage.dc.html",
+  "entry": "Homepage.dc.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-07-20T13:51:33.490Z",
+  "updatedAt": "2026-07-20T14:38:39.536Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

@@ -1,0 +1,103 @@
+<x-dc>
+<helmet>
+<style>
+.sc-host[data-sc-name="PHX-Site-Header"]{display:contents}
+</style>
+</helmet>
+
+<header data-od-id="site-header" data-screen-label="Nav" style="position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:86px;display:flex;align-items:center;justify-content:space-between;gap:32px">
+    <a data-od-id="header-logo" href="{{ homeTop }}" style="display:flex;align-items:center;text-decoration:none">
+      <img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:56px;width:auto;display:block">
+    </a>
+    <nav data-od-id="primary-navigation" aria-label="Primary navigation" style="display:flex;align-items:center;gap:34px">
+      <div style="position:relative;display:flex;align-items:center" onMouseEnter="{{ openAbout }}" onMouseLeave="{{ closeAbout }}">
+        <a href="{{ homeAbout }}" style="display:flex;align-items:center;gap:6px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">About Us<span style="{{ aboutCaretStyle }}">▾</span></a>
+        <div style="{{ aboutMenuStyle }}">
+          <sc-for list="{{ aboutLinks }}" as="ln" hint-placeholder-count="2">
+            <a href="{{ ln.href }}" style="display:flex;align-items:center;gap:12px;padding:11px 16px;text-decoration:none;border-radius:8px;transition:background .13s ease" style-hover="background:#F4EFE7">
+              <span data-acc="text" style="flex:none;width:36px;height:36px;border-radius:9px;background:#F4EFE7;display:flex;align-items:center;justify-content:center;color:#B4552D">{{ ln.icon }}</span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#131C3B">{{ ln.name }}</span>
+                <span style="font:400 12px 'Archivo',Helvetica,sans-serif;color:#8A8F9C">{{ ln.desc }}</span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+      <a href="Refinancing.dc.html" style="font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">Loan Information</a>
+      <div style="position:relative;display:flex;align-items:center" onMouseEnter="{{ openLoans }}" onMouseLeave="{{ closeLoans }}">
+        <a href="{{ homeLoans }}" style="display:flex;align-items:center;gap:6px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">Types of Loans<span style="{{ loansCaretStyle }}">▾</span></a>
+        <div style="{{ loansMenuStyle }}">
+          <sc-for list="{{ loanLinks }}" as="ln" hint-placeholder-count="5">
+            <a href="{{ ln.href }}" style="display:flex;align-items:center;gap:12px;padding:11px 16px;text-decoration:none;border-radius:8px;transition:background .13s ease" style-hover="background:#F4EFE7">
+              <span data-acc="text" style="flex:none;width:36px;height:36px;border-radius:9px;background:#F4EFE7;display:flex;align-items:center;justify-content:center;color:#B4552D">{{ ln.icon }}</span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#131C3B">{{ ln.name }}</span>
+                <span style="font:400 12px 'Archivo',Helvetica,sans-serif;color:#8A8F9C">{{ ln.desc }}</span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+      <a href="Blog.dc.html" style="font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">Blog</a>
+      <a href="{{ homeMedia }}" style="font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">Media</a>
+      <a href="Contact.dc.html" style="font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#1C2237;text-decoration:none;letter-spacing:.01em" style-hover="color:#B4552D">Contact</a>
+    </nav>
+    <a data-od-id="header-schedule-consult" href="{{ homeContact }}" data-acc="bg" style="background:#B4552D;color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:13px 22px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Schedule Consult</a>
+  </div>
+</header>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { aboutMenu: false, loansMenu: false };
+
+  renderVals() {
+    const homeHref = typeof this.props.homeHref === 'string' ? this.props.homeHref : 'Homepage.dc.html';
+    const icon = (...paths) => React.createElement(
+      'svg',
+      { width: 19, height: 19, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' },
+      paths.map((d, index) => React.createElement('path', { key: index, d }))
+    );
+    const dropdownStyle = (open) => ({
+      position: 'absolute', top: 'calc(100% + 2px)', left: '50%',
+      transform: open ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-6px)',
+      width: '288px', background: '#fff', border: '1px solid #E7E1D6',
+      borderRadius: '12px', boxShadow: '0 18px 44px rgba(19,28,59,.16)',
+      padding: '8px', display: 'flex', flexDirection: 'column', gap: '2px',
+      opacity: open ? 1 : 0, visibility: open ? 'visible' : 'hidden',
+      pointerEvents: open ? 'auto' : 'none',
+      transition: 'opacity .16s ease, transform .16s ease, visibility .16s',
+      zIndex: 70
+    });
+
+    return {
+      homeTop: homeHref + '#top',
+      homeAbout: homeHref + '#about',
+      homeLoans: homeHref + '#loans',
+      homeMedia: homeHref + '#media',
+      homeContact: homeHref + '#contact',
+      aboutLinks: [
+        { name: 'Team', desc: 'Meet the people behind the loans', href: 'Team Page.dc.html', icon: React.createElement('svg', { width: 19, height: 19, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' }), React.createElement('circle', { cx: 9, cy: 7, r: 4 }), React.createElement('path', { d: 'M23 21v-2a4 4 0 0 0-3-3.87' }), React.createElement('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })) },
+        { name: 'Meet Jimmy', desc: 'Get to know Jimmy Vercellino', href: 'Meet Jimmy.dc.html', icon: React.createElement('svg', { width: 19, height: 19, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2' }), React.createElement('circle', { cx: 12, cy: 7, r: 4 })) }
+      ],
+      loanLinks: [
+        { name: 'Conventional Loan', desc: 'Lower fixed rate, build equity faster', href: homeHref + '#loan-conventional', icon: icon('M3 21h18', 'M4 21V9l8-5 8 5v12', 'M9 21v-6h6v6') },
+        { name: 'FHA Loan', desc: 'Friendlier to first-time buyers, 3.5% down', href: homeHref + '#loan-fha', icon: React.createElement('svg', { width: 19, height: 19, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: 8, cy: 14, r: 4 }), React.createElement('path', { d: 'M10.8 11.2 20 2' }), React.createElement('path', { d: 'm17 5 3 3' }), React.createElement('path', { d: 'm14 8 3 3' })) },
+        { name: 'VA Loan', desc: 'For military — no down payment or PMI', href: homeHref + '#loan-va', icon: icon('M12 3 4 6v5c0 4.5 3.2 7.9 8 10 4.8-2.1 8-5.5 8-10V6l-8-3Z', 'm9 11 2 2 4-4') },
+        { name: 'C2P Loan', desc: 'Finance construction, one closing', href: homeHref + '#loan-c2p', icon: icon('M3 21h18', 'M5 21V8l7-4 7 4', 'M12 4V2', 'M9 21v-5h6v5', 'M8.5 11h7') },
+        { name: 'Jumbo Loan', desc: 'Above conforming limits', href: homeHref + '#loan-jumbo', icon: icon('M3 21h18', 'M5 21V6a2 2 0 0 1 2-2h5v17', 'M12 21V9h5a2 2 0 0 1 2 2v10', 'M8 8h1M8 12h1M8 16h1M15 13h1M15 17h1') }
+      ],
+      openAbout: () => this.setState({ aboutMenu: true }),
+      closeAbout: () => this.setState({ aboutMenu: false }),
+      openLoans: () => this.setState({ loansMenu: true }),
+      closeLoans: () => this.setState({ loansMenu: false }),
+      aboutCaretStyle: { fontSize: '10px', transition: 'transform .18s ease', transform: this.state.aboutMenu ? 'rotate(180deg)' : 'rotate(0deg)' },
+      loansCaretStyle: { fontSize: '10px', transition: 'transform .18s ease', transform: this.state.loansMenu ? 'rotate(180deg)' : 'rotate(0deg)' },
+      aboutMenuStyle: dropdownStyle(this.state.aboutMenu),
+      loansMenuStyle: dropdownStyle(this.state.loansMenu)
+    };
+  }
+}
+</script>

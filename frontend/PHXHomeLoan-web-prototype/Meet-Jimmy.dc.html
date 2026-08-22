@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+a{color:#B4552D}
+a:hover{color:#8F401F}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-advisor{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
+.mj-photo{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(36px,5vw,72px);align-items:center}
+@keyframes ytScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.mj-ytframe{position:absolute;top:-90px;bottom:-90px;right:max(2%,calc((100% - 1280px)/2 - 40px));width:min(42%,540px);transform:perspective(1700px) rotateX(8deg) rotateY(-16deg) rotateZ(3deg);border-radius:18px;overflow:hidden;background:#060A16;border:1px solid rgba(255,255,255,.12);box-shadow:-40px 50px 100px -30px rgba(0,0,0,.75)}
+@media(max-width:900px){
+  .refi-two,.refi-compare,.refi-advisor,.mj-photo{grid-template-columns:1fr}
+  .mj-ytframe{position:relative;top:auto;bottom:auto;right:auto;width:100%;height:480px;transform:none;margin-top:44px}
+  .refi-advisor-img{max-width:380px;margin:0 auto}
+}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 78px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px">
+      <a href="Homepage.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#fff"><span style="color: rgb(254, 183, 125); font-weight: 600; letter-spacing: 3.12px; text-transform: uppercase;">MEET JIMMY</span></span>
+    </nav>
+    <h1 style="margin:0;max-width:820px;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">Meet Jimmy Vercellino</h1>
+    <p style="margin:20px 0 0;max-width:620px;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Marine Corps veteran. Husband and father. Top-producing, award-winning Phoenix loan originator. Jimmy built his career on the same idea that put him in uniform at 18 — service comes first.</p>
+    <sc-if value="{{ showStats }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.14);display:flex;gap:clamp(32px,5vw,72px);flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">Age 18</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">when he enlisted in the United States Marine Corps</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">2005</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">the year he chose a mortgage career to keep serving veterans</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">All 50 states</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">where Jimmy can facilitate loans as a Phoenix loan officer</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+
+
+<section id="story" data-screen-label="Early Years" style="background:#F7F4EE;padding:96px 40px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:760px;margin-bottom:40px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">THE EARLY YEARS</div>
+      <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">The son of a salesman, forged as a Marine</h2>
+    </div>
+    <div class="refi-two" style="align-items:stretch">
+      <figure style="margin:0;display:flex;flex-direction:column">
+        <img src="assets/jimmy-marine-iraq.jpg" alt="Jimmy Vercellino on deployment in Iraq with the Marine Corps infantry" style="width:100%;flex:1 1 auto;min-height:340px;object-fit:cover;object-position:center 22%;display:block;border-radius:16px;box-shadow:0 24px 60px -24px rgba(19,28,59,.4)">
+        <figcaption style="margin-top:12px;font:400 13px 'Archivo',Helvetica,sans-serif;color:#8A8F9C">On deployment in Iraq, in support of Operation Iraqi Freedom.</figcaption>
+      </figure>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Jimmy grew up in the San Francisco Bay area — his dad a produce salesman, his mom a waitress. His parents divorced when he was five, and he spent his childhood bouncing back and forth between two homes. Nothing, by his own telling, that marked him as special.</p>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">But one conviction took hold early and never left: how you make people feel matters more than how much you know. At 18, he acted on it — enlisting in the Marine Corps infantry, deploying to Iraq in support of Operation Iraqi Freedom, and traveling the world along the way.</p>
+      <div style="margin:2px 0;padding-left:22px;border-left:3px solid #B4552D">
+        <p style="margin:0;font:600 20px/1.5 'Source Serif 4',Georgia,serif;color:#131C3B;text-wrap:pretty">“Deep down, I always believed that how you made people feel matters more than how much you know.”</p>
+      </div>
+      <div style="margin-top:10px;background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:28px 30px">
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:16px">STATIONS &amp; DEPLOYMENTS</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <span style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:9px 18px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#3D4356">Japan</span>
+          <span style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:9px 18px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#3D4356">Korea</span>
+          <span style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:9px 18px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#3D4356">Thailand</span>
+          <span style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:9px 18px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#3D4356">Australia</span>
+          <span style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:9px 18px;font:500 14.5px 'Archivo',Helvetica,sans-serif;color:#3D4356">Singapore</span>
+          <span data-acc="bg" style="background:#B4552D;border:1px solid transparent;border-radius:99px;padding:9px 18px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#fff">Fallujah, Iraq</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="video" data-screen-label="Video Intro" style="background:#131C3B;padding:88px 40px;border-top:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 78% -20%,rgba(180,85,45,.22),transparent 66%)"></div>
+  <div style="position:relative;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+    <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(254,183,125,.9)">IN HIS OWN WORDS</div>
+    <h2 style="margin:0;max-width:760px;font:600 clamp(30px,3.4vw,46px)/1.12 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">“I wanted to reintroduce myself.”</h2>
+    <p style="margin:6px 0 30px;max-width:620px;font:400 17px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.68);text-wrap:pretty">Two minutes with Jimmy — the Bay Area kid, the Marine, the door-to-door start, and the belief that carried all of it: how you make people feel matters more than how much you know.</p>
+    <button onClick="{{ openVideo }}" aria-label="Play Jimmy's introduction video" style="position:relative;display:block;width:100%;max-width:920px;border:0;padding:0;background:transparent;cursor:pointer;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7);transition:transform .2s ease" style-hover="transform:translateY(-3px)">
+      <img src="https://img.youtube.com/vi/OOfeMMtcOCI/maxresdefault.jpg" alt="Jimmy Vercellino introduces himself" style="display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover">
+      <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,19,41,.05),rgba(12,19,41,.4))"></span>
+      <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:88px;height:88px;border-radius:50%;background:rgba(180,85,45,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px rgba(180,85,45,.6)">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"></path></svg>
+      </span>
+    </button>
+  </div>
+</section><section id="family" data-screen-label="Sylvia and Arizona" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-two" style="max-width:1280px;margin:0 auto">
+    <div>
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">A NEW MISSION</div>
+      <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">A girl from Arizona, and a new way to serve</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">One night in Hawaii — right after losing his grandmother — Jimmy met a woman named Sylvia who was there on vacation. She had lost her mother shortly before. Neither of them was supposed to be on that island. The next morning he called his sister and told her, “I just met my future wife.” She asked how he could know. He said, “I just know.”</p>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">He was right. Jimmy finished his service, packed his bags for Arizona, and married her — twenty years and two children later, they're still going. That same season, a conversation with his sister-in-law pointed him toward a new way to keep serving: a career in mortgages.</p>
+      <div style="margin-top:10px;background:#131C3B;border-radius:16px;padding:34px 38px;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(500px 240px at 90% -20%,rgba(180,85,45,.3),transparent 70%)"></div>
+        <div style="position:relative">
+          <div style="font:600 clamp(24px,2.2vw,30px)/1.3 'Source Serif 4',Georgia,serif;color:#fff">“Once a Marine, always a Marine!”</div>
+          <div style="margin-top:10px;font:400 14px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">Jimmy's favorite phrase — and the standard he brings to every family he serves</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="career" data-screen-label="Career and Recognition" style="background:#F7F4EE;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto">
+    <div class="refi-two" style="margin-bottom:44px;align-items:start">
+      <div>
+        <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">DISCIPLINE, APPLIED</div>
+        <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Lessons from the Corps, applied to lending</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">There was one small problem when his sister-in-law suggested mortgages: no degree, no finance background, no connections. But Marines adapt, improvise, and overcome. Jimmy walked door-to-door down Camelback Road — mortgage company to mortgage company — until one of them finally said, “We'll give you a shot, Marine.”</p>
+        <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">For years, while everyone around him made six figures, Jimmy barely made minimum wage. He'll be the first to say he was never the smartest guy in the room — but he could teach. So he founded a real estate school and started a YouTube channel, and the discipline he learned in the Corps has since carried into an award-winning lending career.</p>
+      </div>
+    </div>
+    <div class="refi-compare">
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:38px;display:flex;flex-direction:column;gap:14px">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"></circle><path d="M8.5 13.5L7 21l5-2.5L17 21l-1.5-7.5"></path></svg>
+        </div>
+        <h3 style="margin:0;font:600 24px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">Award-winning production</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Jimmy is a top-producing loan originator and has received several loan production awards over the course of his career.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:38px;display:flex;flex-direction:column;gap:14px">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v8"></path><path d="M8 4h8"></path><rect x="5" y="14" width="14" height="6" rx="1.5"></rect></svg>
+        </div>
+        <h3 style="margin:0;font:600 24px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">A voice in the industry</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">He was recently invited to speak at the prestigious Todd Duncan Sales Mastery Event in Palm Desert, CA.</p>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:#131C3B;border-radius:16px;padding:clamp(32px,4vw,48px);position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(560px 260px at 88% -20%,rgba(180,85,45,.28),transparent 70%)"></div>
+      <div style="position:relative;display:flex;gap:clamp(28px,5vw,64px);align-items:center;flex-wrap:wrap">
+        <div style="flex:0 0 auto">
+          <div style="font:600 clamp(44px,5vw,64px)/1 'Source Serif 4',Georgia,serif;color:#fff">Thousands</div>
+          <div style="margin-top:8px;font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(254,183,125,.9)">OF REAL ESTATE AGENTS EDUCATED</div>
+        </div>
+        <p style="flex:1 1 320px;margin:0;font:400 17px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-wrap:pretty">The real estate school and YouTube channel Jimmy started have educated thousands of agents — many of whom now send him their buyers. Two decades later, that compound effect has grown into a mortgage practice spanning the nation, built on teaching, speaking, word of mouth, and satisfied customers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="youtube" data-screen-label="YouTube Channel" style="background:#0C1329;padding:100px 40px;border-top:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 380px at 12% -14%,rgba(180,85,45,.24),transparent 68%),radial-gradient(620px 360px at 96% 110%,rgba(180,85,45,.12),transparent 70%)"></div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <div style="display:flex;flex-direction:column;gap:22px;align-items:flex-start;max-width:min(560px,52%)">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(254,183,125,.9)">ON YOUTUBE</div>
+      <h2 style="margin:0;font:600 clamp(34px,3.6vw,52px)/1.1 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">1,000,000 views — one question at a time</h2>
+      <p style="margin:0;font:400 17px/1.75 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Jimmy never set out to be a YouTuber. He set out to answer the questions veterans actually ask — about VA loans, credit, refinancing, and buying a first home. Hundreds of videos later, the channel just crossed one million views.</p>
+      <p style="margin:0;font:400 17px/1.75 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Every video is free, and none of it is a sales pitch. It's the same advice he gives across the desk — recorded once, so it can serve a million people instead of one.</p>
+      <div style="display:flex;gap:clamp(28px,4vw,56px);flex-wrap:wrap;padding-top:6px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 34px 'Source Serif 4',Georgia,serif;color:#fff">1M+</div>
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(254,183,125,.9)">TOTAL VIEWS</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 34px 'Source Serif 4',Georgia,serif;color:#fff">100s</div>
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(254,183,125,.9)">OF FREE VIDEOS</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 34px 'Source Serif 4',Georgia,serif;color:#fff">$0</div>
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(254,183,125,.9)">COST TO LEARN</div>
+        </div>
+      </div>
+      <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="margin-top:8px;display:inline-flex;align-items:center;gap:10px;background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"></path></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+  <div class="mj-ytframe">
+    <div style="animation:ytScroll 70s linear infinite;will-change:transform">
+      <img src="uploads/jimmy-v-youtube-channel-video-list.jpg" alt="A grid of videos from Jimmy's YouTube channel answering VA loan questions" style="display:block;width:100%;height:auto">
+      <img src="uploads/jimmy-v-youtube-channel-video-list.jpg" alt="" aria-hidden="true" style="display:block;width:100%;height:auto">
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 30%,rgba(6,10,22,0) 60%,rgba(6,10,22,.45) 100%)"></div>
+  </div>
+</section>
+
+<section id="team" data-screen-label="Serving Families" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-advisor" style="max-width:1120px;margin:0 auto">
+    <img class="refi-advisor-img" src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, Phoenix mortgage loan officer" style="width:100%;height:auto;display:block;border-radius:18px;background:#F7F4EE">
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">SERVING FAMILIES</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Jimmy and his team at Luminate Bank</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Jimmy and his team work with Luminate Bank in Phoenix and place their focus on “serving families.” As a Phoenix mortgage loan officer, he is able to facilitate loans in all 50 states, and his bank maintains a full line of loan products:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <a href="Conventional Loan.dc.html" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:10px 20px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;transition:background .13s ease" style-hover="background:#F0EAE0">Conventional</a>
+        <a href="#loans" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:10px 20px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;transition:background .13s ease" style-hover="background:#F0EAE0">FHA</a>
+        <a href="#loans" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:10px 20px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;transition:background .13s ease" style-hover="background:#F0EAE0">VA</a>
+        <a href="#loans" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:99px;padding:10px 20px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;transition:background .13s ease" style-hover="background:#F0EAE0">Jumbo</a>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+        <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Schedule Consult</a>
+        <a href="tel:4808008387" style="border:1.5px solid #C9C2B4;color:#131C3B;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:background .15s ease" style-hover="background:#F7F4EE">Call (480) 800-8387</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="arcadia" data-screen-label="Home in Arcadia" style="background:#F7F4EE;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="mj-photo" style="max-width:1120px;margin:0 auto">
+    <img src="uploads/jimmy-family-photo.avif" alt="Jimmy Vercellino with his wife Sylvia and their two children" style="width:100%;height:auto;display:block;border-radius:18px;box-shadow:0 24px 60px -24px rgba(19,28,59,.35)">
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">OFF THE CLOCK</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Home is Arcadia</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Jimmy and his family currently reside in the Arcadia section of Phoenix — and if he's not working, he's likely making memories with them.</p>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+<sc-if value="{{ videoOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeVideo }}" style="position:fixed;inset:0;z-index:200;background:rgba(6,10,22,.9);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,56px)">
+    <div style="position:relative;width:100%;max-width:1080px">
+      <button onClick="{{ closeVideo }}" aria-label="Close video" style="position:absolute;top:-46px;right:0;width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font:400 20px 'Archivo',Helvetica,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease" style-hover="background:rgba(255,255,255,.24)">✕</button>
+      <div onClick="{{ stop }}" style="position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 40px 100px -20px rgba(0,0,0,.8);background:#000">
+        <iframe src="https://www.youtube.com/embed/OOfeMMtcOCI?autoplay=1&amp;rel=0" title="Meet Jimmy Vercellino" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen="true" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showHeaderStats&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Page header&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { videoOpen: false };
+
+  componentDidMount() {
+    this.applyTweaks();
+    this._onKey = (e) => { if (e.key === 'Escape' && this.state.videoOpen) this.setState({ videoOpen: false }); };
+    document.addEventListener('keydown', this._onKey);
+  }
+  componentWillUnmount() { document.removeEventListener('keydown', this._onKey); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}';
+  }
+
+  renderVals() {
+    // Star field — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 0.5) continue;
+      const fade = Math.min(1, (dist - 0.5) / 0.55);
+      const size = 1.2 + rnd(seed++) * 2.6;
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      stars,
+      videoOpen: this.state.videoOpen,
+      openVideo: () => this.setState({ videoOpen: true }),
+      closeVideo: () => this.setState({ videoOpen: false }),
+      stop: (e) => e.stopPropagation(),
+      showStats: this.props.showHeaderStats ?? true,
+    };
+  }
+}
+</script>
+
+</script>
+</body>
+</html>

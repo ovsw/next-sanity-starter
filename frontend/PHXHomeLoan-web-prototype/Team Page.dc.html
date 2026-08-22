@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+@keyframes heroRise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFade{from{opacity:0}to{opacity:1}}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.blog-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:stretch}
+.blog-side{display:flex;flex-direction:column;gap:24px}
+.blog-side-card{display:grid;grid-template-columns:150px 1fr;flex:1 1 0}
+@media(max-width:1000px){
+  .blog-grid{grid-template-columns:1fr}
+  .blog-side{flex-direction:row}
+  .blog-side-card{grid-template-columns:1fr;grid-auto-rows:min-content;flex:1 1 0;min-width:0}
+  .blog-side-card .blog-side-thumb{aspect-ratio:16/9;height:auto}
+}
+@media(max-width:640px){
+  .blog-side{flex-direction:column}
+}
+@keyframes loveL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes loveR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.love-row{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.love-track{display:flex;gap:20px;width:max-content;will-change:transform}
+.love-row:hover .love-track{animation-play-state:paused}
+.love-card{flex:0 0 auto;width:360px;box-sizing:border-box}
+@media(max-width:820px){
+  .team-row,.team-row-rev{grid-template-columns:1fr!important;gap:26px!important}
+  .team-row-rev>*{order:0!important}
+  .team-row .team-img,.team-row-rev .team-img{max-width:420px}
+}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 78px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px">
+      <a href="PHX Home Loan Homepage v2.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#fff">Our Team</span>
+    </nav>
+    <div style="font: 600 13px 'Archivo',Helvetica,sans-serif; letter-spacing: .24em; text-transform: uppercase; color: #FEB77D; margin-bottom: 16px">Our Team</div>
+    <h1 style="margin:0;max-width:820px;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">The people behind every approval.</h1>
+    <p style="margin:20px 0 0;max-width:620px;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">A tight-knit group of specialists — origination, certification, and processing — who stay with you from the first conversation all the way to closing day.</p>
+  </div>
+</section>
+
+<section id="team" data-screen-label="Team" style="background:#F7F4EE;padding:110px 40px 118px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:760px;margin:0 auto 76px;text-align:center">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#B4552D;margin-bottom:14px">Meet the Team</div>
+      <h2 style="margin:0 0 18px;font:600 clamp(34px,3.4vw,48px)/1.1 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.015em;text-wrap:balance">The Highly Motivated Vercellino Team</h2>
+      <p style="margin:0;font:400 17px/1.7 'Archivo',Helvetica,sans-serif;color:#5B6172;text-wrap:pretty">Three specialists, one shared standard: make your home loan experience second to none. Here's who you'll be working with.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:64px">
+
+      <div class="team-row" style="display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(32px,5vw,72px);align-items:center">
+        <div style="position:relative;border-radius:16px;overflow:hidden;box-shadow:0 30px 66px rgba(19,28,59,.24);background:#0C1329;aspect-ratio:4/5">
+          <img src="assets/jimmy-vercellino-team.avif" alt="Jimmy Vercellino" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:10px">
+            <span data-acc="bg" style="background:#B4552D;color:#fff;font:600 11.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px">Producing Branch Manager</span>
+            <span style="font:500 12.5px 'Archivo',Helvetica,sans-serif;color:#8A8F9C;letter-spacing:.02em">NMLS #184169</span>
+          </div>
+          <h3 style="margin:0;font:600 clamp(30px,3vw,40px)/1.1 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">Jimmy Vercellino</h3>
+          <p style="margin:0;font:400 16.5px/1.72 'Archivo',Helvetica,sans-serif;color:#454B5E;max-width:560px;text-wrap:pretty">Jimmy is committed to making your home loan experience second to none — accurately customizing a mortgage that is right for you. His goal is to help you select a mortgage that integrates into your short- and long-term financial goals, then manage it long term to minimize your expense and optimize your investment.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px">
+            <a href="mailto:jimmy.vercellino@goluminate.com" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;border:1.5px solid #D8D1C3;padding:11px 18px;border-radius:9px;transition:border-color .15s ease,background .15s ease" style-hover="border-color:#131C3B;background:#fff">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+              Email Jimmy
+            </a>
+            <a href="tel:6029085849" data-acc="text" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#B4552D;text-decoration:none;padding:11px 4px" style-hover="opacity:.75">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"></path></svg>
+              602-908-5849
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-row team-row-rev" style="display:grid;grid-template-columns:1.18fr 0.82fr;gap:clamp(32px,5vw,72px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:18px;order:1">
+          <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:10px;flex-wrap:wrap">
+            <span data-acc="bg" style="background:#B4552D;color:#fff;font:600 11.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px">Loan Originator · Prequalification</span>
+            <span style="font:500 12.5px 'Archivo',Helvetica,sans-serif;color:#8A8F9C;letter-spacing:.02em">NMLS #1018745</span>
+          </div>
+          <h3 style="margin:0;font:600 clamp(30px,3vw,40px)/1.1 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">Brian Coakley</h3>
+          <p style="margin:0;font:400 16.5px/1.72 'Archivo',Helvetica,sans-serif;color:#454B5E;max-width:560px;text-wrap:pretty">Brian specializes in the structuring and certification of your mortgage loan — providing what we call a customized lending solution that suits both your short- and long-term financial goals. Shop with confidence, knowing Brian has done his due diligence with an up-front, thorough review so there are no last-minute hidden closing surprises.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px">
+            <a href="mailto:Brian.Coakley@goluminate.com" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;border:1.5px solid #D8D1C3;padding:11px 18px;border-radius:9px;transition:border-color .15s ease,background .15s ease" style-hover="border-color:#131C3B;background:#fff">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+              Email Brian
+            </a>
+            <a href="tel:6029085849" data-acc="text" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#B4552D;text-decoration:none;padding:11px 4px" style-hover="opacity:.75">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"></path></svg>
+              602-908-5849
+            </a>
+          </div>
+        </div>
+        <div style="position:relative;border-radius:16px;overflow:hidden;box-shadow:0 30px 66px rgba(19,28,59,.24);background:#0C1329;aspect-ratio:4/5;order:2">
+          <img src="assets/brian-coakley-team.avif" alt="Brian Coakley" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%">
+        </div>
+      </div>
+
+      <div class="team-row" style="display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(32px,5vw,72px);align-items:center">
+        <div style="position:relative;border-radius:16px;overflow:hidden;box-shadow:0 30px 66px rgba(19,28,59,.24);background:#0C1329;aspect-ratio:4/5">
+          <img src="assets/jack-roche-team.avif" alt="Jack Roche" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:inline-flex;align-self:flex-start;align-items:center;gap:10px">
+            <span data-acc="bg" style="background:#B4552D;color:#fff;font:600 11.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px">Premier Processor</span>
+          </div>
+          <h3 style="margin:0;font:600 clamp(30px,3vw,40px)/1.1 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">Jack Roche</h3>
+          <p style="margin:0;font:400 16.5px/1.72 'Archivo',Helvetica,sans-serif;color:#454B5E;max-width:560px;text-wrap:pretty">Once your loan is submitted to processing, Jack oversees the heavy lifting all the way through clear to close. Contributing to your smooth loan experience, you can expect communication from him on appraisals, ordering payoffs of existing loans when necessary, and much more.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px">
+            <a href="mailto:jack.roche@goluminate.com" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;text-decoration:none;border:1.5px solid #D8D1C3;padding:11px 18px;border-radius:9px;transition:border-color .15s ease,background .15s ease" style-hover="border-color:#131C3B;background:#fff">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+              Email Jack
+            </a>
+            <a href="tel:6023549523" data-acc="text" style="display:inline-flex;align-items:center;gap:9px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#B4552D;text-decoration:none;padding:11px 4px" style-hover="opacity:.75">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"></path></svg>
+              602-354-9523
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;heroDim&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:55,&quot;min&quot;:20,&quot;max&quot;:85,&quot;step&quot;:5,&quot;unit&quot;:&quot;%&quot;,&quot;section&quot;:&quot;Hero&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;reviewsDark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Reviews&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { faqOpen: 0, videoPlaying: false };
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    const dim = Math.min(1.6, (this.props.heroDim ?? 55) / 55);
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-hero-overlay]{opacity:' + dim + ' !important}' +
+      (this.props.reviewsDark
+        ? '#reviews-section{background:#0C1329 !important}' +
+          '#reviews-section [data-reviews-heading]{color:#fff !important}' +
+          '#reviews-section [data-reviews-sub]{color:rgba(255,255,255,.7) !important}' +
+          '#reviews-section .love-row{-webkit-mask:none !important;mask:none !important}' +
+          '#reviews-section [data-reviews-link]{color:#F5B98F !important}'
+        : '');
+  }
+
+  renderVals() {
+    const faqData = [
+      { q: 'What Are the Types of Home Loans Available?', a: 'The main options are Conventional, FHA, VA, Jumbo, and Construction-to-Permanent (C2P) loans, plus refinancing for existing mortgages. Each differs in down payment, credit requirements, and cost over time. The right one depends on your finances and goals — that\u2019s exactly what a first consultation sorts out.' },
+      { q: 'What is a Conventional Mortgage?', a: 'A conventional mortgage is a home loan not backed by a government agency. It typically offers a lower fixed interest rate, but asks for a larger down payment — which helps you build equity faster. If you put down less than 20%, you may need Private Mortgage Insurance (PMI) until you reach that equity threshold.' },
+      { q: 'What is an FHA Mortgage?', a: 'An FHA loan is insured by the Federal Housing Administration, making it friendlier to first-time homebuyers. It allows a down payment as low as 3.5%, and you may qualify even with imperfect credit or a past bankruptcy or foreclosure.' }
+    ];
+    const open = this.state.faqOpen;
+    const faqs = faqData.map((f, i) => ({
+      q: f.q,
+      a: f.a,
+      toggle: () => this.setState({ faqOpen: open === i ? -1 : i }),
+      iconStyle: {
+        width: '34px', height: '34px', borderRadius: '50%', border: '1.5px solid #C9C2B4',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        font: "400 20px 'Archivo',Helvetica,sans-serif", color: '#131C3B',
+        transition: 'transform .25s ease, background .25s ease',
+        transform: open === i ? 'rotate(45deg)' : 'rotate(0deg)',
+        background: open === i ? '#F7F4EE' : 'transparent'
+      },
+      bodyStyle: {
+        overflow: 'hidden', transition: 'max-height .3s ease, opacity .3s ease',
+        maxHeight: open === i ? '320px' : '0px',
+        opacity: open === i ? 1 : 0
+      }
+    }));
+
+    const reviews = [
+      { initial: 'M', name: 'Marcus & Elena T.', date: '2 weeks ago', text: 'Jimmy and his team walked us through every option instead of pushing one product. As a fellow veteran, he made the VA loan process feel effortless — we closed in 24 days with zero surprises.' },
+      { initial: 'S', name: 'Sarah K.', date: '1 month ago', text: 'First-time buyer, terrified of the process. The team explained everything in plain English, answered texts at 9pm, and got us a better rate than two big banks quoted. Cannot recommend enough.' },
+      { initial: 'D', name: 'David R.', date: '1 month ago', text: 'We refinanced with Jimmy after a friend\u2019s recommendation. Communication was constant and honest — including telling us when waiting a month would save us money. That candor is rare.' },
+      { initial: 'A', name: 'Alyssa M.', date: '2 months ago', text: 'Our construction-to-perm loan had a dozen moving parts and the Vercellino Team handled every one. One closing, one set of fees, exactly as promised on day one.' },
+      { initial: 'J', name: 'James & Priya N.', date: '3 months ago', text: 'Jumbo loan on a tight timeline. Jimmy\u2019s team coordinated with our realtor and title company so smoothly we barely had to lift a finger. Professional from first call to final signature.' },
+      { initial: 'C', name: 'Carlos G.', date: '3 months ago', text: 'They found an FHA path for us when another lender said no. Six months later we were homeowners. These people genuinely care about getting you the right loan, not just any loan.' },
+      { initial: 'R', name: 'Rebecca H.', date: '3 months ago', text: 'Jimmy treats you like family. He sat with my parents for two hours explaining a reverse-mortgage decision with zero pressure. That\u2019s integrity you can\u2019t fake.' },
+      { initial: 'T', name: 'Tyler B.', date: '4 months ago', text: 'Self-employed with messy income docs. Every other lender bailed. Jimmy\u2019s team structured it, explained it, and closed it. Absolute professionals.' },
+      { initial: 'N', name: 'Nicole & Sam P.', date: '4 months ago', text: 'We\u2019ve now bought two homes with the Vercellino Team. There was never a question they wouldn\u2019t answer or a call they didn\u2019t return the same day.' },
+      { initial: 'K', name: 'Kevin O.', date: '5 months ago', text: 'The rate lock advice alone saved us thousands. Jimmy watches the market like a hawk and actually tells you what he\u2019d do if it were his own money.' },
+      { initial: 'L', name: 'Laura V.', date: '5 months ago', text: 'From pre-approval to keys in 21 days. Their process is a well-oiled machine and somehow still feels personal. Best real-estate decision we made.' },
+      { initial: 'B', name: 'Brandon & Mia F.', date: '5 months ago', text: 'As a military family we\u2019ve worked with a lot of lenders. Nobody understands the VA loan like Jimmy. He fought for our appraisal and it made all the difference.' },
+      { initial: 'G', name: 'Grace L.', date: '6 months ago', text: 'Honest, patient, and genuinely kind. The team never once made me feel like a dumb question was a dumb question. Refinanced and lowered my payment by $340/mo.' },
+      { initial: 'W', name: 'Walter S.', date: '6 months ago', text: 'I interviewed four mortgage originators. Jimmy was the only one who asked about my goals before quoting a number. That told me everything.' },
+      { initial: 'E', name: 'Emily & Dan R.', date: '7 months ago', text: 'They caught an error the title company made that would\u2019ve cost us at closing. Detail-oriented doesn\u2019t begin to describe this team.' },
+      { initial: 'P', name: 'Priscilla A.', date: '7 months ago', text: 'Moved from out of state and did the whole thing remotely. E-sign, video calls, constant updates. Flawless. I recommend them to everyone I know.' },
+      { initial: 'H', name: 'Hector M.', date: '8 months ago', text: 'Bad credit history from years ago had me convinced I\u2019d never own. Jimmy laid out a real plan, and 10 months later I closed on my first house.' },
+      { initial: 'J', name: 'Jordan T.', date: '9 months ago', text: 'Responsive, transparent, and calm under pressure when our closing date got moved twice. The Vercellino Team is the real deal.' }
+    ];
+    const third = Math.ceil(reviews.length / 3);
+    const r1 = reviews.slice(0, third);
+    const r2 = reviews.slice(third, third * 2);
+    const r3 = reviews.slice(third * 2);
+
+    // Star field for the Trust Band — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);       // 0 center → ~1.4 corner
+      if (dist < 0.5) continue;                         // keep center clear for text
+      const fade = Math.min(1, (dist - 0.5) / 0.55);    // ramp brightness outward
+      const size = 1.2 + rnd(seed++) * 2.6;             // 1.2 – 3.8px
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      faqs,
+      stars,
+      row1: [...r1, ...r1],
+      row2: [...r2, ...r2],
+      row3: [...r3, ...r3],
+      videoPlaying: this.state.videoPlaying,
+      videoIdle: !this.state.videoPlaying,
+      playVideo: () => this.setState({ videoPlaying: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

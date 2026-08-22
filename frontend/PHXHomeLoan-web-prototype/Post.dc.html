@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+a{color:#B4552D}
+a:hover{color:#8F401F}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-advisor{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
+.cl-adv{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cl-req{display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto 1fr;gap:clamp(18px,2.2vw,26px);align-items:stretch}
+.cl-req>.cl-req-a{grid-column:1;grid-row:1/3}
+.cl-req>.cl-req-b{grid-column:2;grid-row:1}
+.cl-req>.cl-req-c{grid-column:2;grid-row:2}
+@media(max-width:900px){.cl-req>.cl-req-a,.cl-req>.cl-req-b,.cl-req>.cl-req-c{grid-column:1;grid-row:auto}}
+@media(max-width:1000px){.cl-adv{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .refi-two,.refi-compare,.refi-advisor,.cl-req{grid-template-columns:1fr}
+  .refi-advisor-img{max-width:380px;margin:0 auto}
+}
+.bh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:1000px){.bh-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.bh-grid{grid-template-columns:1fr}}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 200px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;justify-content:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px;flex-wrap:wrap">
+      <a href="Homepage.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <a href="Blog Home.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Blog</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#FEB77D;font-weight:600;letter-spacing:.24em;text-transform:uppercase">Market Trends</span>
+    </nav>
+    <h1 style="margin:0 auto;max-width:900px;text-align:center;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">Americans Are Voting With… U-Haul Trucks?</h1>
+    <p style="margin:20px auto 0;max-width:640px;text-align:center;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">U-Haul's 2025 Growth Index shows where Americans are moving — and where they're leaving. Here's what one-way truck rentals tell us about housing.</p>
+    <div style="margin-top:34px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+      <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#F7F4EE;flex-shrink:0"><img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block"></div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#fff">Jimmy Vercellino</div>
+        <div style="font:400 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55)">Mortgage Loan Originator · NMLS# 184169</div>
+      </div>
+      <div style="width:1px;height:36px;background:rgba(255,255,255,.18);margin:0 6px"></div>
+      <div style="font:600 12.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6);letter-spacing:.08em">JUN 30, 2026 · 6 MIN READ</div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Article" style="background:#F7F4EE;padding:0 40px 96px">
+  <div style="position:relative;z-index:5;max-width:1080px;margin:-130px auto 0">
+    <img src="assets/blog-uhaul.webp" alt="U-Haul truck on the move" style="width:100%;aspect-ratio:16/8.5;object-fit:cover;display:block;border-radius:20px;box-shadow:0 30px 70px rgba(12,19,41,.35)">
+  </div>
+  <article style="max-width:760px;margin:64px auto 0">
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">So I found this kind of interesting. Every year, U-Haul releases something called the Growth Index, and it gives us a pretty interesting look at where people are moving. Now, before everyone loses their mind, let me be clear: this is not Census data. It does not count every single person who moved in America or tell us exactly how many people moved into or out of each state.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">What it does track is one-way U-Haul movement. In plain English, U-Haul looks at where people pick up a truck, trailer, or U-Box in one state and drop it off in another. So while it may not be perfect, it is still a pretty strong signal. People do not rent a one-way U-Haul for fun. They are moving their life somewhere.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">With me so far? Okay, here's where things get interesting.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">According to U-Haul's 2025 Growth Index, the pattern is hard to ignore.</p>
+    <h3 style="margin:38px 0 14px;font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B">📈 Top growth states, 2025</h3>
+    <ol style="margin:0 0 30px;padding:0 0 0 24px;display:flex;flex-direction:column;gap:8px;font:400 17px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">
+      <li>Texas</li><li>Florida</li><li>North Carolina</li><li>Tennessee</li><li>South Carolina</li><li>Washington</li><li>Arizona</li><li>Idaho</li><li>Alabama</li><li>Georgia</li>
+    </ol>
+    <h3 style="margin:0 0 14px;font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B">📉 On the other end of the list</h3>
+    <ul style="margin:0 0 8px;padding:0 0 0 24px;display:flex;flex-direction:column;gap:8px;font:400 17px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">
+      <li>Massachusetts</li><li>New York</li><li>New Jersey</li><li>Illinois</li><li>California — ranked last for the sixth consecutive year</li>
+    </ul>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Ouch.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Now, does that mean nobody wants to live in California, New York, New Jersey, Illinois, or Massachusetts? Of course not. These are still massive states with major job centers, universities, businesses, culture, and opportunity. California is still California. New York is still New York. But when you zoom out and look at where everyday people are choosing to move, the data tells a pretty clear story.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">People are chasing affordability, space, jobs, and a better quality of life. They are looking at their income, taxes, housing costs, and monthly payment and asking a very basic question: does this still make sense?</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">That is the part that gets lost in a lot of housing conversations. People do not move just because a state has a cool slogan or because some influencer made a video about it. People move because life forces a decision. Can I afford to buy a home here? Can I raise my family here? Can I keep more of what I earn? Can I get a better job? Can I sell a house in one state and buy more house somewhere else?</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Right now, a lot of Americans appear to be answering those questions by moving toward Texas, Florida, the Carolinas, Tennessee, Arizona, Idaho, Alabama, and Georgia. That does not mean every one of those markets is perfect. Some have higher inventory. Some have affordability issues. Some have insurance problems. Some have property tax issues. Some have a lot of new construction competing with resale homes.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">But migration still matters, especially in real estate. Long-term housing demand is not just about interest rates. It is also about people. Where are they going? Where are they leaving? Where are jobs being created? Where are families trying to build a life?</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Those questions matter because population movement eventually shows up somewhere. It shows up in housing demand, rents, new construction, traffic, school enrollment, local businesses, and the overall feel of a market.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Now, should you buy a house just because a state ranks high on U-Haul's list? No. Please don't do that. A U-Haul ranking does not pay your mortgage. Your income does. Your budget does. Your debt-to-income ratio does. Your reserves do. Your comfort level does.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">But if you are trying to understand the bigger housing picture, migration is one of the pieces that matters. Real estate is local, but people movement is one of the reasons local markets change over time.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">If a state becomes too expensive, too heavily taxed, or too difficult for normal families to afford, people eventually start looking for options. If another state gives them more space, more affordability, more job opportunity, or a better quality of life, people start paying attention.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">That does not happen overnight, and it does not happen perfectly. But year after year, U-Haul data keeps showing the same general theme: people are leaving some of the most expensive states in the country and moving toward states where the math may work a little better.</p>
+    <div style="margin:44px 0;padding:8px 0 8px 34px;border-left:3px solid #B4552D">
+      <p style="margin:0;font:600 clamp(24px,2.6vw,30px)/1.35 'Source Serif 4',Georgia,serif;color:#131C3B">That's not political. That's practical.</p>
+    </div>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">When the payment does not work, people move. When taxes hurt, people move. When they can sell a home in one state and buy more home in another, people move. When remote work gives them flexibility, people move. When their kids can't afford to live where they grew up, people move.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">This is why the "where are people moving?" question matters so much in real estate. Housing demand is not just about today's interest rate. It is about where people believe they can build a better life.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Again, this is not Census data. It is not perfect. It is not the whole story. But it shows patterns, and those patterns provide signals.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">People are voting with their feet. Or in this case, with U-Haul trucks. And right now, the trucks are telling a pretty clear story: Americans are still chasing affordability, space, jobs, and a better quality of life.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">That is not just a moving story.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">That is a housing story.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">And if you are thinking about making a move, I can help.</p>
+    <p style="margin:0 0 26px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">I lend nationwide, and I work with buyers all over the country. Whether you are moving across town or across state lines, I can help you understand the financing, run the numbers, and connect you with a good local real estate agent in the market you are moving to.</p>
+    <p style="margin:0 0 34px;font:400 17.5px/1.85 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty"><a href="#contact" style="color:#B4552D;font-weight:600" style-hover="color:#8F401F">Schedule a time to speak with me</a>, and I'll give it to you straight.</p>
+    <p style="margin:0;font:600 26px 'Source Serif 4',Georgia,serif;color:#131C3B;font-style:italic">Jimmy V</p>
+
+    <div style="margin-top:64px;background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:30px 34px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="width:74px;height:74px;border-radius:50%;overflow:hidden;background:#F7F4EE;flex-shrink:0"><img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block"></div>
+      <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px">
+        <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#9AA0AE">WRITTEN BY</div>
+        <div style="font:600 19px 'Source Serif 4',Georgia,serif;color:#131C3B">Jimmy Vercellino</div>
+        <div style="font:400 14px/1.55 'Archivo',Helvetica,sans-serif;color:#5B6172">Marine Corps veteran and Top 1% mortgage loan originator. NMLS# 184169.</div>
+      </div>
+      <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:14px 24px;border-radius:9px;text-decoration:none;white-space:nowrap;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Schedule Consult</a>
+    </div>
+  </article>
+</section>
+
+<section data-screen-label="Keep Reading" style="background:#F7F4EE;padding:0 40px 104px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:24px;flex-wrap:wrap;margin-bottom:34px;border-top:1px solid #E7E1D6;padding-top:72px">
+      <h2 style="margin:0;font:600 clamp(26px,2.4vw,32px)/1.15 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">Keep reading</h2>
+      <a href="Blog Home.dc.html" data-acc="text" style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#B4552D;text-decoration:none;white-space:nowrap">View all posts →</a>
+    </div>
+    <div class="bh-grid">
+      <a href="Blog Home.dc.html" style="text-decoration:none;background:#fff;border:1px solid #E7E1D6;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 22px 48px rgba(19,28,59,.14)">
+        <div style="position:relative;aspect-ratio:16/10;overflow:hidden">
+          <img src="assets/blog-notgood.avif" alt="Toy houses in a shopping cart beside a falling chart" style="width:100%;height:100%;object-fit:cover;display:block">
+          <div style="position:absolute;top:14px;left:14px;background:rgba(12,19,41,.82);backdrop-filter:blur(4px);color:#fff;font:600 10.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px">Buying a Home</div>
+        </div>
+        <div style="padding:26px 28px 30px;display:flex;flex-direction:column;gap:11px;flex:1">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;color:#9AA0AE;letter-spacing:.08em">JUN 23, 2026 · 5 MIN READ</div>
+          <h3 style="margin:0;font:600 21px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B;text-wrap:balance">Housing “looks” terrible. You should buy a house.</h3>
+          <p style="margin:0;font:400 14.5px/1.6 'Archivo',Helvetica,sans-serif;color:#5B6172;text-wrap:pretty;flex:1">Inflation just hit a 3-year high. Inventory's climbing. Rates are back in the mid-6s. And despite all that, the math still favors buyers who act.</p>
+          <div data-acc="text" style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#B4552D;margin-top:4px">Read post →</div>
+        </div>
+      </a>
+      <a href="Blog Home.dc.html" style="text-decoration:none;background:#fff;border:1px solid #E7E1D6;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 22px 48px rgba(19,28,59,.14)">
+        <div style="position:relative;aspect-ratio:16/10;overflow:hidden">
+          <img src="assets/blog-strait.avif" alt="Map of the Strait of Hormuz marked closed" style="width:100%;height:100%;object-fit:cover;display:block">
+          <div style="position:absolute;top:14px;left:14px;background:rgba(12,19,41,.82);backdrop-filter:blur(4px);color:#fff;font:600 10.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px">Rates</div>
+        </div>
+        <div style="padding:26px 28px 30px;display:flex;flex-direction:column;gap:11px;flex:1">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;color:#9AA0AE;letter-spacing:.08em">MAR 17, 2026 · 7 MIN READ</div>
+          <h3 style="margin:0;font:600 21px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B;text-wrap:balance">Why Mortgage Rates Are Going Up in 2026</h3>
+          <p style="margin:0;font:400 14.5px/1.6 'Archivo',Helvetica,sans-serif;color:#5B6172;text-wrap:pretty;flex:1">Oil prices spike and inflation fears return. A simple breakdown of how global energy markets and the Strait of Hormuz reach your monthly payment.</p>
+          <div data-acc="text" style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#B4552D;margin-top:4px">Read post →</div>
+        </div>
+      </a>
+      <a href="Blog Home.dc.html" style="text-decoration:none;background:#fff;border:1px solid #E7E1D6;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 22px 48px rgba(19,28,59,.14)">
+        <div style="position:relative;aspect-ratio:16/10;overflow:hidden">
+          <img src="assets/blog-rentvsbuy.avif" alt="Jimmy Vercellino smiling in the Arizona desert" style="width:100%;height:100%;object-fit:cover;display:block;object-position:center 25%">
+          <div style="position:absolute;top:14px;left:14px;background:rgba(12,19,41,.82);backdrop-filter:blur(4px);color:#fff;font:600 10.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px">Buying a Home</div>
+        </div>
+        <div style="padding:26px 28px 30px;display:flex;flex-direction:column;gap:11px;flex:1">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;color:#9AA0AE;letter-spacing:.08em">FEB 17, 2026 · 6 MIN READ</div>
+          <h3 style="margin:0;font:600 21px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B;text-wrap:balance">“Don’t buy a home. Just invest.”</h3>
+          <p style="margin:0;font:400 14.5px/1.6 'Archivo',Helvetica,sans-serif;color:#5B6172;text-wrap:pretty;flex:1">The rent vs buy debate is back — and this time it says you're better off renting and investing for 30 years. But what if the real answer isn't either/or?</p>
+          <div data-acc="text" style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#B4552D;margin-top:4px">Read post →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="advisors" data-screen-label="Advisors CTA" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-advisor" style="max-width:1120px;margin:0 auto">
+    <div class="refi-advisor-img" style="position:relative;display:flex;justify-content:center;align-items:flex-end">
+      <div aria-hidden="true" style="position:absolute;left:8%;right:8%;bottom:0;top:16%;background:#F7F4EE;border-radius:220px 220px 24px 24px"></div>
+      <img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, home loan advisor" style="position:relative;width:96%;height:auto;display:block">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">READY WHEN YOU ARE</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Our experienced home loan advisors can help you refinance</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">To obtain lower monthly payments and interest rates, you need a relatable advisor who can walk you through the process. Our team of experienced home loan specialists listens to your unique goals and starts your journey to achieving them — we not only educate you on your best options but genuinely care about your family winning your dream home.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+        <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Start Your Application</a>
+        <a href="tel:4808008387" style="border:1.5px solid #C9C2B4;color:#131C3B;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:background .15s ease" style-hover="background:#F7F4EE">Call (480) 800-8387</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showHeaderStats&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Page header&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {};
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}';
+  }
+
+  renderVals() {
+    // Star field — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 0.5) continue;
+      const fade = Math.min(1, (dist - 0.5) / 0.55);
+      const size = 1.2 + rnd(seed++) * 2.6;
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      stars,
+      showStats: this.props.showHeaderStats ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

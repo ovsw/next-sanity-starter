@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "cd \"${CLAUDE_PROJECT_DIR:-.}/frontend\" && exec node_modules/.bin/shadcn mcp"
+      ]
+    },
+    "sanity": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "cd \"${CLAUDE_PROJECT_DIR:-.}/studio\" && SANITY_AUTH_TOKEN=\"$(. ./.env >/dev/null 2>&1; printf %s \"${SANITY_AUTH_TOKEN}\")\" exec npx -y mcp-remote@0.1.38 https://mcp.sanity.io --transport http-only --header \"Authorization: Bearer \\${SANITY_AUTH_TOKEN}\""
+      ]
+    }
+  }
+}

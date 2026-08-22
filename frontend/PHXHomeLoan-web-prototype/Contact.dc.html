@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+a{color:#B4552D}
+a:hover{color:#8F401F}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+#advisors{background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6}
+.refi-advisor{display:grid;grid-template-columns:minmax(320px,.92fr) minmax(0,1.08fr);align-items:stretch;max-width:1120px;margin:0 auto;overflow:hidden;background:#F7F4EE;border:1px solid #E7E1D6;border-radius:24px;box-shadow:0 24px 64px rgba(19,28,59,.08)}
+.refi-advisor-img{--portrait-panel:#EDE8DE;--portrait-arc:#FDFCF9;position:relative;display:grid;align-items:end;padding-top:clamp(32px,4vw,52px);box-sizing:border-box;overflow:hidden;isolation:isolate;background:var(--portrait-panel)}
+.refi-portrait-stage{position:relative;width:100%;min-height:360px;max-height:520px;aspect-ratio:1 / 1.04;display:grid;place-items:end center;overflow:hidden}
+.refi-portrait-arc{position:absolute;z-index:0;top:75%;left:50%;width:100%;aspect-ratio:1;border-radius:50%;background:var(--portrait-arc);transform:translate(-50%,-50%)}
+.refi-portrait-stage>img{position:relative;z-index:1;width:min(108%,620px);height:100%;max-height:520px;object-fit:cover;object-position:center top;display:block}
+.refi-advisor-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:clamp(40px,5vw,68px)}
+.cl-adv{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cl-req{display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto 1fr;gap:clamp(18px,2.2vw,26px);align-items:stretch}
+.cl-req>.cl-req-a{grid-column:1;grid-row:1/3}
+.cl-req>.cl-req-b{grid-column:2;grid-row:1}
+.cl-req>.cl-req-c{grid-column:2;grid-row:2}
+@media(max-width:900px){.cl-req>.cl-req-a,.cl-req>.cl-req-b,.cl-req>.cl-req-c{grid-column:1;grid-row:auto}}
+@media(max-width:1000px){.cl-adv{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .refi-two,.refi-compare,.refi-advisor,.cl-req{grid-template-columns:1fr}
+  .refi-advisor-copy{padding:36px 28px 42px}
+}
+@media(max-width:640px){
+  #advisors{padding:48px 0 56px}
+  #advisors .refi-advisor{max-width:none;background:transparent;border:0;border-radius:0;box-shadow:none}
+  #advisors .refi-advisor-img{--portrait-panel:transparent;--portrait-arc:#F7F4EE;padding-top:0}
+  #advisors .refi-advisor-copy{padding:32px 24px 0}
+  .contact-location-grid{grid-template-columns:1fr!important}
+}
+.bh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:1000px){.bh-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.bh-grid{grid-template-columns:1fr}}
+.bento{display:grid;grid-template-columns:.9fr 1.25fr;gap:clamp(24px,3vw,44px);align-items:start}
+.bento-left{display:flex;flex-direction:column;gap:44px}
+.bento-form{grid-column:2;grid-row:1}
+@media(max-width:900px){.bento{grid-template-columns:1fr}.bento-left,.bento-form{grid-column:auto;grid-row:auto}}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+<section data-screen-label="Contact Form" style="background:#F7F4EE;padding:88px 40px 110px">
+  <div style="max-width:1280px;margin:0 auto" class="bento">
+    <div class="bento-left">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#B4552D">Contact</div>
+        <h1 style="margin:0;font:600 clamp(40px,4vw,56px)/1.1 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.015em;max-width:640px;text-wrap:balance">Let's talk about your home loan.</h1>
+        <p style="margin:0;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:#5B6172;max-width:560px;text-wrap:pretty">Call, email, or send a note below. Jimmy and his team typically respond the same business day.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <h3 style="margin:0 0 16px;font:600 18px 'Source Serif 4',Georgia,serif;color:#131C3B">Office hours</h3>
+        <div style="display:flex;flex-direction:column;font:400 14.5px 'Archivo',Helvetica,sans-serif;color:#454B5E;border-top:1px solid #E7E1D6">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #E7E1D6"><span>Monday – Friday</span><span style="font-weight:600;color:#131C3B">8:00 AM – 6:00 PM</span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #E7E1D6"><span>Saturday</span><span style="font-weight:600;color:#131C3B">By appointment</span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #E7E1D6"><span>Sunday</span><span style="font-weight:600;color:#131C3B">Closed</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="bento-form" style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:clamp(28px,3.5vw,48px);box-shadow:0 20px 48px rgba(19,28,59,.07)">
+      <sc-if value="{{ formIdle }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submitForm }}" style="display:flex;flex-direction:column;gap:22px">
+          <h2 style="margin:0;font:600 26px 'Source Serif 4',Georgia,serif;color:#131C3B">Send us a message</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <label style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 13px 'Archivo',Helvetica,sans-serif;color:#131C3B;letter-spacing:.02em">Name</span>
+              <input name="name" type="text" required="required" placeholder="Your full name" style="font:400 15px 'Archivo',Helvetica,sans-serif;color:#131C3B;padding:14px 16px;border:1.5px solid #E7E1D6;border-radius:9px;background:#FDFCF9;outline:none;transition:border-color .15s ease" style-focus="border-color:#B4552D">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:8px">
+              <span style="font:600 13px 'Archivo',Helvetica,sans-serif;color:#131C3B;letter-spacing:.02em">Email</span>
+              <input name="email" type="email" required="required" placeholder="you@example.com" style="font:400 15px 'Archivo',Helvetica,sans-serif;color:#131C3B;padding:14px 16px;border:1.5px solid #E7E1D6;border-radius:9px;background:#FDFCF9;outline:none;transition:border-color .15s ease" style-focus="border-color:#B4552D">
+            </label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:600 13px 'Archivo',Helvetica,sans-serif;color:#131C3B;letter-spacing:.02em">Phone</span>
+            <input name="phone" type="tel" placeholder="(480) 000-0000" style="font:400 15px 'Archivo',Helvetica,sans-serif;color:#131C3B;padding:14px 16px;border:1.5px solid #E7E1D6;border-radius:9px;background:#FDFCF9;outline:none;transition:border-color .15s ease" style-focus="border-color:#B4552D">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:600 13px 'Archivo',Helvetica,sans-serif;color:#131C3B;letter-spacing:.02em">Comments / Questions</span>
+            <textarea name="comments" rows="5" placeholder="Tell us a bit about what you're looking for…" style="font:400 15px/1.6 'Archivo',Helvetica,sans-serif;color:#131C3B;padding:14px 16px;border:1.5px solid #E7E1D6;border-radius:9px;background:#FDFCF9;outline:none;resize:vertical;min-height:120px;transition:border-color .15s ease" style-focus="border-color:#B4552D"></textarea>
+          </label>
+          <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+            <button type="submit" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15.5px 'Archivo',Helvetica,sans-serif;padding:16px 32px;border:0;border-radius:9px;cursor:pointer;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Send Message</button>
+            <span style="font:400 13px 'Archivo',Helvetica,sans-serif;color:#9AA0AE">We'll never share your information.</span>
+          </div>
+        </form>
+      </sc-if>
+      <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:24px 0">
+          <div data-acc="bg" style="width:52px;height:52px;border-radius:50%;background:#B4552D;color:#fff;display:flex;align-items:center;justify-content:center;font:600 24px 'Archivo',Helvetica,sans-serif">✓</div>
+          <h2 style="margin:0;font:600 26px 'Source Serif 4',Georgia,serif;color:#131C3B">Message sent — thank you!</h2>
+          <p style="margin:0;font:400 16px/1.65 'Archivo',Helvetica,sans-serif;color:#5B6172;max-width:440px">Jimmy or a member of the team will get back to you within one business day. Need an answer sooner? Call <a href="tel:4808008387" data-acc="text" style="font-weight:600;text-decoration:none">480-800-8387</a>.</p>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section><section id="advisors" data-od-id="reach-jimmy-directly" data-screen-label="Advisors CTA">
+  <div class="refi-advisor">
+    <div class="refi-advisor-img">
+      <div class="refi-portrait-stage">
+        <div class="refi-portrait-arc" aria-hidden="true"></div>
+        <img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, home loan advisor">
+      </div>
+    </div>
+    <div class="refi-advisor-copy">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.22em;color:#B4552D;text-transform:uppercase">Prefer a conversation?</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Reach Jimmy directly</h2>
+      <p style="margin:14px 0 28px;font:400 16px/1.65 'Archivo',Helvetica,sans-serif;color:#5B6172;max-width:45ch;text-wrap:pretty">Call, email, or stop by the Phoenix office. You’ll connect directly with Jimmy and his local team.</p>
+      <div style="display:flex;flex-direction:column;gap:18px;width:100%;padding-top:22px;border-top:1px solid #D8D0C3">
+        <a href="tel:4808008387" style="display:flex;align-items:center;gap:14px;text-decoration:none" style-hover="opacity:.8">
+          <span data-acc="bg" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B4552D;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </span>
+          <span style="font:600 17px 'Archivo',Helvetica,sans-serif;color:#131C3B">480-800-8387</span>
+        </a>
+        <a href="mailto:jimmy.vercellino@goluminate.com" style="display:flex;align-items:center;gap:14px;text-decoration:none;word-break:break-all" style-hover="opacity:.8">
+          <span data-acc="bg" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B4552D;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><path d="M22 6l-10 7L2 6"></path></svg>
+          </span>
+          <span style="font:600 17px 'Archivo',Helvetica,sans-serif;color:#131C3B">jimmy.vercellino@goluminate.com</span>
+        </a>
+        <a href="https://maps.app.goo.gl/1g17C8YKuTvx4WvV8" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:flex-start;gap:14px;text-decoration:none" style-hover="opacity:.8">
+          <span data-acc="bg" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B4552D;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </span>
+          <span style="font:600 17px/1.4 'Archivo',Helvetica,sans-serif;color:#131C3B">3602 E Campbell Ave Ste 1,<br>Phoenix, AZ 85018, USA</span>
+        </a>
+      </div>
+      <div style="margin-top:26px;font:400 13px/1.5 'Archivo',Helvetica,sans-serif;color:#5B6172;letter-spacing:.01em">Jimmy Vercellino · Mortgage Loan Originator · NMLS# 184169</div>
+    </div>
+  </div>
+</section>
+
+
+
+<section data-screen-label="Location Map" style="padding: 110px 40px; background-color: #F7F4EE">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:48px;margin-bottom:44px;flex-wrap:wrap">
+      <div style="max-width:560px">
+        <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#B4552D;margin-bottom:14px">Our Location</div>
+        <h2 style="margin:0;font:600 clamp(32px,3vw,42px)/1.15 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">Visit us in the heart of Phoenix.</h2>
+      </div>
+      <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave+Ste+1,+Phoenix,+AZ+85018" data-acc="text" style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#B4552D;text-decoration:none;white-space:nowrap">Get directions →</a>
+    </div>
+    <div class="contact-location-grid" style="display:grid;grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);gap:24px;align-items:stretch">
+      <div style="position:relative;border-radius:16px;overflow:hidden;border:1px solid #E7E1D6;box-shadow:0 24px 56px rgba(19,28,59,.12);min-height:480px">
+        <img src="assets/hero-building.jpg" alt="Our landmark building in Phoenix" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,28,59,0) 45%,rgba(19,28,59,.78) 100%)"></div>
+        <div style="position:absolute;left:24px;bottom:24px;right:24px">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#F2C4A9;margin-bottom:8px">Look for this building</div>
+          <div style="font:600 20px/1.3 'Source Serif 4',Georgia,serif;color:#fff">The Vercellino Team Headquarters</div>
+        </div>
+      </div>
+      <div style="position:relative;border-radius:16px;overflow:hidden;border:1px solid #E7E1D6;box-shadow:0 24px 56px rgba(19,28,59,.12);min-height:480px">
+        <iframe src="https://www.google.com/maps?q=3602+E+Campbell+Ave+Ste+1,+Phoenix,+AZ+85018&amp;output=embed" title="Map — 3602 E Campbell Ave Ste 1, Phoenix, AZ 85018" loading="lazy" referrerPolicy="no-referrer-when-downgrade" style="display:block;width:100%;height:100%;border:0"></iframe>
+        <div style="position:absolute;top:24px;left:24px;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid #E7E1D6;border-radius:12px;padding:20px 24px;max-width:300px;box-shadow:0 14px 36px rgba(19,28,59,.18)">
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#131C3B">Phoenix Mortgage Lender Jimmy V</div>
+          <div style="font:400 12.5px 'Archivo',Helvetica,sans-serif;color:#9AA0AE;margin:2px 0 8px">NMLS# 184169</div>
+          <div style="font:400 14px/1.55 'Archivo',Helvetica,sans-serif;color:#454B5E">3602 E Campbell Ave Ste 1,<br>Phoenix, AZ 85018, USA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showHeaderStats&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Page header&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { formSent: false };
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}';
+  }
+
+  renderVals() {
+    // Star field — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 0.5) continue;
+      const fade = Math.min(1, (dist - 0.5) / 0.55);
+      const size = 1.2 + rnd(seed++) * 2.6;
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      stars,
+      formIdle: !this.state.formSent,
+      formSent: this.state.formSent,
+      submitForm: (e) => { e.preventDefault(); this.setState({ formSent: true }); },
+      showStats: this.props.showHeaderStats ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "Meet Jimmy.dc.html",
+  "entry": "Meet Jimmy.dc.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-07-20T13:56:21.976Z",
+  "updatedAt": "2026-07-20T14:44:18.731Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

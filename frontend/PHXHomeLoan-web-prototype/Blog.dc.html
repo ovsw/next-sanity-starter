@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+a{color:#B4552D}
+a:hover{color:#8F401F}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-advisor{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
+.cl-adv{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cl-req{display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto 1fr;gap:clamp(18px,2.2vw,26px);align-items:stretch}
+.cl-req>.cl-req-a{grid-column:1;grid-row:1/3}
+.cl-req>.cl-req-b{grid-column:2;grid-row:1}
+.cl-req>.cl-req-c{grid-column:2;grid-row:2}
+@media(max-width:900px){.cl-req>.cl-req-a,.cl-req>.cl-req-b,.cl-req>.cl-req-c{grid-column:1;grid-row:auto}}
+@media(max-width:1000px){.cl-adv{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .refi-two,.refi-compare,.refi-advisor,.cl-req{grid-template-columns:1fr}
+  .refi-advisor-img{max-width:380px;margin:0 auto}
+}
+.bh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:1000px){.bh-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.bh-grid{grid-template-columns:1fr}}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 78px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px">
+      <a href="Homepage.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#FEB77D;font-weight:600;letter-spacing:.24em;text-transform:uppercase">Blog</span>
+    </nav>
+    <h1 style="margin:0;max-width:820px;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">Plain-English takes on the market.</h1>
+    <p style="margin:20px 0 0;max-width:620px;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Rates, housing trends, and home-buying strategy from Jimmy and the team — no jargon, no hype, just what actually matters for your next move.</p>
+  </div>
+</section>
+
+<nav data-screen-label="Jump Nav" aria-label="Filter posts" data-acc="bg" style="position:sticky;top:86px;z-index:50;background:#B4552D;backdrop-filter:blur(10px)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:58px;display:flex;align-items:center;gap:8px;overflow-x:auto">
+    <span data-acc="on-accent-label" style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.72);margin-right:10px;white-space:nowrap">BROWSE BY TOPIC</span>
+    <sc-for list="{{ catChips }}" as="cat" hint-placeholder-count="5">
+      <a href="#posts" data-acc="on-accent" onClick="{{ cat.onClick }}" style="{{ cat.style }}" style-hover="background:rgba(255,255,255,.18)">{{ cat.label }}</a>
+    </sc-for>
+  </div>
+</nav>
+
+<section id="posts" data-screen-label="Blog List" style="background:#F7F4EE;padding:88px 40px 104px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:24px;flex-wrap:wrap;margin-bottom:34px">
+      <h2 style="margin:0;font:600 clamp(26px,2.4vw,32px)/1.15 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em">{{ listHeading }}</h2>
+      <div style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#9AA0AE">{{ resultsLabel }}</div>
+    </div>
+    <div class="bh-grid">
+      <sc-for list="{{ pagePosts }}" as="post" hint-placeholder-count="0">
+        <a href="{{ post.href }}" style="text-decoration:none;background:#fff;border:1px solid #E7E1D6;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 22px 48px rgba(19,28,59,.14)">
+          <div style="position:relative;aspect-ratio:16/10;overflow:hidden">
+            <div role="img" aria-label="{{ post.alt }}" style="{{ post.thumbStyle }}"></div>
+            <div style="position:absolute;top:14px;left:14px;background:rgba(12,19,41,.82);backdrop-filter:blur(4px);color:#fff;font:600 10.5px 'Archivo',Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px">{{ post.category }}</div>
+          </div>
+          <div style="padding:26px 28px 30px;display:flex;flex-direction:column;gap:11px;flex:1">
+            <div style="font:600 12px 'Archivo',Helvetica,sans-serif;color:#9AA0AE;letter-spacing:.08em">{{ post.date }} · {{ post.read }} MIN READ</div>
+            <h3 style="margin:0;font:600 21px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B;text-wrap:balance">{{ post.title }}</h3>
+            <p style="margin:0;font:400 14.5px/1.6 'Archivo',Helvetica,sans-serif;color:#5B6172;text-wrap:pretty;flex:1">{{ post.excerpt }}</p>
+            <div data-acc="text" style="font:600 14px 'Archivo',Helvetica,sans-serif;color:#B4552D;margin-top:4px">Read post →</div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+    <nav aria-label="Pagination" style="margin-top:56px;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap">
+      <a href="#posts" onClick="{{ prevPage }}" style="{{ prevStyle }}" style-hover="background:#F7F4EE">← Previous</a>
+      <sc-for list="{{ pageButtons }}" as="pg" hint-placeholder-count="2">
+        <a href="#posts" onClick="{{ pg.onClick }}" style="{{ pg.style }}" style-hover="filter:brightness(.97)">{{ pg.label }}</a>
+      </sc-for>
+      <a href="#posts" onClick="{{ nextPage }}" style="{{ nextStyle }}" style-hover="background:#F7F4EE">Next →</a>
+    </nav>
+  </div>
+</section>
+
+<section id="advisors" data-screen-label="Advisors CTA" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-advisor" style="max-width:1120px;margin:0 auto">
+    <div class="refi-advisor-img" style="position:relative;display:flex;justify-content:center;align-items:flex-end">
+      <div aria-hidden="true" style="position:absolute;left:8%;right:8%;bottom:0;top:16%;background:#F7F4EE;border-radius:220px 220px 24px 24px"></div>
+      <img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, home loan advisor" style="position:relative;width:96%;height:auto;display:block">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">READY WHEN YOU ARE</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Our experienced home loan advisors can help you refinance</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">To obtain lower monthly payments and interest rates, you need a relatable advisor who can walk you through the process. Our team of experienced home loan specialists listens to your unique goals and starts your journey to achieving them — we not only educate you on your best options but genuinely care about your family winning your dream home.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+        <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Start Your Application</a>
+        <a href="tel:4808008387" style="border:1.5px solid #C9C2B4;color:#131C3B;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:background .15s ease" style-hover="background:#F7F4EE">Call (480) 800-8387</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showHeaderStats&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Page header&quot;,&quot;tsType&quot;:&quot;boolean&quot;},&quot;postsPerPage&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;min&quot;:3,&quot;max&quot;:12,&quot;section&quot;:&quot;Blog list&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { page: 1, category: 'All' };
+
+  static POSTS = [
+    { title: 'Americans Are Voting With… U-Haul Trucks?', excerpt: "U-Haul migration data shows where Americans are moving — and where they're leaving. Affordability, space, and jobs are reshaping where families plant roots.", date: 'JUN 30, 2026', read: 6, category: 'Market Trends', img: 'assets/blog-uhaul.webp', alt: 'U-Haul truck on the move', href: 'Blog Post.dc.html' },
+    { title: 'Housing “looks” terrible. You should buy a house.', excerpt: "Inflation just hit a 3-year high. Inventory's climbing. Rates are back in the mid-6s. And despite all that, the math still favors buyers who act.", date: 'JUN 23, 2026', read: 5, category: 'Buying a Home', img: 'assets/blog-notgood.avif', alt: 'Toy houses in a shopping cart beside a falling chart' },
+    { title: 'Why Mortgage Rates Are Going Up in 2026', excerpt: 'Oil prices spike and inflation fears return. A simple breakdown of how global energy markets and the Strait of Hormuz reach your monthly payment.', date: 'MAR 17, 2026', read: 7, category: 'Rates', img: 'assets/blog-strait.avif', alt: 'Map of the Strait of Hormuz marked closed' },
+    { title: '“Don\u2019t buy a home. Just invest.”', excerpt: "The rent vs buy debate is back — and this time it says you're better off renting and investing for 30 years. But what if the real answer isn't either/or?", date: 'FEB 17, 2026', read: 6, category: 'Buying a Home', img: 'assets/blog-rentvsbuy.avif', alt: 'Jimmy Vercellino smiling in the Arizona desert' },
+    { title: "What the Fed's January Pause Means for Your Pre-Approval", excerpt: "The Fed held steady — again. Here's what a pause actually does (and doesn't do) to mortgage rates, and how to time your lock.", date: 'JAN 28, 2026', read: 5, category: 'Rates', img: 'assets/blog-strait.avif', alt: 'Chart of interest rate movements' },
+    { title: 'Phoenix Housing Market Outlook: 2026 Edition', excerpt: 'Inventory, prices, and the neighborhoods to watch. Our annual look at what the Valley market is telling buyers and sellers this year.', date: 'JAN 12, 2026', read: 8, category: 'Market Trends', img: 'assets/blog-uhaul.webp', alt: 'Phoenix housing market imagery' },
+    { title: 'How Much House Can You Actually Afford?', excerpt: "Forget the online calculators. A real-world walkthrough of DTI, reserves, and the payment you'll be comfortable with — not just approved for.", date: 'DEC 9, 2025', read: 6, category: 'Buying a Home', img: 'assets/blog-notgood.avif', alt: 'Toy houses beside a calculator' },
+    { title: 'VA Loans: The Benefit Too Many Veterans Never Use', excerpt: 'No down payment, no PMI, competitive rates — and roughly a third of eligible veterans never use it. What every service member should know.', date: 'NOV 11, 2025', read: 7, category: 'VA Loans', img: 'assets/blog-rentvsbuy.avif', alt: 'Jimmy Vercellino, Marine Corps veteran' },
+    { title: 'Cash-Out Refinance vs. HELOC: Which Fits Your Plan?', excerpt: "Both tap your equity — but they behave very differently when rates move. How to choose based on what you're funding and how long you'll hold.", date: 'OCT 21, 2025', read: 6, category: 'Refinancing', img: 'assets/blog-notgood.avif', alt: 'House with equity chart' },
+    { title: '5 Credit Score Myths That Cost Buyers Real Money', excerpt: "Closing a card helps? Checking your score hurts? We debunk the myths that quietly raise buyers' rates — and what actually moves your score.", date: 'SEP 30, 2025', read: 5, category: 'Buying a Home', img: 'assets/blog-strait.avif', alt: 'Credit score illustration' },
+    { title: 'Should You Buy Points to Lower Your Rate?', excerpt: 'Discount points can save tens of thousands — or be money down the drain. The break-even math, explained with real numbers.', date: 'SEP 9, 2025', read: 5, category: 'Rates', img: 'assets/blog-uhaul.webp', alt: 'Mortgage rate buydown illustration' },
+    { title: 'The First-Time Buyer Checklist: 90 Days Out', excerpt: 'A week-by-week plan for the three months before you make an offer — documents, credit moves, and the one call to make first.', date: 'AUG 19, 2025', read: 7, category: 'Buying a Home', img: 'assets/blog-rentvsbuy.avif', alt: 'Couple planning a home purchase' }
+  ];
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}';
+  }
+
+  renderVals() {
+    // Star field — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 0.5) continue;
+      const fade = Math.min(1, (dist - 0.5) / 0.55);
+      const size = 1.2 + rnd(seed++) * 2.6;
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    // ---- Blog list: filter + pagination ----
+    const perPage = Math.max(1, this.props.postsPerPage ?? 6);
+    const all = Component.POSTS;
+    const cat = this.state.category;
+    const filtered = cat === 'All' ? all : all.filter(p => p.category === cat);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+    const page = Math.min(this.state.page, totalPages);
+    const start = (page - 1) * perPage;
+    const pagePosts = filtered.slice(start, start + perPage).map(p => ({
+      ...p,
+      href: p.href ?? '#posts',
+      thumbStyle: {
+        width: '100%', height: '100%',
+        backgroundImage: 'url("' + p.img + '")',
+        backgroundSize: 'cover', backgroundPosition: 'center'
+      }
+    }));
+
+    const scrollToList = () => {
+      const el = document.getElementById('posts');
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 150, behavior: 'smooth' });
+    };
+    const goto = (p) => { this.setState({ page: p }); scrollToList(); };
+
+    const chipBase = {
+      font: "500 14px 'Archivo',Helvetica,sans-serif", color: '#fff', textDecoration: 'none',
+      padding: '8px 14px', borderRadius: '99px', whiteSpace: 'nowrap', transition: 'background .13s ease'
+    };
+    const catChips = ['All', 'Market Trends', 'Rates', 'Buying a Home', 'Refinancing', 'VA Loans'].map(label => ({
+      label,
+      onClick: (e) => { e.preventDefault(); this.setState({ category: label, page: 1 }); },
+      style: { ...chipBase, background: label === cat ? 'rgba(255,255,255,.26)' : 'transparent', fontWeight: label === cat ? 700 : 500 }
+    }));
+
+    const btnBase = {
+      font: "600 14px 'Archivo',Helvetica,sans-serif", textDecoration: 'none', borderRadius: '9px',
+      padding: '11px 16px', border: '1.5px solid #C9C2B4', color: '#131C3B', transition: 'background .15s ease',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '20px'
+    };
+    const pageButtons = Array.from({ length: totalPages }, (_, i) => {
+      const p = i + 1, active = p === page;
+      return {
+        label: String(p),
+        onClick: (e) => { e.preventDefault(); goto(p); },
+        style: active
+          ? { ...btnBase, background: '#131C3B', borderColor: '#131C3B', color: '#fff' }
+          : { ...btnBase, background: '#fff' }
+      };
+    });
+    const endStyle = (disabled) => ({
+      ...btnBase, background: '#fff',
+      opacity: disabled ? .4 : 1, pointerEvents: disabled ? 'none' : 'auto'
+    });
+
+    return {
+      pagePosts,
+      catChips,
+      pageButtons,
+      listHeading: cat === 'All' ? 'All posts' : cat,
+      resultsLabel: filtered.length === 0 ? 'No posts' :
+        'Showing ' + (start + 1) + '–' + Math.min(start + perPage, filtered.length) + ' of ' + filtered.length + ' posts',
+      prevPage: (e) => { e.preventDefault(); if (page > 1) goto(page - 1); },
+      nextPage: (e) => { e.preventDefault(); if (page < totalPages) goto(page + 1); },
+      prevStyle: endStyle(page <= 1),
+      nextStyle: endStyle(page >= totalPages),
+      stars,
+      showStats: this.props.showHeaderStats ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

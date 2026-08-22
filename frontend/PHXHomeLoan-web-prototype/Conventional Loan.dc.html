@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+a{color:#B4552D}
+a:hover{color:#8F401F}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-advisor{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
+.cl-adv{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cl-req{display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto 1fr;gap:clamp(18px,2.2vw,26px);align-items:stretch}
+.cl-req>.cl-req-a{grid-column:1;grid-row:1/3}
+.cl-req>.cl-req-b{grid-column:2;grid-row:1}
+.cl-req>.cl-req-c{grid-column:2;grid-row:2}
+@media(max-width:900px){.cl-req>.cl-req-a,.cl-req>.cl-req-b,.cl-req>.cl-req-c{grid-column:1;grid-row:auto}}
+@media(max-width:1000px){.cl-adv{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .refi-two,.refi-compare,.refi-advisor,.cl-req{grid-template-columns:1fr}
+  .refi-advisor-img{max-width:380px;margin:0 auto}
+}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 78px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px">
+      <a href="Homepage.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#fff"><span style="color: rgb(254, 183, 125); font-weight: 600; letter-spacing: 3.12px; text-transform: uppercase;">CONVENTIONAL MORTGAGE LOAN</span></span>
+    </nav>
+    <h1 style="margin:0;max-width:820px;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">The Conventional Mortgage Loan</h1>
+    <p style="margin:20px 0 0;max-width:620px;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Although it asks for a higher credit score and a sizable down payment, a conventional mortgage loan may be the perfect way to finance your home — stable rates, real flexibility, and no government program fees.</p>
+    <sc-if value="{{ showStats }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.14);display:flex;gap:clamp(32px,5vw,72px);flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">3% down</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">minimum for qualifying first-time buyers</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">620 score</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">the credit score to aim for</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">Up to 3%</div>
+          <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">of the home's value the seller can pay in closing costs</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<nav data-screen-label="Jump Nav" aria-label="On this page" data-acc="bg" style="position:sticky;top:86px;z-index:50;background:#B4552D;backdrop-filter:blur(10px)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:58px;display:flex;align-items:center;gap:8px;overflow-x:auto">
+    <span data-acc="on-accent-label" style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.72);margin-right:10px;white-space:nowrap">ON THIS PAGE</span>
+    <a href="#what" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">What they are</a>
+    <a href="#kinds" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Conforming vs. non-conforming</a>
+    <a href="#advantages" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Advantages</a>
+    <a href="#requirements" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Requirements</a>
+    <a href="#why" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Why conventional</a>
+  </div>
+</nav>
+
+<section id="what" data-screen-label="What They Are" style="background:#F7F4EE;padding:96px 40px">
+  <div class="refi-two" style="max-width:1280px;margin:0 auto">
+    <div>
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">THE BASICS</div>
+      <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What are conventional mortgage loans?</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Conventional mortgage loans are part of a loan program unique to private lenders — banks, credit unions, and mortgage companies. Because no government agency controls them, no agency can charge fees on them either.</p>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Most conventional mortgage loans have fixed rates that do not change during the life of the loan, although some are adjustable-rate mortgages. Many buyers are drawn to these loans because interest rates stay stable in the midst of unpredictable times.</p>
+      <div style="margin-top:10px;background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:28px 30px;display:flex;gap:24px;align-items:stretch;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <div style="font:600 19px 'Source Serif 4',Georgia,serif;color:#131C3B;margin-bottom:6px">The seller can help with closing costs</div>
+          <p style="margin:0;font:400 15px/1.65 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">On a conventional loan, the seller can cover closing costs up to 3% of the house's value — money that stays in your pocket at the closing table.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;border-left:1px solid #E7E1D6;padding-left:28px">
+          <div style="text-align:center"><div style="font:600 22px 'Source Serif 4',Georgia,serif;color:#131C3B">$200,000</div><div style="font:400 12px 'Archivo',Helvetica,sans-serif;color:#8A8F9C">home price</div></div>
+          <div style="font:400 18px 'Archivo',Helvetica,sans-serif;color:#C9C2B4">→</div>
+          <div style="text-align:center"><div data-acc="text" style="font:600 22px 'Source Serif 4',Georgia,serif;color:#B4552D">$6,000</div><div style="font:400 12px 'Archivo',Helvetica,sans-serif;color:#8A8F9C">seller-paid closing costs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kinds" data-screen-label="Conforming vs Non-Conforming" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:720px;margin-bottom:40px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">TWO CATEGORIES</div>
+      <h2 style="margin:0 0 20px;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What kinds of conventional mortgage loans are there?</h2>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">While conventional mortgage loans are the same by nature, a few key differences set them apart. Fannie Mae and Freddie Mac set dollar limits on conventional loans — where your loan falls relative to those limits determines its category.</p>
+    </div>
+    <div style="margin-bottom:24px;background:#131C3B;border-radius:14px;padding:22px 28px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+      <div style="font:600 26px 'Source Serif 4',Georgia,serif;color:#fff">$548,250</div>
+      <div style="font:400 15px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">the 2021 maximum conforming loan amount for most of the continental United States</div>
+    </div>
+    <div class="refi-compare">
+      <div style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:16px;padding:38px;display:flex;flex-direction:column;gap:20px">
+        <div>
+          <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:8px">WITHIN THE LIMITS</div>
+          <h3 style="margin:0;font:600 30px 'Source Serif 4',Georgia,serif;color:#131C3B">Conforming</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #E7E1D6;padding-top:20px">
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Falls within the Fannie Mae &amp; Freddie Mac terms and conditions</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Stays under the set dollar limit</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">An excellent option for most home buying situations</span></div>
+        </div>
+      </div>
+      <div style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:16px;padding:38px;display:flex;flex-direction:column;gap:20px">
+        <div>
+          <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:8px">BEYOND THE LIMITS</div>
+          <h3 style="margin:0;font:600 30px 'Source Serif 4',Georgia,serif;color:#131C3B">Non-Conforming</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #E7E1D6;padding-top:20px">
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Exceeds the Fannie Mae &amp; Freddie Mac dollar limits</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Includes Jumbo Loans, generally used for luxury homes with greater loan capacity</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start"><span data-acc="text" style="color:#B4552D;font:700 15px 'Archivo',Helvetica,sans-serif;line-height:1.55">✓</span><span style="font:400 15.5px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Example: an $800,000 jumbo loan surpasses the conforming limit</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="advantages" data-screen-label="Advantages" style="background:#F7F4EE;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:720px;margin-bottom:52px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">THREE KEY ADVANTAGES</div>
+      <h2 style="margin:0 0 20px;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What are the advantages of conventional mortgage loans?</h2>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Among the countless financing options available, conventional mortgage loans offer key advantages that make them a wise home loan decision.</p>
+    </div>
+    <div class="cl-adv">
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v9h14v-9"></path><path d="M12 12.5v4"></path><path d="M10 14.5h4"></path></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">01</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">They allow for a second home purchase</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Other programs such as VA Home Loans only allow the purchase of a primary residence. Conventional mortgage loans give you greater versatility — invest in a home to sell in the future, or buy a vacation home for your family.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path><path d="M9 11.5l2 2 4-4"></path></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">02</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">They give the choice of mortgage insurance</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">While FHA loans require lifetime mortgage insurance, conventional home loan participants only need it temporarily. Once the home's principal has been paid below 78%, you can decide to bypass the monthly payments entirely.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"></path><circle cx="7.5" cy="7.5" r="1.7"></circle><circle cx="16.5" cy="16.5" r="1.7"></circle></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">03</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">They stop additional program fees</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Because private lenders lead conventional mortgage loans, home buyers are protected from hidden government fees. Government-sponsored programs apply funding fees instead — VA Home Loans, for example, demand a 1.4 to 2.3% funding fee.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="requirements" data-screen-label="Requirements" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:720px;margin-bottom:52px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">ELIGIBILITY</div>
+      <h2 style="margin:0 0 20px;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What are conventional mortgage loan requirements?</h2>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Conventional mortgage loans carry incredible benefits for homebuyers but come with stricter requirements. To be eligible, you have to pay a certain down payment, keep a high enough credit score, and have a promising debt-to-income ratio.</p>
+    </div>
+    <div class="cl-req">
+      <div class="cl-req-a" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:16px;padding:38px">
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:8px">REQUIREMENT 01</div>
+        <h3 style="margin:0 0 12px;font:600 26px 'Source Serif 4',Georgia,serif;color:#131C3B">Down payment</h3>
+        <p style="margin:0 0 10px;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">First-time buyers may qualify with only a 3% down payment. In all other situations, the figure depends on your home buying status and the kind of conventional loan:</p>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid #E7E1D6">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">First-time home buyers</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">3%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid #E7E1D6">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">Experienced buyers, or income under 80% of your area's median</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">5%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid #E7E1D6">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">Adjustable-rate mortgages</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">5%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid #E7E1D6">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">Buying a second home</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">10%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0;border-bottom:1px solid #E7E1D6">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">Single-family homes</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">15%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:15px 0">
+            <span style="font:400 15.5px/1.5 'Archivo',Helvetica,sans-serif;color:#3D4356">Jumbo loans</span>
+            <span style="font:600 20px 'Source Serif 4',Georgia,serif;color:#131C3B;white-space:nowrap">20–40%</span>
+          </div>
+        </div>
+      </div>
+      <div class="cl-req-b" style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:16px;padding:38px">
+          <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:8px">REQUIREMENT 02</div>
+          <h3 style="margin:0 0 12px;font:600 26px 'Source Serif 4',Georgia,serif;color:#131C3B">Credit score &amp; DTI</h3>
+          <p style="margin:0 0 22px;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Since interest rates run lower for conventional mortgage loans than VA loans, your credit score has to be higher to compensate. And unlike most misconceptions, you can still have debt and qualify.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;border-top:1px solid #E7E1D6;padding-top:24px">
+            <div>
+              <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#131C3B">620</div>
+              <div style="font:400 13.5px/1.5 'Archivo',Helvetica,sans-serif;color:#8A8F9C;margin-top:4px">the credit score to aim for in the home loan market</div>
+            </div>
+            <div style="border-left:1px solid #E7E1D6;padding-left:32px">
+              <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#131C3B">&lt;50%</div>
+              <div style="font:400 13.5px/1.5 'Archivo',Helvetica,sans-serif;color:#8A8F9C;margin-top:4px">debt-to-income ratio accepted by most lenders</div>
+            </div>
+          </div>
+      </div>
+        <div class="cl-req-c" style="background:#131C3B;border-radius:16px;padding:32px 36px;display:flex;flex-direction:column;gap:16px;align-items:flex-start;justify-content:center">
+          <div>
+            <div style="font:600 20px 'Source Serif 4',Georgia,serif;color:#fff">Not sure where you fit?</div>
+            <div style="font:400 15px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65);margin-top:6px">Jimmy's team will map your down payment scenario in one honest conversation — no pressure, no obligation.</div>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:14px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Schedule Consult</a>
+            <a href="tel:4808008387" style="border:1.5px solid rgba(255,255,255,.35);color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:14px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s ease" style-hover="background:rgba(255,255,255,.1)">Call (480) 800-8387</a>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section id="why" data-screen-label="Why Conventional" style="background:#F7F4EE;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-advisor" style="max-width:1120px;margin:0 auto">
+    <img class="refi-advisor-img" src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, home loan advisor" style="width:100%;height:auto;display:block;border-radius:18px;background:#fff">
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">WHY CONVENTIONAL</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Your conventional mortgage Phoenix lender</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">For those who can fund a sizable down payment and have a good credit score, conventional mortgage loans can be an excellent financing solution — suited for families who are ready to purchase their dream home. When simplified, conventional home loans are not as intimidating as they seem.</p>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Luminate Bank works to simplify the home loan process so you can get to homeownership. We serve our clients and partner with them every step of the way. Give us a call, or visit our Phoenix office in person — we would be honored to assist you.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+        <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Start Your Application</a>
+        <a href="tel:4808008387" style="border:1.5px solid #C9C2B4;color:#131C3B;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:background .15s ease" style-hover="background:#fff">Call (480) 800-8387</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showHeaderStats&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Page header&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {};
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}';
+  }
+
+  renderVals() {
+    // Star field — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 0.5) continue;
+      const fade = Math.min(1, (dist - 0.5) / 0.55);
+      const size = 1.2 + rnd(seed++) * 2.6;
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      stars,
+      showStats: this.props.showHeaderStats ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

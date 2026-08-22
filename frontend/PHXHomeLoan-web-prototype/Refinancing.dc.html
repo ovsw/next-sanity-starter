@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&amp;family=Archivo:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F7F4EE;-webkit-font-smoothing:antialiased}
+@keyframes heroRise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFade{from{opacity:0}to{opacity:1}}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.blog-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:stretch}
+.blog-side{display:flex;flex-direction:column;gap:24px}
+.blog-side-card{display:grid;grid-template-columns:150px 1fr;flex:1 1 0}
+@media(max-width:1000px){
+  .blog-grid{grid-template-columns:1fr}
+  .blog-side{flex-direction:row}
+  .blog-side-card{grid-template-columns:1fr;grid-auto-rows:min-content;flex:1 1 0;min-width:0}
+  .blog-side-card .blog-side-thumb{aspect-ratio:16/9;height:auto}
+}
+@media(max-width:640px){
+  .blog-side{flex-direction:column}
+}
+@keyframes loveL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes loveR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.love-row{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.love-track{display:flex;gap:20px;width:max-content;will-change:transform}
+.love-row:hover .love-track{animation-play-state:paused}
+.love-card{flex:0 0 auto;width:360px;box-sizing:border-box}
+@media(max-width:820px){
+  .team-row,.team-row-rev{grid-template-columns:1fr!important;gap:26px!important}
+  .team-row-rev>*{order:0!important}
+  .team-row .team-img,.team-row-rev .team-img{max-width:420px}
+}
+.refi-two{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-how{display:grid;grid-template-columns:.9fr 1.4fr;gap:clamp(32px,5vw,80px);align-items:start}
+.refi-how-intro{position:sticky;top:172px}
+.refi-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;row-gap:52px}
+.refi-step{position:relative;display:grid;grid-template-columns:44px 1fr;column-gap:clamp(20px,2.5vw,32px);align-items:start}
+.refi-step::before{content:"";position:absolute;left:21.5px;top:52px;bottom:-44px;width:1px;background:#E7E1D6}
+.refi-step:last-child::before{display:none}
+.refi-step-num{width:44px;height:44px;border-radius:50%;border:1px solid #C9C2B4;background:#fff;display:flex;align-items:center;justify-content:center;font:600 19px 'Source Serif 4',Georgia,serif;color:#B4552D}
+.refi-step-body{padding-top:8px}
+.refi-step-title{margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B}
+.refi-step-sub{font:400 15px/1.5 'Archivo',Helvetica,sans-serif;color:#5B6172;margin-top:5px}
+.refi-step-copy{margin-top:16px;display:flex;flex-direction:column;gap:14px}
+.refi-step-copy p{margin:0;font:400 16px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty}
+.refi-why{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-table{display:grid;grid-template-columns:1.2fr 1fr 1fr}
+.refi-flex-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.refi-advisor{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
+@media(max-width:900px){
+  .refi-two,.refi-how,.refi-why,.refi-compare,.refi-flex-cards,.refi-advisor{grid-template-columns:1fr}
+  .refi-how-intro{position:static}
+  .refi-advisor-img{max-width:380px;margin:0 auto}
+}
+</style>
+</helmet>
+
+<dc-import name="PHX-Site-Header" home-href="Homepage.dc.html"></dc-import>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-screen-label="Page Header" style="position:relative;overflow:hidden;background:#0C1329;padding:74px 40px 78px">
+  <div style="position:absolute;inset:0;background:radial-gradient(760px 340px at 82% -10%,rgba(180,85,45,.28),transparent 68%),radial-gradient(680px 420px at 6% 118%,rgba(180,85,45,.14),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.7">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1280px;margin:0 auto">
+    <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:10px;font:500 13px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);margin-bottom:22px">
+      <a href="PHX Home Loan Homepage v2.dc.html" style="color:rgba(255,255,255,.62);text-decoration:none" style-hover="color:#fff">Home</a>
+      <span style="opacity:.5">/</span>
+      <span style="color:#fff"><span style="color: rgb(254, 183, 125); font-weight: 600; letter-spacing: 3.12px; text-transform: uppercase;">REFINANCING A HOME LOAN</span></span>
+    </nav>
+    
+    <h1 style="margin:0;max-width:820px;font:600 clamp(40px,4.6vw,60px)/1.08 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em;text-wrap:balance">What You Should Know Before You Refinance</h1>
+    <p style="margin:20px 0 0;max-width:620px;font:400 18px/1.65 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.72);text-wrap:pretty">Refinancing follows a straightforward process, but knowing what to expect, from application to closing, helps you get a home loan that's more affordable and better suited to your goals.</p>
+    <div style="margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.14);display:flex;gap:clamp(32px,5vw,72px);flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">30–45 days</div>
+        <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">typical time from application to closing</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">2–6% of loan value</div>
+        <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">typical total refinancing cost</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="font:600 30px 'Source Serif 4',Georgia,serif;color:#fff">3-day</div>
+        <div style="font:400 13.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.6)">grace period to cancel after closing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav data-screen-label="Jump Nav" aria-label="On this page" data-acc="bg" style="position:sticky;top:86px;z-index:50;background:#B4552D;backdrop-filter:blur(10px)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:58px;display:flex;align-items:center;gap:8px;overflow-x:auto">
+    <span data-acc="on-accent-label" style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.72);margin-right:10px;white-space:nowrap">ON THIS PAGE</span>
+    <a href="#meaning" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">What it means</a>
+    <a href="#how" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">How it works</a>
+    <a href="#why" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Why refinance</a>
+    <a href="#options" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Your options</a>
+    <a href="#refi-faq" data-acc="on-accent" style="font:500 14px 'Archivo',Helvetica,sans-serif;color:#fff;text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap;transition:background .13s ease" style-hover="background:rgba(255,255,255,.18)">Costs &amp; FAQ</a>
+  </div>
+</nav>
+
+<section id="meaning" data-screen-label="What It Means" style="background:#F7F4EE;padding:96px 40px">
+  <div class="refi-two" style="max-width:1280px;margin:0 auto">
+    <div>
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">THE BASICS</div>
+      <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What does home loan refinancing mean?</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">When you refinance your home loan, you essentially replace your current mortgage with a new one. The new lender pays off the former and offers you a new principal and refinance rate — an excellent way to get a personalized home loan that is more affordable.</p>
+      <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">People refinance for several reasons: lowering monthly payments, shortening the loan term, opting for more favorable terms and conditions, or taking advantage of the equity gained on the property.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how" data-screen-label="How It Works" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-how" style="max-width:1280px;margin:0 auto">
+    <div class="refi-how-intro">
+        <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">THE PROCESS — 5 STEPS</div>
+        <h2 style="margin:0 0 20px;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">How does refinancing a home work?</h2>
+        <p style="margin:0;font:400 17.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Like buying a new home, refinancing requires you to apply, get an appraisal of the house, and then close your loan. Technical elements like underwriting and locking in an interest rate are handled by your loan specialist. Typically it takes 30–45 days to complete — confirm the timeline with your lender.</p>
+      </div>
+      <ol class="refi-steps">
+        <li class="refi-step">
+          <div class="refi-step-num">1</div>
+          <div class="refi-step-body">
+            <h3 class="refi-step-title">Submit an application</h3>
+            <div class="refi-step-sub">You can stay with your current lender or shop around</div>
+            <div class="refi-step-copy">
+              <p>The process starts with applying with your lender — who could be your initial lender or a different one. You are at liberty to shop around for a better refinance option, and whoever your home loan lender is will pay off your current loan.</p>
+              <p>The lender will ask for the same information you supplied when you bought the home: your income, assets, debts (auto loan, credit card, student loans, etc.), recent bank statements, and credit score. If you are married, your lender may request your spouse's documents, and you might need recent tax returns ready if asked for additional documentation.</p>
+            </div>
+          </div>
+        </li>
+        <li class="refi-step">
+          <div class="refi-step-num">2</div>
+          <div class="refi-step-body">
+            <h3 class="refi-step-title">Underwriting</h3>
+            <div class="refi-step-sub">Your lender verifies everything you submitted</div>
+            <div class="refi-step-copy">
+              <p>Underwriting begins soon after you submit your application. At this stage, your lender reviews the information and documents you supplied to make sure everything checks out, including an appraisal to determine the value of the house.</p>
+              <p>If you are refinancing to lower your monthly payment, your home's value could afford you enough equity to get rid of private mortgage insurance — or make you eligible for a different kind of home loan with other long-term financial benefits.</p>
+            </div>
+          </div>
+        </li>
+        <li class="refi-step">
+          <div class="refi-step-num">3</div>
+          <div class="refi-step-body">
+            <h3 class="refi-step-title">Home appraisal</h3>
+            <div class="refi-step-sub">An estimate of your home's current value</div>
+            <div class="refi-step-copy">
+              <p>Your lender will order a house appraisal so they can approve you for a refinance loan. The appraiser visits your property, and afterward you'll receive an estimate of your home's value. To ensure it reflects the actual value, tidy up the property, fix any pending upgrades, and list out any upgrades you've implemented since you bought the home.</p>
+              <p>The appraisal helps determine what loan options are available to you — whether you'll get the loan amount you want, pay the difference out of pocket if your home's value is less than the loan amount, or reduce how much you're requesting.</p>
+            </div>
+          </div>
+        </li>
+        <li class="refi-step">
+          <div class="refi-step-num">4</div>
+          <div class="refi-step-body">
+            <h3 class="refi-step-title">Locking in your interest rate</h3>
+            <div class="refi-step-sub">Rate locks typically last 15–60 days</div>
+            <div class="refi-step-copy">
+              <p>Once approved, your lender may give you the option to lock your interest rate in case of fluctuations before the loan closes. Rate locks typically last 15–60 days. Alternatively, you can float your rate — you might get a lower one, but there's a chance you set yourself up for a higher rate instead.</p>
+            </div>
+          </div>
+        </li>
+        <li class="refi-step">
+          <div class="refi-step-num">5</div>
+          <div class="refi-step-body">
+            <h3 class="refi-step-title">Closing the new loan</h3>
+            <div class="refi-step-sub">Usually faster than closing a home purchase</div>
+            <div class="refi-step-copy">
+              <p>After underwriting, you can close your loan. The Closing Disclosure, a document your lender provides, shows you all the numbers before you sign. You may have to pay closing costs unless your lender bundles them into your new mortgage loan.</p>
+              <p>After closing, you have a grace period of 3 days to cancel if something goes wrong and you do not wish to continue.</p>
+            </div>
+          </div>
+        </li>
+      </ol>
+  </div>
+</section>
+
+<section data-screen-label="Rate Lock CTA" style="background:#131C3B;padding:60px 40px">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:28px 48px;flex-wrap:wrap">
+    <div style="max-width:600px">
+      <div style="font:600 clamp(24px,2.4vw,31px)/1.2 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.01em;text-wrap:balance">Wondering if now is the right time to lock a rate?</div>
+      <div style="font:400 16px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.68);margin-top:10px;text-wrap:pretty">Rates change constantly. Jimmy's team will tell you honestly — even if the answer is "wait."</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:14px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Schedule Consult</a>
+      <a href="tel:4808008387" style="border:1.5px solid rgba(255,255,255,.35);color:#fff;font:600 14.5px 'Archivo',Helvetica,sans-serif;padding:14px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s ease" style-hover="background:rgba(255,255,255,.1)">Call (480) 800-8387</a>
+    </div>
+  </div>
+</section>
+
+<section id="why" data-screen-label="Why Refinance" style="background:#F7F4EE;padding:96px 40px">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:720px;margin-bottom:52px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">FOUR GOOD REASONS</div>
+      <h2 style="margin:0;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Why refinancing your home loan is a good option</h2>
+    </div>
+    <div class="refi-why">
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">01</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">Change your loan term or reduce the monthly payment</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">If you have a 30-year loan and wish to pay it off faster, refinance to a shorter term like 15 years — this increases your monthly payment but reduces the overall interest you pay. You can also lengthen your loan term to lower your monthly payment.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v9h14v-9"></path><path d="M12 21v-6" stroke-dasharray="0"></path><path d="M9.5 15.5h5"></path></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">02</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">Take advantage of home equity</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">With a cash-out refinance, you can borrow more than you owe on your home and keep the difference. If upgrades increased your home's value, you can use that equity toward home repairs, debt consolidation, and other expenses.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"></path><circle cx="7.5" cy="7.5" r="1.7"></circle><circle cx="16.5" cy="16.5" r="1.7"></circle></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">03</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">Lower your interest rate</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Interest rates are constantly changing, so it's wise to refinance to a cheaper rate and save significant money in the long run. Even a slight percentage change, with the help of an experienced lender, will significantly lower your total interest over the loan's life.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E7E1D6;border-radius:16px;padding:34px 34px 38px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:44px;height:44px;border-radius:10px;background:rgba(180,85,45,.09);display:flex;align-items:center;justify-content:center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B4552D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13M17 8l-3-3M17 8l-3 3"></path><path d="M20 16H7M7 16l3-3M7 16l3 3"></path></svg>
+          </div>
+          <div style="font:600 15px 'Archivo',Helvetica,sans-serif;color:#C9C2B4;letter-spacing:.08em">04</div>
+        </div>
+        <h3 style="margin:0;font:600 23px/1.25 'Source Serif 4',Georgia,serif;color:#131C3B">Change your loan type</h3>
+        <p style="margin:0;font:400 15.5px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">If you started with an adjustable-rate mortgage (ARM) to save on interest, you can refinance to a fixed-rate mortgage when rates are low. You can also refinance an FHA loan to escape mortgage insurance premiums by switching to a different loan type.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="options" data-screen-label="Your Options" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="max-width:760px;margin-bottom:48px">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D;margin-bottom:18px">COMPARE YOUR OPTIONS</div>
+      <h2 style="margin:0 0 20px;font:600 clamp(30px,3vw,42px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">What refinancing options do I have?</h2>
+      <p style="margin:0;font:400 17px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">Start by comparing the two main fixed-rate term options, then look at other refinance structures if your goal is to access equity or reduce upfront costs.</p>
+    </div>
+
+    <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;margin-bottom:16px">FIXED-RATE TERM COMPARISON</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:56px">
+      <div class="refi-table" style="min-width:680px;border:1px solid #E7E1D6;border-radius:16px;overflow:hidden;background:#fff">
+        <!-- header row -->
+        <div style="background:#F7F4EE;padding:22px 24px;border-bottom:1px solid #E7E1D6;display:flex;align-items:flex-end;font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.14em;color:#8A8F9C">FEATURE</div>
+        <div style="background:#F7F4EE;padding:22px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.16em;color:#8A8F9C;margin-bottom:6px">FIXED-RATE</div>
+          <div style="font:600 24px 'Source Serif 4',Georgia,serif;color:#131C3B">15-Year</div>
+        </div>
+        <div style="background:#F7F4EE;padding:22px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6">
+          <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.16em;color:#8A8F9C;margin-bottom:6px">FIXED-RATE</div>
+          <div style="font:600 24px 'Source Serif 4',Georgia,serif;color:#131C3B">30-Year</div>
+        </div>
+
+        <!-- Best fit -->
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Best fit</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">A shorter term and lower rates</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Low monthly payments</div>
+
+        <!-- Monthly payments -->
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Monthly payments</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Not your main priority</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">A top priority</div>
+
+        <!-- Qualification -->
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Qualification</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#9A9384">Not the easier option</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Easier to qualify for</div>
+
+        <!-- Time horizon -->
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Time in your home</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">More than 10 years</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Less than 10 years</div>
+
+        <!-- Main tradeoff -->
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Main tradeoff</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Higher monthly payment, but less interest over time</div>
+        <div style="padding:20px 24px;border-bottom:1px solid #E7E1D6;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Lower monthly payment by lengthening the loan term</div>
+
+        <!-- Tax advantages -->
+        <div style="padding:20px 24px;font:600 14.5px 'Archivo',Helvetica,sans-serif;color:#131C3B;background:#FBF9F4">Tax advantages</div>
+        <div style="padding:20px 24px;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#9A9384">—</div>
+        <div style="padding:20px 24px;border-left:1px solid #E7E1D6;font:400 15px/1.55 'Archivo',Helvetica,sans-serif;color:#3D4356">Offers the maximum tax advantages</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:22px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:#8A8F9C;white-space:nowrap">OTHER REFINANCE STRUCTURES</div>
+      <div style="flex:1;height:1px;background:#E7E1D6"></div>
+    </div>
+    <div class="refi-flex-cards">
+      <div style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:14px;padding:30px 32px;display:flex;flex-direction:column;gap:12px">
+        <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.16em;color:#8A8F9C">TAP YOUR EQUITY</div>
+        <h3 style="margin:0;font:600 22px 'Source Serif 4',Georgia,serif;color:#131C3B">Cash-Out Refinance</h3>
+        <p style="margin:0;font:400 15px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">If you have equity in your home, you can refinance for an amount higher than your current mortgage and take the difference in cash — for home improvement, debt consolidation, and other expenses.</p>
+      </div>
+      <div style="background:#F7F4EE;border:1px solid #E7E1D6;border-radius:14px;padding:30px 32px;display:flex;flex-direction:column;gap:12px">
+        <div style="font:600 12px 'Archivo',Helvetica,sans-serif;letter-spacing:.16em;color:#8A8F9C">MINIMAL UPFRONT FEES</div>
+        <h3 style="margin:0;font:600 22px 'Source Serif 4',Georgia,serif;color:#131C3B">Low Upfront Cost Refinance</h3>
+        <div style="margin:0;font:400 15px/1.7 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty"><div>Refinance without paying as much out of pocket at closing, by accepting a slightly higher interest rate or by folding certain costs into the new loan, which can still make sense if the new terms are better than your current mortgage.</div></div>
+      </div>
+    </div>
+    <p style="margin:28px 0 0;font:400 15px 'Archivo',Helvetica,sans-serif;color:#8A8F9C;text-wrap:pretty">Not sure which fit makes the most sense? <a href="#contact" data-acc="text" style="color:#B4552D;font-weight:600;text-decoration:none" style-hover="text-decoration:underline">An advisor can help you compare</a> term length, monthly payment, and equity goals based on your situation.</p>
+  </div>
+</section>
+
+<section id="faq" data-screen-label="FAQ" style="padding: 110px 40px; background-color: #F7F4EE">
+  <div style="max-width:840px;margin:0 auto">
+    <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#B4552D;margin-bottom:14px;text-align:center">Loan Information</div>
+    <h2 style="margin:0 0 48px;font:600 clamp(34px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-align:center">Common questions, straight answers.</h2>
+    <div style="border-top:1px solid #E7E1D6">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <div style="border-bottom:1px solid #E7E1D6">
+          <div onClick="{{ f.toggle }}" role="button" style="display:flex;justify-content:space-between;align-items:center;gap:24px;padding:26px 4px;cursor:pointer">
+            <h3 style="margin:0;font:600 21px 'Source Serif 4',Georgia,serif;color:#131C3B">{{ f.q }}</h3>
+            <div style="{{ f.iconStyle }}">+</div>
+          </div>
+          <div style="{{ f.bodyStyle }}">
+            <p style="margin:0;padding:0 4px 28px;font:400 16px/1.7 'Archivo',Helvetica,sans-serif;color:#454B5E;max-width:720px;text-wrap:pretty">{{ f.a }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="advisors" data-screen-label="Advisors CTA" style="background:#fff;padding:96px 40px;border-top:1px solid #E7E1D6">
+  <div class="refi-advisor" style="max-width:1120px;margin:0 auto">
+    <div class="refi-advisor-img" style="position:relative;display:flex;justify-content:center;align-items:flex-end">
+      <div aria-hidden="true" style="position:absolute;left:8%;right:8%;bottom:0;top:16%;background:#F7F4EE;border-radius:220px 220px 24px 24px"></div>
+      <img src="assets/jimmy-portrait.png" alt="Jimmy Vercellino, home loan advisor" style="position:relative;width:96%;height:auto;display:block">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+      <div data-acc="text" style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:#B4552D">READY WHEN YOU ARE</div>
+      <h2 style="margin:0;font:600 clamp(30px,3.2vw,44px)/1.12 'Source Serif 4',Georgia,serif;color:#131C3B;letter-spacing:-.01em;text-wrap:balance">Our experienced home loan advisors can help you refinance</h2>
+      <p style="margin:0;font:400 16.5px/1.75 'Archivo',Helvetica,sans-serif;color:#3D4356;text-wrap:pretty">To obtain lower monthly payments and interest rates, you need a relatable advisor who can walk you through the process. Our team of experienced home loan specialists listens to your unique goals and starts your journey to achieving them — we not only educate you on your best options but genuinely care about your family winning your dream home.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+        <a href="#contact" data-acc="bg" style="background:#B4552D;color:#fff;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:filter .15s ease" style-hover="filter:brightness(1.08)">Start Your Application</a>
+        <a href="tel:4808008387" style="border:1.5px solid #C9C2B4;color:#131C3B;font:600 15px 'Archivo',Helvetica,sans-serif;padding:16px 28px;border-radius:9px;text-decoration:none;transition:background .15s ease" style-hover="background:#F7F4EE">Call (480) 800-8387</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Trust Band" style="background:#131C3B;padding:120px 40px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 400px at 50% 120%,rgba(180,85,45,.22),transparent 70%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <sc-for list="{{ stars }}" as="star" hint-placeholder-count="0">
+      <div style="{{ star.outerStyle }}"><div style="{{ star.dotStyle }}"></div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,84px);flex-wrap:wrap">
+    <div style="flex:0 0 auto;display:flex;justify-content:center">
+      <img src="assets/trophy.png" alt="Top 1% award trophy" style="height:clamp(320px,34vw,460px);width:auto;display:block;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))">
+    </div>
+    <div style="text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:22px;max-width:560px">
+      <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.26em;color:rgba(255,255,255,.55)">A TRACK RECORD YOU CAN VERIFY</div>
+      <h2 style="margin:0;font:600 clamp(44px,5vw,78px)/1.05 'Source Serif 4',Georgia,serif;color:#fff;letter-spacing:-.015em">“Top 1% Mortgage<br>Loan Originators”</h2>
+      <p style="margin:0;font:400 17px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.65)">in the U.S., 2019 — according to Mortgage Executive Magazine</p>
+      <a href="#contact" data-acc="bg" style="margin-top:14px;background:#B4552D;color:#fff;font:600 16px 'Archivo',Helvetica,sans-serif;padding:18px 34px;border-radius:9px;text-decoration:none;box-shadow:0 14px 40px -12px rgba(180,85,45,.7);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease" style-hover="filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 20px 50px -12px rgba(180,85,45,.85)">Schedule Consult</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" data-screen-label="Footer" style="background:#0C1329;padding:88px 40px 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:56px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="background:#fff;border-radius:10px;padding:14px 18px;align-self:flex-start"><img src="assets/logo-stacked.webp" alt="The Vercellino Team — a division of Luminate Bank" style="height:64px;width:auto;display:block"></div>
+        <div style="font:400 14.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.62)">NMLS ID 477166<br>Call: <a href="tel:6029085849" style="color:rgba(255,255,255,.85);text-decoration:none">602-908-5849</a><br>3602 E Campbell Ave,<br>Phoenix AZ 85018</div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">USEFUL RESOURCES</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Types of Mortgage Loans</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Conventional Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">FHA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Jumbo Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">C2P Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">VA Loan</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Refinancing</a>
+          <a href="#loans" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Mortgage Insurance</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">CONTACT JIMMY</div>
+        <div style="display:flex;flex-direction:column;gap:12px;font:400 14.5px/1.5 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78)">
+          <div style="color:#fff;font-weight:600">Jimmy Vercellino<br><span style="font-weight:400;color:rgba(255,255,255,.55);font-size:13px">NMLS# 184169</span></div>
+          <a href="tel:4808008387" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">480-800-8387</a>
+          <a href="mailto:jimmy.vercellino@goluminate.com" style="color:rgba(255,255,255,.78);text-decoration:none;word-break:break-all" style-hover="color:#fff">jimmy.vercellino@goluminate.com</a>
+          <a href="https://phxhomeloan.com" style="color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">phxhomeloan.com</a>
+        </div>
+      </div>
+      <div>
+        <div style="font:600 13px 'Archivo',Helvetica,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.45);margin-bottom:20px">FOLLOW</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a href="https://www.youtube.com/watch?v=OOfeMMtcOCI" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">YouTube</a>
+          <a href="https://twitter.com/phxhomeloan" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Twitter</a>
+          <a href="https://www.linkedin.com/in/jimmy-vercellino-29060930/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">LinkedIn</a>
+          <a href="http://www.facebook.com/TheVercellinoTeam" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Facebook</a>
+          <a href="https://www.instagram.com/jimmyvercellino_/" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Instagram</a>
+          <a href="https://www.google.com/maps/place/3602+E+Campbell+Ave,+Phoenix,+AZ+85018" style="font:400 14.5px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.78);text-decoration:none" style-hover="color:#fff">Google Maps</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:32px 0;display:flex;gap:32px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <p style="margin:0;font:400 12.5px/1.7 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.42);max-width:860px">This is not an offer to enter into an agreement. Not all customers will qualify. Information, rates and programs are subject to change without notice. All products are subject to credit and property approval. Other restrictions and limitations may apply. Equal Housing Lender.</p>
+      <div style="display:flex;gap:12px;flex-shrink:0">
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">NMLS</div>
+        <div style="border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:8px 12px;font:600 11px 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.55);letter-spacing:.06em">⌂ EQUAL HOUSING OPPORTUNITY</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.12);padding:24px 0 32px">
+      <p style="margin:0;font:400 12.5px/1.6 'Archivo',Helvetica,sans-serif;color:rgba(255,255,255,.38)">Copyright © 2019–2026 Luminate Bank, Member FDIC. NMLS ID 477166. Call: 1-877-505-1281. All rights reserved. | Website by OVS Websites.</p>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1F6E8C&quot;,&quot;options&quot;:[&quot;#B4552D&quot;,&quot;#8A6D3B&quot;,&quot;#1F6E8C&quot;,&quot;#131C3B&quot;],&quot;section&quot;:&quot;Brand&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;heroDim&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:55,&quot;min&quot;:20,&quot;max&quot;:85,&quot;step&quot;:5,&quot;unit&quot;:&quot;%&quot;,&quot;section&quot;:&quot;Hero&quot;,&quot;tsType&quot;:&quot;number&quot;},&quot;reviewsDark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;section&quot;:&quot;Reviews&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { faqOpen: 0, videoPlaying: false };
+
+  componentDidMount() { this.applyTweaks(); }
+  componentDidUpdate() { this.applyTweaks(); }
+
+  applyTweaks() {
+    const accent = this.props.accent ?? '#B4552D';
+    const dim = Math.min(1.6, (this.props.heroDim ?? 55) / 55);
+    let el = document.getElementById('phx-tweaks');
+    if (!el) { el = document.createElement('style'); el.id = 'phx-tweaks'; document.head.appendChild(el); }
+    el.textContent =
+      '[data-acc="bg"]{background-color:' + accent + ' !important}' +
+      '[data-acc="text"]{color:' + accent + ' !important}' +
+      '[data-acc="on-accent"]{color:#fff !important}' +
+      '[data-acc="on-accent-label"]{color:rgba(255,255,255,.72) !important}' +
+      '[data-hero-overlay]{opacity:' + dim + ' !important}' +
+      (this.props.reviewsDark
+        ? '#reviews-section{background:#0C1329 !important}' +
+          '#reviews-section [data-reviews-heading]{color:#fff !important}' +
+          '#reviews-section [data-reviews-sub]{color:rgba(255,255,255,.7) !important}' +
+          '#reviews-section .love-row{-webkit-mask:none !important;mask:none !important}' +
+          '#reviews-section [data-reviews-link]{color:#F5B98F !important}'
+        : '');
+  }
+
+  renderVals() {
+    const faqData = [
+      { q: 'What does it cost to refinance?', a: 'Your refinancing cost depends on your specific lender and your current home\'s value. In the average mortgage refinancing situation, you will pay between 2–6% of the total value of your loan.' },
+      { q: 'Can I make extra payments to pay off the loan quicker?', a: 'Depending on your specific loan and what your state allows, it could be possible to make extra payments to shorten the life of your loan. Additional payments applied directly to the principal can significantly decrease your loan\'s interest and the years you pay on it.' },
+      { q: 'How long does refinancing take?', a: 'Typically, it takes between 30–45 days to complete a home loan refinancing process, but you should confirm the timeline with your new lender. Closing a refinance is usually faster than closing a home purchase.' },
+      { q: 'Will refinancing affect my credit score?', a: 'Applying for a refinance typically causes a small, temporary dip in your credit score due to the hard inquiry and new account. Most borrowers see their score recover within a few months as they continue making on-time payments.' },
+      { q: 'Can I cancel after closing?', a: 'Yes — after closing you have a grace period of 3 days to cancel if something goes wrong and you do not wish to continue.' }
+    ];
+    const open = this.state.faqOpen;
+    const faqs = faqData.map((f, i) => ({
+      q: f.q,
+      a: f.a,
+      toggle: () => this.setState({ faqOpen: open === i ? -1 : i }),
+      iconStyle: {
+        width: '34px', height: '34px', borderRadius: '50%', border: '1.5px solid #C9C2B4',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        font: "400 20px 'Archivo',Helvetica,sans-serif", color: '#131C3B',
+        transition: 'transform .25s ease, background .25s ease',
+        transform: open === i ? 'rotate(45deg)' : 'rotate(0deg)',
+        background: open === i ? '#F7F4EE' : 'transparent'
+      },
+      bodyStyle: {
+        overflow: 'hidden', transition: 'max-height .3s ease, opacity .3s ease',
+        maxHeight: open === i ? '320px' : '0px',
+        opacity: open === i ? 1 : 0
+      }
+    }));
+
+    const reviews = [
+      { initial: 'M', name: 'Marcus & Elena T.', date: '2 weeks ago', text: 'Jimmy and his team walked us through every option instead of pushing one product. As a fellow veteran, he made the VA loan process feel effortless — we closed in 24 days with zero surprises.' },
+      { initial: 'S', name: 'Sarah K.', date: '1 month ago', text: 'First-time buyer, terrified of the process. The team explained everything in plain English, answered texts at 9pm, and got us a better rate than two big banks quoted. Cannot recommend enough.' },
+      { initial: 'D', name: 'David R.', date: '1 month ago', text: 'We refinanced with Jimmy after a friend\u2019s recommendation. Communication was constant and honest — including telling us when waiting a month would save us money. That candor is rare.' },
+      { initial: 'A', name: 'Alyssa M.', date: '2 months ago', text: 'Our construction-to-perm loan had a dozen moving parts and the Vercellino Team handled every one. One closing, one set of fees, exactly as promised on day one.' },
+      { initial: 'J', name: 'James & Priya N.', date: '3 months ago', text: 'Jumbo loan on a tight timeline. Jimmy\u2019s team coordinated with our realtor and title company so smoothly we barely had to lift a finger. Professional from first call to final signature.' },
+      { initial: 'C', name: 'Carlos G.', date: '3 months ago', text: 'They found an FHA path for us when another lender said no. Six months later we were homeowners. These people genuinely care about getting you the right loan, not just any loan.' },
+      { initial: 'R', name: 'Rebecca H.', date: '3 months ago', text: 'Jimmy treats you like family. He sat with my parents for two hours explaining a reverse-mortgage decision with zero pressure. That\u2019s integrity you can\u2019t fake.' },
+      { initial: 'T', name: 'Tyler B.', date: '4 months ago', text: 'Self-employed with messy income docs. Every other lender bailed. Jimmy\u2019s team structured it, explained it, and closed it. Absolute professionals.' },
+      { initial: 'N', name: 'Nicole & Sam P.', date: '4 months ago', text: 'We\u2019ve now bought two homes with the Vercellino Team. There was never a question they wouldn\u2019t answer or a call they didn\u2019t return the same day.' },
+      { initial: 'K', name: 'Kevin O.', date: '5 months ago', text: 'The rate lock advice alone saved us thousands. Jimmy watches the market like a hawk and actually tells you what he\u2019d do if it were his own money.' },
+      { initial: 'L', name: 'Laura V.', date: '5 months ago', text: 'From pre-approval to keys in 21 days. Their process is a well-oiled machine and somehow still feels personal. Best real-estate decision we made.' },
+      { initial: 'B', name: 'Brandon & Mia F.', date: '5 months ago', text: 'As a military family we\u2019ve worked with a lot of lenders. Nobody understands the VA loan like Jimmy. He fought for our appraisal and it made all the difference.' },
+      { initial: 'G', name: 'Grace L.', date: '6 months ago', text: 'Honest, patient, and genuinely kind. The team never once made me feel like a dumb question was a dumb question. Refinanced and lowered my payment by $340/mo.' },
+      { initial: 'W', name: 'Walter S.', date: '6 months ago', text: 'I interviewed four mortgage originators. Jimmy was the only one who asked about my goals before quoting a number. That told me everything.' },
+      { initial: 'E', name: 'Emily & Dan R.', date: '7 months ago', text: 'They caught an error the title company made that would\u2019ve cost us at closing. Detail-oriented doesn\u2019t begin to describe this team.' },
+      { initial: 'P', name: 'Priscilla A.', date: '7 months ago', text: 'Moved from out of state and did the whole thing remotely. E-sign, video calls, constant updates. Flawless. I recommend them to everyone I know.' },
+      { initial: 'H', name: 'Hector M.', date: '8 months ago', text: 'Bad credit history from years ago had me convinced I\u2019d never own. Jimmy laid out a real plan, and 10 months later I closed on my first house.' },
+      { initial: 'J', name: 'Jordan T.', date: '9 months ago', text: 'Responsive, transparent, and calm under pressure when our closing date got moved twice. The Vercellino Team is the real deal.' }
+    ];
+    const third = Math.ceil(reviews.length / 3);
+    const r1 = reviews.slice(0, third);
+    const r2 = reviews.slice(third, third * 2);
+    const r3 = reviews.slice(third * 2);
+
+    // Star field for the Trust Band — deterministic pseudo-random, scattered (not a grid),
+    // cleared out of the central text zone and fading in toward the edges.
+    const rnd = (n) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const stars = [];
+    let seed = 1;
+    for (let i = 0; i < 90; i++) {
+      const x = rnd(seed++) * 100;
+      const y = rnd(seed++) * 100;
+      const dx = (x - 50) / 50, dy = (y - 50) / 46;
+      const dist = Math.sqrt(dx * dx + dy * dy);       // 0 center → ~1.4 corner
+      if (dist < 0.5) continue;                         // keep center clear for text
+      const fade = Math.min(1, (dist - 0.5) / 0.55);    // ramp brightness outward
+      const size = 1.2 + rnd(seed++) * 2.6;             // 1.2 – 3.8px
+      const bright = 0.45 + rnd(seed++) * 0.55;
+      const glow = size * (1.6 + rnd(seed++) * 1.4);
+      const dur = 2.6 + rnd(seed++) * 4.5;
+      const delay = -rnd(seed++) * dur;
+      stars.push({
+        outerStyle: {
+          position: 'absolute', left: x + '%', top: y + '%',
+          transform: 'translate(-50%,-50%)',
+          opacity: (fade * bright).toFixed(3)
+        },
+        dotStyle: {
+          width: size.toFixed(2) + 'px', height: size.toFixed(2) + 'px',
+          borderRadius: '50%', background: '#fff',
+          boxShadow: `0 0 ${glow.toFixed(1)}px ${(glow * 0.35).toFixed(1)}px rgba(255,255,255,.55)`,
+          animation: `twinkle ${dur.toFixed(2)}s ease-in-out ${delay.toFixed(2)}s infinite`,
+          willChange: 'opacity, transform'
+        }
+      });
+    }
+
+    return {
+      faqs,
+      stars,
+      row1: [...r1, ...r1],
+      row2: [...r2, ...r2],
+      row3: [...r3, ...r3],
+      videoPlaying: this.state.videoPlaying,
+      videoIdle: !this.state.videoPlaying,
+      playVideo: () => this.setState({ videoPlaying: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

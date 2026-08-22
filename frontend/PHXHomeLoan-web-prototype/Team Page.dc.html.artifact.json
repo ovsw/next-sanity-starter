@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "Team Page.dc.html",
+  "entry": "Team Page.dc.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-07-20T13:56:22.386Z",
+  "updatedAt": "2026-07-20T13:56:22.386Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}
