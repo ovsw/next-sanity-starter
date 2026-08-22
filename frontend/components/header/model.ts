@@ -1,5 +1,6 @@
 import { stegaClean } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
+import { siteName } from "@/lib/site-name";
 import type { SETTINGS_QUERY_RESULT } from "@/sanity.types";
 import type { NavigationIconModel } from "./navigation-icon";
 
@@ -106,7 +107,8 @@ function toLogoModel(source: unknown): HeaderLogoModel | null {
 export function createHeaderBrandModel(
   settings: SETTINGS_QUERY_RESULT,
 ): HeaderBrandModel | null {
-  const label = settings?.siteName?.trim();
+  if (!settings) return null;
+  const label = settings.siteName?.trim() || siteName;
   if (!label) return null;
   const logo = settings?.logo as RawLogoGroup;
   return {

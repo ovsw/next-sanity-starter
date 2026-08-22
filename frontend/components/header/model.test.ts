@@ -3,6 +3,7 @@ import {
   createHeaderBrandModel,
   createHeaderNavigationModel,
 } from "./model";
+import { siteName } from "@/lib/site-name";
 
 const testSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 22h18"></path></svg>';
@@ -108,10 +109,13 @@ describe("createHeaderNavigationModel", () => {
     expect(model).toEqual({ items: [], actions: [] });
   });
 
-  it("uses only the authored Sanity identity", () => {
+  it("uses authored identity and supports settings documents from before siteName", () => {
     expect(createHeaderBrandModel(null)).toBeNull();
     expect(
       createHeaderBrandModel({ siteName: "Northline", logo: null } as never),
     ).toEqual({ dark: null, label: "Northline", light: null });
+    expect(
+      createHeaderBrandModel({ siteName: null, logo: null } as never),
+    ).toEqual({ dark: null, label: siteName, light: null });
   });
 });

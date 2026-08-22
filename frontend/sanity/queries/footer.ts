@@ -29,8 +29,8 @@ export const FOOTER_QUERY = defineQuery(`
       heading,
       links[]${linkProjection}
     },
-    legalLinks[]${linkProjection},
-    copyrightStartYear,
-    copyrightOwner
+    "legalLinks": coalesce(legalLinks, compliance.legalLinks)[]${linkProjection},
+    "copyrightStartYear": coalesce(copyrightStartYear, compliance.copyrightStartYear),
+    "copyrightOwner": coalesce(copyrightOwner, compliance.copyrightOwner)
   }
 `);

@@ -1,4 +1,5 @@
 import { urlFor } from "@/sanity/lib/image";
+import { siteName } from "@/lib/site-name";
 
 export type FooterLinkModel = {
   key: string;
@@ -153,7 +154,7 @@ export function createFooterModel(
   currentYear: number,
 ): FooterModel | null {
   if (!settings) return null;
-  const label = settings?.siteName?.trim();
+  const label = settings.siteName?.trim() || siteName;
   const owner = text(raw?.copyrightOwner);
   const startYear = raw?.copyrightStartYear;
   if (

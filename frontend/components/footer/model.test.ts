@@ -4,6 +4,7 @@ import {
   type RawFooter,
   type RawFooterSettings,
 } from "./model";
+import { siteName } from "@/lib/site-name";
 
 const rawLink = (
   key: string,
@@ -65,11 +66,15 @@ describe("createFooterModel", () => {
     expect(model?.copyrightYears).toBe("2024-2026");
   });
 
-  it("returns unavailable when authored identity or required footer data is missing", () => {
-    expect(createFooterModel(rawFooter, null, 2026)).toBeNull();
+  it("supports settings documents from before siteName", () => {
     expect(
-      createFooterModel(rawFooter, { ...settings, siteName: null }, 2026),
-    ).toBeNull();
+      createFooterModel(rawFooter, { ...settings, siteName: null }, 2026)
+        ?.brand.label,
+    ).toBe(siteName);
+  });
+
+  it("returns unavailable when settings or required footer data is missing", () => {
+    expect(createFooterModel(rawFooter, null, 2026)).toBeNull();
     expect(
       createFooterModel(
         { ...rawFooter, copyrightOwner: null },
