@@ -1,7 +1,7 @@
 [
   {
     "type": "type",
-    "name": "helpCard",
+    "name": "keyDetails",
     "value": {
       "type": "object",
       "attributes": {
@@ -12,25 +12,13 @@
           },
           "optional": true
         },
-        "body": {
+        "items": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "ctaLabel": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "ctaLink": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "customUrl"
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
           },
           "optional": true
         }
@@ -70,7 +58,7 @@
   },
   {
     "type": "type",
-    "name": "keyDetails",
+    "name": "helpCard",
     "value": {
       "type": "object",
       "attributes": {
@@ -81,13 +69,25 @@
           },
           "optional": true
         },
-        "items": {
+        "body": {
           "type": "objectAttribute",
           "value": {
-            "type": "array",
-            "of": {
-              "type": "string"
-            }
+            "type": "string"
+          },
+          "optional": true
+        },
+        "ctaLabel": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "ctaLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "customUrl"
           },
           "optional": true
         }
@@ -469,7 +469,7 @@
   },
   {
     "type": "type",
-    "name": "phxBenefitCard.icon",
+    "name": "featureGridItem.icon",
     "value": {
       "type": "object",
       "attributes": {
@@ -993,7 +993,7 @@
                   "type": "objectAttribute",
                   "value": {
                     "type": "inline",
-                    "name": "phxBenefitCard.icon"
+                    "name": "featureGridItem.icon"
                   },
                   "optional": true
                 },
@@ -1016,7 +1016,7 @@
                   "type": "objectAttribute",
                   "value": {
                     "type": "string",
-                    "value": "phxBenefitCard"
+                    "value": "featureGridItem"
                   }
                 }
               },
@@ -5272,21 +5272,6 @@
                 }
               }
             }
-          },
-          {
-            "type": "object",
-            "attributes": {
-              "_key": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string"
-                }
-              }
-            },
-            "rest": {
-              "type": "inline",
-              "name": "code"
-            }
           }
         ]
       }
@@ -5948,6 +5933,43 @@
                 "value": {
                   "type": "string",
                   "value": "table"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "attributes": {
+              "title": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "body": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "callout"
                 }
               }
             },
@@ -7090,13 +7112,6 @@
         },
         "optional": true
       },
-      "nmlsId": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "email": {
         "type": "objectAttribute",
         "value": {
@@ -7912,6 +7927,66 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "benefitCards"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "storyFeature"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "faqAccordion"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "teamMembers"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "ctaBanner"
                 }
               },
@@ -8017,21 +8092,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "faqAccordion"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "awardCta"
                 }
               },
@@ -8048,21 +8108,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "pageHeader"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "storyFeature"
                 }
               },
               {
@@ -8182,21 +8227,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "teamMembers"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "advisorCta"
                 }
               },
@@ -8213,21 +8243,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "processSteps"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "benefitCards"
                 }
               },
               {
@@ -8373,6 +8388,66 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "benefitCards"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "storyFeature"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "faqAccordion"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "teamMembers"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "ctaBanner"
                 }
               },
@@ -8478,21 +8553,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "faqAccordion"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "awardCta"
                 }
               },
@@ -8509,21 +8569,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "pageHeader"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "storyFeature"
                 }
               },
               {
@@ -8643,21 +8688,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "teamMembers"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "advisorCta"
                 }
               },
@@ -8674,21 +8704,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "processSteps"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "benefitCards"
                 }
               },
               {
@@ -8922,6 +8937,13 @@
               },
               "optional": true
             },
+            "alt": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "_type": {
               "type": "objectAttribute",
               "value": {
@@ -8937,7 +8959,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "inline",
-          "name": "block-content"
+          "name": "simpleRichText"
         },
         "optional": true
       },
@@ -9575,6 +9597,66 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "benefitCards"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "storyFeature"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "faqAccordion"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "teamMembers"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "ctaBanner"
                 }
               },
@@ -9680,21 +9762,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "faqAccordion"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "awardCta"
                 }
               },
@@ -9711,21 +9778,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "pageHeader"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "storyFeature"
                 }
               },
               {
@@ -9845,21 +9897,6 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "teamMembers"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
                   "name": "advisorCta"
                 }
               },
@@ -9876,21 +9913,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "processSteps"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "benefitCards"
                 }
               },
               {
@@ -9980,53 +10002,6 @@
           "name": "slug"
         },
         "optional": true
-      }
-    }
-  },
-  {
-    "name": "code",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "code"
-          }
-        },
-        "language": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "filename": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "code": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "highlightedLines": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "array",
-            "of": {
-              "type": "number"
-            }
-          },
-          "optional": true
-        }
       }
     }
   },

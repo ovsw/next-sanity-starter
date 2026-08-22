@@ -2,8 +2,12 @@ import { render, screen } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { describe, expect, it } from "vitest";
 import CtaBanner from "./cta-banner";
+import BenefitCards from "./benefit-cards";
+import FaqAccordion from "./faq-accordion";
 import Hero from "./hero";
 import RichTextBlock from "./rich-text-block";
+import StoryFeature from "./story-feature";
+import TeamMembers from "./team-members";
 
 const paragraph = (key: string, text: string) => ({
   _key: key,
@@ -87,5 +91,102 @@ describe("core Page Builder sections", () => {
     expect(
       screen.getByRole("link", { name: "Start a conversation" }),
     ).toHaveAttribute("href", "/contact");
+  });
+
+  it("renders reusable marketing sections with semantic content", () => {
+    const featureGrid = {
+      _key: "features",
+      _type: "benefitCards",
+      cards: [
+        {
+          _key: "feature-one",
+          _type: "featureGridItem",
+          body: [paragraph("feature-body", "Short, useful context.")],
+          icon: null,
+          title: "Reusable content blocks",
+        },
+      ],
+      intro: "Common sections for marketing pages.",
+      title: "Feature grid",
+    } as unknown as ComponentProps<typeof BenefitCards>;
+    const { rerender } = render(<BenefitCards {...featureGrid} />);
+
+    expect(
+      screen.getByRole("heading", { name: "Feature grid" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Reusable content blocks" }),
+    ).toBeInTheDocument();
+
+    const imageAndText = {
+      _key: "image-text",
+      _type: "storyFeature",
+      buttons: [],
+      image: null,
+      keyDetails: {
+        items: ["Reusable", "Neutral"],
+        title: "Details",
+      },
+      richText: [paragraph("story-copy", "Story context visitors can use.")],
+      title: "Image and text",
+    } as unknown as ComponentProps<typeof StoryFeature>;
+    rerender(<StoryFeature {...imageAndText} />);
+
+    expect(
+      screen.getByRole("heading", { name: "Image and text" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Reusable")).toBeInTheDocument();
+
+    const faqSection = {
+      _key: "faq",
+      _type: "faqAccordion",
+      faqs: [
+        {
+          _id: "faq-one",
+          _key: "faq-one",
+          _type: "faq",
+          answer: [paragraph("faq-answer", "Use Sanity to manage it.")],
+          title: "How is this content reused?",
+        },
+      ],
+      title: "Questions",
+    } as unknown as ComponentProps<typeof FaqAccordion>;
+    rerender(<FaqAccordion {...faqSection} />);
+
+    expect(
+      screen.getByRole("button", { name: /How is this content reused/i }),
+    ).toBeInTheDocument();
+
+    const team = {
+      _key: "team",
+      _type: "teamMembers",
+      members: [
+        {
+          _key: "person-one",
+          _ref: "person-one",
+          _type: "reference",
+          document: {
+            _id: "person-one",
+            _type: "teamMember",
+            bio: [paragraph("person-bio", "Leads client strategy.")],
+            email: "hello@example.com",
+            image: null,
+            name: "Avery Stone",
+            phone: null,
+            role: "Founder",
+            sortOrder: 1,
+          },
+        },
+      ],
+      title: "Team",
+    } as unknown as ComponentProps<typeof TeamMembers>;
+    rerender(<TeamMembers {...team} />);
+
+    expect(screen.getByRole("heading", { name: "Team" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Avery Stone" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Email Avery" })).toHaveAttribute(
+      "href",
+      "mailto:hello@example.com",
+    );
   });
 });

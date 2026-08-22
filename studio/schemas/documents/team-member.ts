@@ -7,7 +7,10 @@ export default defineType({
   type: "document",
   icon: UserRound,
   description:
-    "A person on the PHX Home Loan team whose profile can be reused on team pages and related content.",
+    "A reusable person profile that can be selected in team sections.",
+  initialValue: {
+    role: "Team Role",
+  },
   fields: [
     defineField({
       name: "name",
@@ -22,14 +25,7 @@ export default defineType({
       type: "string",
       title: "Role",
       description:
-        "The team member's job title or public-facing role, such as Producing Branch Manager.",
-    }),
-    defineField({
-      name: "nmlsId",
-      type: "string",
-      title: "NMLS ID",
-      description:
-        "The team member's individual NMLS identifier, shown without the NMLS label.",
+        "The team member's job title or public-facing responsibility.",
     }),
     defineField({
       name: "email",
@@ -104,7 +100,7 @@ export default defineType({
     },
     prepare: ({ media, role, title }) => ({
       title: title || "Unnamed Team Member",
-      subtitle: role || "No role set",
+      subtitle: role || "Reusable profile",
       media,
     }),
   },

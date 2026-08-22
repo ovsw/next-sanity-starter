@@ -3,11 +3,19 @@ import { defineField, type ArrayOfObjectsInputProps } from "sanity";
 export const generalPageBuilderBlockTypes = [
   "hero",
   "richTextBlock",
+  "benefitCards",
+  "storyFeature",
+  "faqAccordion",
+  "teamMembers",
   "ctaBanner",
 ] as const;
 
 export const contentPageBuilderBlockTypes = [
   "richTextBlock",
+  "benefitCards",
+  "storyFeature",
+  "faqAccordion",
+  "teamMembers",
   "ctaBanner",
 ] as const;
 
@@ -23,10 +31,8 @@ export const legacyBlockTypes = [
   "phxEmbedSocialReviews",
   "homebotWidget",
   "latestArticles",
-  "faqAccordion",
   "awardCta",
   "pageHeader",
-  "storyFeature",
   "bigVideoFeature",
   "editorialChapter",
   "youtubeChannelFeature",
@@ -34,10 +40,8 @@ export const legacyBlockTypes = [
   "locationMap",
   "personContactCta",
   "contactForm",
-  "teamMembers",
   "advisorCta",
   "processSteps",
-  "benefitCards",
   "comparisonTable",
   "loanRequirements",
 ] as const;
@@ -66,6 +70,9 @@ function validateBlocks(
   if (heroIndexes.length === 1 && heroIndexes[0] !== 0) {
     return "The Hero section must be the first section";
   }
+  const faqCount =
+    blocks?.filter((block) => block?._type === "faqAccordion").length ?? 0;
+  if (faqCount > 1) return "Add no more than one FAQ section";
   return true;
 }
 

@@ -39,16 +39,38 @@ const storyRichTextField = defineField({
 
 export default defineType({
   name: "storyFeature",
-  title: "Story Feature",
+  title: "Image and Text",
   type: "object",
   icon: BookOpenText,
-  description: "An editorial story with a featured image, optional key details, and actions",
+  description:
+    "A reusable image-and-text section for a story, service, or point of view.",
+  initialValue: {
+    eyebrow: "Story",
+    title: "Pair a useful image with clear editorial context.",
+    richText: [
+      {
+        _key: "starter-image-text-body",
+        _type: "block",
+        children: [
+          {
+            _key: "starter-image-text-span",
+            _type: "span",
+            marks: [],
+            text: "Replace this sample with the context visitors need before they continue.",
+          },
+        ],
+        markDefs: [],
+        style: "normal",
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "useCreamBackground",
-      title: "Use Cream Background",
+      title: "Use Alternate Background",
       type: "boolean",
-      description: "Turn on to use a cream background for this section. Leave off for white.",
+      description:
+        "Turn on to separate this section from the surrounding page content.",
       initialValue: false,
     }),
     defineField({
@@ -125,8 +147,8 @@ export default defineType({
   preview: {
     select: { title: "title", media: "image" },
     prepare: ({ title, media }) => ({
-      title: title || "Untitled Story Feature",
-      subtitle: "Story Feature",
+      title: title || "Untitled Image and Text",
+      subtitle: "Image and Text",
       media,
     }),
   },
