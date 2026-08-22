@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { randomBytes } from "node:crypto";
-import { access, mkdir, writeFile } from "node:fs/promises";
+import { access, chmod, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { createInterface } from "node:readline/promises";
@@ -12,6 +12,8 @@ const ARGUMENTS = {
   "--site-url": "siteUrl",
   "--project-id": "projectId",
   "--dataset": "dataset",
+  "--read-token": "readToken",
+  "--sanity-auth-token": "sanityAuthToken",
   "--studio-hostname": "studioHostname",
 };
 
@@ -26,6 +28,11 @@ export function validateSetupValues(input) {
   const siteName = requiredValue("site name", input.siteName);
   const projectId = requiredValue("Sanity project ID", input.projectId);
   const dataset = requiredValue("Sanity dataset", input.dataset);
+  const readToken = requiredValue("Sanity API read token", input.readToken);
+  const sanityAuthToken = requiredValue(
+    "Sanity auth token",
+    input.sanityAuthToken,
+  );
   const studioHostname = normalizeStudioHostname(
     requiredValue("Studio hostname", input.studioHostname),
   );
@@ -45,7 +52,15 @@ export function validateSetupValues(input) {
     );
   }
 
-  return { dataset, projectId, siteName, siteUrl, studioHostname };
+  return {
+    dataset,
+    projectId,
+    readToken,
+    sanityAuthToken,
+    siteName,
+    siteUrl,
+    studioHostname,
+  };
 }
 
 function normalizeSiteUrl(value) {
@@ -93,6 +108,7 @@ export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).to
       `NEXT_PUBLIC_SANITY_PROJECT_ID=${config.projectId}`,
       `NEXT_PUBLIC_SANITY_DATASET=${config.dataset}`,
       `OG_IMAGE_SECRET=${ogImageSecret}`,
+      `SANITY_API_READ_TOKEN=${config.readToken}`,
       "",
     ].join("\n"),
     studio: [
@@ -102,6 +118,7 @@ export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).to
       `SANITY_STUDIO_PROJECT_ID=${config.projectId}`,
       `SANITY_STUDIO_DATASET=${config.dataset}`,
       `SANITY_STUDIO_HOSTNAME=${config.studioHostname}`,
+      `SANITY_AUTH_TOKEN=${config.sanityAuthToken}`,
       "",
     ].join("\n"),
   };
@@ -132,7 +149,12 @@ export async function writeSetupFiles(rootDirectory, values, { force = false } =
   await Promise.all(
     targets.map(async ([target, contents]) => {
       await mkdir(path.dirname(target), { recursive: true });
-      await writeFile(target, contents, { encoding: "utf8", flag: "w" });
+      await writeFile(target, contents, {
+        encoding: "utf8",
+        flag: "w",
+        mode: 0o600,
+      });
+      await chmod(target, 0o600);
     }),
   );
 }
@@ -155,11 +177,13 @@ function parseArguments(argumentsList) {
 
 async function collectValues(provided) {
   const prompts = [
-    ["siteName", "Site name"],
-    ["siteUrl", "Public URL", "http://localhost:3000"],
-    ["projectId", "Sanity project ID"],
-    ["dataset", "Sanity dataset", "production"],
-    ["studioHostname", "Studio hostname"],
+    ["siteName", "Site name", undefined, false],
+    ["siteUrl", "Public URL", "http://localhost:3000", false],
+    ["projectId", "Sanity project ID", undefined, false],
+    ["dataset", "Sanity dataset", "production", false],
+    ["readToken", "Sanity API read token", undefined, true],
+    ["sanityAuthToken", "Sanity auth token", undefined, true],
+    ["studioHostname", "Studio hostname", undefined, false],
   ];
   const values = { ...provided };
   const missing = prompts.filter(([key]) => !values[key]);
@@ -171,15 +195,30 @@ async function collectValues(provided) {
 
   const terminal = createInterface({ input: process.stdin, output: process.stdout });
   try {
-    for (const [key, label, defaultValue] of missing) {
+    for (const [key, label, defaultValue, secret] of missing) {
       const suffix = defaultValue ? ` [${defaultValue}]` : "";
-      const answer = await terminal.question(`${label}${suffix}: `);
+      const answer = secret
+        ? await askSecret(terminal, `${label}${suffix}: `)
+        : await terminal.question(`${label}${suffix}: `);
       values[key] = answer.trim() || defaultValue;
     }
   } finally {
     terminal.close();
   }
   return values;
+}
+
+async function askSecret(terminal, prompt) {
+  const writeToOutput = terminal._writeToOutput;
+  terminal._writeToOutput = () => {};
+  try {
+    terminal.output.write(prompt);
+    const answer = await terminal.question("");
+    terminal.output.write("\n");
+    return answer;
+  } finally {
+    terminal._writeToOutput = writeToOutput;
+  }
 }
 
 async function main() {
