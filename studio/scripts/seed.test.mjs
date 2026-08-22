@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -120,4 +121,11 @@ test("unseed refuses partial starter datasets", async () => {
     /missing Starter seed documents: settings/,
   );
   assert.equal(client.calls.commits.length, 0);
+});
+
+test("seed reads Studio env directly instead of the legacy root env file", () => {
+  const source = readFileSync(new URL("./seed.mjs", import.meta.url), "utf8");
+
+  assert.doesNotMatch(source, /rootDirectory,\s*"\.env\.local"/);
+  assert.match(source, /rootDirectory,\s*"studio",\s*"\.env\.local"/);
 });

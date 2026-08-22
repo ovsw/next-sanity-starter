@@ -15,6 +15,8 @@ Requirements:
 - Node.js 24.19.0
 - pnpm 11.10.0
 - An existing Sanity project ID
+- A Sanity API read token
+- A Sanity auth token
 - An available Studio hostname
 
 Install dependencies and run the guided setup:
@@ -24,15 +26,11 @@ pnpm install
 pnpm setup
 ```
 
-Setup asks for the site name, public URL, Sanity project ID, dataset, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
+Setup asks for the site name, public URL, Sanity project ID, dataset, Sanity API read token, Sanity auth token, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
 
 If local env files already exist, setup stops instead of replacing them. Use `pnpm setup --force` only when you intend to replace both files.
 
-Setup never asks for a token. Add optional preview and integration credentials to the local env files only when the matching feature needs them. The committed `.env.local.example` files list the supported names.
-
-For repository-scoped Sanity MCP access in Codex, add `SANITY_AUTH_TOKEN` to
-an ignored `.env.local` at the repository root. The committed Codex
-configuration loads it when starting the MCP server.
+The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed `.env.local.example` files list the supported names.
 
 Start both apps:
 
@@ -55,7 +53,7 @@ pnpm seed
 
 The seed is manual. It never runs during install, setup, development, build, or deploy. It refuses to write unless the target dataset is empty.
 
-Seeding needs a Sanity write token in `SANITY_AUTH_TOKEN`, either in the shell or in an ignored root `.env.local`.
+Seeding needs a Sanity write token in `SANITY_AUTH_TOKEN`, either in the shell or in `studio/.env.local`.
 
 The sample content creates global settings, navigation, footer, the homepage, a normal `/about/` page, Blog settings, authors, categories, a Blog Post, FAQ, Team Member, Testimonial, relevant SEO values, and every retained Page Builder section. Use it to confirm Website rendering and Studio editing, then remove it before adding real project content:
 

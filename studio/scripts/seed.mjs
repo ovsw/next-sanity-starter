@@ -36,7 +36,6 @@ function loadEnvFile(filePath) {
   }
 }
 
-loadEnvFile(path.join(rootDirectory, ".env.local"));
 loadEnvFile(path.join(rootDirectory, "studio", ".env.local"));
 
 const PROJECT_ID = process.env.SANITY_STUDIO_PROJECT_ID;
