@@ -8,6 +8,8 @@ export const bigVideoFeatureQuery = groq`
     title,
     description,
     youtubeUrl,
+    videoPublishedAt,
+    videoDuration,
     thumbnailImage {
       ${imageQuery}
     }
