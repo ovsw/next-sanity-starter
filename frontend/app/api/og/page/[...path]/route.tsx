@@ -114,7 +114,10 @@ export async function GET(
   if (!title || createPageOgImageRevision(title) !== revision) return notFound();
 
   try {
-    return await createOgImageResponse({ eyebrow: "PHX HOME LOAN", title });
+    return await createOgImageResponse({
+      eyebrow: siteName.toUpperCase(),
+      title,
+    });
   } catch (error) {
     return ogImageFallbackResponse(error, "Page");
   }

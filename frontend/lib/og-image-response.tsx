@@ -1,4 +1,5 @@
 import { PostOgImage } from "@/components/post-og-image";
+import { siteName } from "@/lib/site-name";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
@@ -9,8 +10,6 @@ const sourceSerifSemibold = readFile(
     "node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-600-normal.woff",
   ),
 );
-const jimmyPortrait = readFile(join(process.cwd(), "assets/og/jimmy-portrait.png"));
-
 const CACHE_HEADERS = {
   "Cache-Control": "public, max-age=31536000, immutable",
   "CDN-Cache-Control": "public, max-age=31536000, immutable",
@@ -26,14 +25,10 @@ export async function createOgImageResponse({
   eyebrow: string;
   title: string;
 }) {
-  const [font, portrait] = await Promise.all([sourceSerifSemibold, jimmyPortrait]);
-  const portraitData = portrait.buffer.slice(
-    portrait.byteOffset,
-    portrait.byteOffset + portrait.byteLength,
-  );
+  const font = await sourceSerifSemibold;
 
   return new ImageResponse(
-    <PostOgImage eyebrow={eyebrow} portrait={portraitData} title={title} />,
+    <PostOgImage eyebrow={eyebrow} siteName={siteName} title={title} />,
     {
       width: 1200,
       height: 630,
