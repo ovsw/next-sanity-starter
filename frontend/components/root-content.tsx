@@ -111,7 +111,6 @@ function PostContent({
   return (
     <section>
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
-      <VideoJsonLd blocks={[]} postBody={body} siteUrl={siteUrl} />
       <PostHero post={post} readTime={readTime} stega={stega} />
       <div data-post-layout={layoutName}>
         {bodyModel.showTableOfContents ? (

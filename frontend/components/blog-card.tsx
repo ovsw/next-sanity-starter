@@ -10,30 +10,24 @@ type DataAttribute = (path: string) => string | undefined;
 
 function BlogImage({
   dataAttribute,
-  featured = false,
   post,
 }: {
   dataAttribute?: DataAttribute;
-  featured?: boolean;
   post: BlogPost;
 }) {
   if (!post.image?.asset?._id) return null;
   return (
-    <div
-      className={featured ? "pointer-events-none relative min-h-72 bg-muted lg:min-h-full" : "pointer-events-none relative aspect-[16/10] bg-muted"}
-      data-sanity={dataAttribute?.("image")}
-    >
+    <figure data-sanity={dataAttribute?.("image")}>
       <Image
         alt={stegaClean(post.image.alt) || ""}
         blurDataURL={post.image.asset.metadata?.lqip || undefined}
-        className="object-cover"
-        fill
+        height={post.image.asset.metadata?.dimensions?.height ?? 900}
         placeholder={post.image.asset.metadata?.lqip ? "blur" : undefined}
-        quality={100}
-        sizes={featured ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+        sizes="100vw"
         src={urlFor(post.image).url()}
+        width={post.image.asset.metadata?.dimensions?.width ?? 1600}
       />
-    </div>
+    </figure>
   );
 }
 
@@ -55,7 +49,6 @@ export function PublicationDate({
     .toUpperCase();
   return (
     <time
-      className="typo-meta-label text-muted-foreground"
       data-sanity={dataAttribute?.("publishedAt")}
       dateTime={stegaClean(value)}
     >
@@ -100,31 +93,25 @@ export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean
     ? documentDataAttribute({ id: category._id, stega, type: "category" })
     : undefined;
   return (
-    <article className="relative grid overflow-hidden rounded-card border border-border bg-card shadow-sm lg:grid-cols-2">
-      {!stega ? (
-        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={postHref} />
-      ) : null}
-      <BlogImage dataAttribute={dataAttribute} featured post={post} />
+    <article>
+      <BlogImage dataAttribute={dataAttribute} post={post} />
       {categoryLabel && categoryHref ? (
         <Link
-          className="absolute left-3.5 top-3.5 z-10 rounded-full bg-[rgba(12,19,41,0.82)] px-3 py-1.5 typo-meta-label text-white no-underline backdrop-blur-sm lg:left-[calc(50%+0.875rem)]"
           data-sanity={categoryDataAttribute?.("title")}
           href={categoryHref}
         >
           {categoryLabel}
         </Link>
       ) : null}
-      <div className="pointer-events-none relative z-10 self-center p-7 md:p-9 lg:p-10">
+      <div>
         <PublicationDate dataAttribute={dataAttribute} value={post.publishedAt} />
         <h3
-          className="mt-4 text-balance text-3xl font-semibold leading-tight text-card-foreground"
           data-sanity={dataAttribute?.("title")}
         >
-          {stega ? <Link className="pointer-events-auto" href={postHref}>{post.title}</Link> : post.title}
+          <Link href={postHref}>{post.title}</Link>
         </h3>
         {post.excerpt ? (
           <p
-            className="mt-3 line-clamp-3 typo-body-sm text-muted-foreground"
             data-sanity={dataAttribute?.("excerpt")}
           >
             {post.excerpt}
@@ -149,41 +136,27 @@ export function RegularPostCard({ post, stega }: { post: BlogPost; stega: boolea
     ? documentDataAttribute({ id: categoryReference._id, stega, type: "category" })
     : undefined;
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-border bg-card transition-[box-shadow,translate] motion-base hover:-translate-y-1 hover:shadow-interactive-lift dark:hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
-      {!stega ? (
-        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={postHref} />
+    <article>
+      <BlogImage dataAttribute={dataAttribute} post={post} />
+      {category && categoryHref ? (
+        <Link data-sanity={categoryDataAttribute?.("title")} href={categoryHref}>
+          {category}
+        </Link>
       ) : null}
-      <div className="relative bg-muted">
-        <BlogImage dataAttribute={dataAttribute} post={post} />
-        {category && categoryHref ? (
-          <Link
-            className="absolute left-3.5 top-3.5 z-10 rounded-full bg-[rgba(12,19,41,0.82)] px-3 py-1.5 typo-meta-label text-white no-underline backdrop-blur-sm"
-            data-sanity={categoryDataAttribute?.("title")}
-            href={categoryHref}
-          >
-            {category}
-          </Link>
-        ) : null}
-      </div>
-      <div className="pointer-events-none relative z-10 flex flex-1 flex-col gap-3 px-7 pb-7 pt-6">
+      <div>
         <PublicationDate dataAttribute={dataAttribute} value={post.publishedAt} />
         <h3
-          className="text-balance typo-card-title text-card-foreground"
           data-sanity={dataAttribute?.("title")}
         >
-          {stega ? <Link className="pointer-events-auto" href={postHref}>{post.title}</Link> : post.title}
+          <Link href={postHref}>{post.title}</Link>
         </h3>
         {post.excerpt ? (
           <p
-            className="line-clamp-3 typo-body-sm text-muted-foreground"
             data-sanity={dataAttribute?.("excerpt")}
           >
             {post.excerpt}
           </p>
         ) : null}
-        <span className="mt-auto pt-2 typo-button text-primary">
-          Read post {"\u2192"}
-        </span>
       </div>
     </article>
   );

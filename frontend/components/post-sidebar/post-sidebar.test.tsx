@@ -27,40 +27,40 @@ const threeHeadings = [
 const currentSidebar = {
   _id: "blogPostSettings",
   _type: "blogPostSettings",
-  title: "Contact Jimmy",
-  description: "Choose the next step that fits where you are in the mortgage process.",
+  title: "Explore the topic",
+  description: "Choose the next resource that fits what you want to learn.",
   actions: [
     {
-      _key: "call",
-      title: "Call Jimmy",
-      description: "Speak with Jimmy's team about your home loan options.",
-      text: "Call 480-800-8387",
+      _key: "guide",
+      title: "Read the guide",
+      description: "Start with the complete guide for this topic.",
+      text: "Open guide",
       openInNewTab: false,
-      href: "tel:+14808008387",
+      href: "/guide/",
     },
     {
-      _key: "apply",
-      title: "Apply online for a loan today!",
-      description: "Fast and easy online application.",
-      text: "Apply Online",
+      _key: "external-resource",
+      title: "External resource",
+      description: "Open a related resource in a new tab.",
+      text: "Open resource",
       openInNewTab: true,
-      href: "https://applynow.example.com/",
+      href: "https://example.com/resource/",
     },
     {
-      _key: "mortgage-calculator",
-      title: "Mortgage Calculator",
-      description: "Find out what you can expect to pay for your home loan.",
-      text: "Calculate Now",
+      _key: "checklist",
+      title: "Checklist",
+      description: "Review the checklist before you continue.",
+      text: "View checklist",
       openInNewTab: false,
-      href: "/mortgage-calculator/",
+      href: "/checklist/",
     },
     {
-      _key: "home-value",
-      title: "What's My Home Worth?",
-      description: "Get a ballpark estimate for your home with our online calculator.",
-      text: "Calculate Now",
+      _key: "contact",
+      title: "Contact",
+      description: "Send a question about this topic.",
+      text: "Email us",
       openInNewTab: false,
-      href: "/home-value-estimator/",
+      href: "mailto:hello@example.com",
     },
   ],
 } satisfies BlogPostSidebar;
@@ -70,16 +70,16 @@ describe("PostSidebar", () => {
     render(<PostSidebar sidebar={currentSidebar} />);
 
     const sidebar = screen.getByRole("complementary", {
-      name: "Post contact options",
+      name: "Post actions",
     });
-    expect(within(sidebar).getByRole("heading", { name: "Contact Jimmy" })).toBeInTheDocument();
+    expect(within(sidebar).getByRole("heading", { name: "Explore the topic" })).toBeInTheDocument();
     expect(
       within(sidebar).getAllByRole("heading", { level: 3 }).map((item) => item.textContent),
     ).toEqual([
-      "Call Jimmy",
-      "Apply online for a loan today!",
-      "Mortgage Calculator",
-      "What's My Home Worth?",
+      "Read the guide",
+      "External resource",
+      "Checklist",
+      "Contact",
     ]);
   });
 
@@ -87,11 +87,11 @@ describe("PostSidebar", () => {
     const dataAttribute = vi.fn((path: string) => `source:${path}`);
     render(<PostSidebar dataAttribute={dataAttribute} sidebar={currentSidebar} />);
 
-    expect(screen.getByRole("complementary", { name: "Post contact options" })).toHaveAttribute(
+    expect(screen.getByRole("complementary", { name: "Post actions" })).toHaveAttribute(
       "data-sanity",
       "source:actions",
     );
-    expect(screen.getByRole("heading", { name: "Contact Jimmy" })).toHaveAttribute(
+    expect(screen.getByRole("heading", { name: "Explore the topic" })).toHaveAttribute(
       "data-sanity",
       "source:title",
     );
@@ -106,17 +106,19 @@ describe("PostSidebar", () => {
     );
 
     expect(screen.getAllByRole("heading", { level: 3 }).map((item) => item.textContent)).toEqual([
-      "Call Jimmy",
-      "Apply online for a loan today!",
+      "Read the guide",
+      "External resource",
     ]);
   });
 
-  it("places secondary descriptions before their links", () => {
+  it("places action descriptions before their links", () => {
     render(<PostSidebar sidebar={currentSidebar} />);
 
-    const description = screen.getByText("Fast and easy online application.");
-    const link = screen.getByRole("link", { name: "Apply Online" });
-    expect(description.nextElementSibling).toBe(link);
+    const description = screen.getByText("Open a related resource in a new tab.");
+    const link = screen.getByRole("link", { name: "Open resource" });
+    expect(description.compareDocumentPosition(link)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
   });
 
   it.each([
@@ -133,22 +135,22 @@ describe("PostSidebar", () => {
   it("uses the correct link element and target behavior for internal, external, and tel destinations", () => {
     render(<PostSidebar sidebar={currentSidebar} />);
 
-    const phone = screen.getByRole("link", { name: "Call 480-800-8387" });
-    expect(phone).toHaveAttribute("href", "tel:+14808008387");
-    expect(phone).not.toHaveAttribute("target");
+    const email = screen.getByRole("link", { name: "Email us" });
+    expect(email).toHaveAttribute("href", "mailto:hello@example.com");
+    expect(email).not.toHaveAttribute("target");
 
-    const apply = screen.getByRole("link", { name: "Apply Online" });
-    expect(apply).toHaveAttribute("href", "https://applynow.example.com/");
-    expect(apply).toHaveAttribute("target", "_blank");
-    expect(apply).toHaveAttribute("rel", "noopener noreferrer");
+    const external = screen.getByRole("link", { name: "Open resource" });
+    expect(external).toHaveAttribute("href", "https://example.com/resource/");
+    expect(external).toHaveAttribute("target", "_blank");
+    expect(external).toHaveAttribute("rel", "noopener noreferrer");
 
     const internalCard = screen
-      .getByRole("heading", { name: "Mortgage Calculator" })
+      .getByRole("heading", { name: "Checklist" })
       .closest("section");
     const internal = within(internalCard as HTMLElement).getByRole("link", {
-      name: "Calculate Now",
+      name: "View checklist",
     });
-    expect(internal).toHaveAttribute("href", "/mortgage-calculator");
+    expect(internal).toHaveAttribute("href", "/checklist");
     expect(internal).not.toHaveAttribute("target");
   });
 
@@ -156,7 +158,7 @@ describe("PostSidebar", () => {
     const bodyModel = createPostBodyModel(threeHeadings);
     render(<PostTableOfContentsRail headings={bodyModel.headings} />);
 
-    expect(screen.getByText("Table of Contents").closest("details")).toHaveAttribute("open");
+    expect(screen.getByText("Table of contents").closest("details")).toHaveAttribute("open");
     expect(screen.getByRole("navigation", { name: "Table of Contents" })).toBeInTheDocument();
   });
 
