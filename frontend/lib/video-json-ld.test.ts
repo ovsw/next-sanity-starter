@@ -185,11 +185,44 @@ describe("collectAuthoredVideoMetadata", () => {
         description: null,
         duration: "PT5M",
         publishedAt: "2026-08-03",
-        thumbnailUrl: "https://img.youtube.com/vi/ccccccccccc/hqdefault.jpg",
+        thumbnailUrl: null,
         title: "Shared Video",
         videoId: "ccccccccccc",
       },
     ]);
+  });
+
+  it("prefers a later authored thumbnail over an earlier fallback", () => {
+    const [metadata] = collectAuthoredVideoMetadata(
+      [
+        {
+          _type: "videoFeature",
+          title: "Shared Video",
+          videoPublishedAt: "2026-08-04",
+          youtubeUrl: "https://youtu.be/ddddddddddd",
+        },
+      ],
+      [
+        {
+          _type: "youtube",
+          thumbnailImage: {
+            resolvedAsset: {
+              url: "https://cdn.sanity.io/images/project/dataset/authored.jpg",
+            },
+          },
+          url: "https://www.youtube.com/watch?v=ddddddddddd",
+        },
+      ],
+    );
+
+    expect(metadata?.thumbnailUrl).toBe(
+      "https://cdn.sanity.io/images/project/dataset/authored.jpg",
+    );
+    expect(createVideoObjectJsonLd(metadata!, "https://example.com")).toEqual(
+      expect.objectContaining({
+        thumbnailUrl: "https://cdn.sanity.io/images/project/dataset/authored.jpg",
+      }),
+    );
   });
 });
 
@@ -227,9 +260,18 @@ describe("createVideoObjectJsonLd", () => {
   it.each([
     ["title", metadata({ title: "  " })],
     ["publishedAt", metadata({ publishedAt: "" })],
-    ["thumbnailUrl", metadata({ thumbnailUrl: "" })],
   ])("returns null when %s is missing", (_field, input) => {
     expect(createVideoObjectJsonLd(input, "https://example.com")).toBeNull();
+  });
+
+  it("uses a YouTube thumbnail when no authored thumbnail exists", () => {
+    expect(
+      createVideoObjectJsonLd(metadata({ thumbnailUrl: null }), "https://example.com"),
+    ).toEqual(
+      expect.objectContaining({
+        thumbnailUrl: "https://img.youtube.com/vi/abc123def45/hqdefault.jpg",
+      }),
+    );
   });
 });
 

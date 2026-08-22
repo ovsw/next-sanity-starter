@@ -104,7 +104,7 @@ export function collectAuthoredVideoMetadata(
           description: getString(node.description),
           duration: getString(node.videoDuration),
           publishedAt: getString(node.videoPublishedAt),
-          thumbnailUrl: getImageUrl(node.thumbnailImage) ?? getFallbackThumbnailUrl(videoId),
+          thumbnailUrl: getImageUrl(node.thumbnailImage),
           title: getString(node.title),
           videoId,
         });
@@ -125,7 +125,7 @@ export function collectAuthoredVideoMetadata(
           description: getString(node.description),
           duration: getString(node.duration),
           publishedAt: getString(node.publishedAt),
-          thumbnailUrl: getImageUrl(node.thumbnailImage) ?? getFallbackThumbnailUrl(videoId),
+          thumbnailUrl: getImageUrl(node.thumbnailImage),
           title: getString(node.title),
           videoId,
         });
@@ -154,17 +154,18 @@ export function createVideoObjectJsonLd(
   siteUrl: string,
 ): VideoObjectJsonLd | null {
   const name = metadata.title?.trim() || "";
-  if (!name || !metadata.thumbnailUrl || !metadata.publishedAt) return null;
+  if (!name || !metadata.publishedAt) return null;
 
   const description = metadata.description?.trim() || "";
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  const thumbnailUrl = metadata.thumbnailUrl || getFallbackThumbnailUrl(metadata.videoId);
 
   return {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name,
     ...(description ? { description } : {}),
-    thumbnailUrl: metadata.thumbnailUrl,
+    thumbnailUrl,
     uploadDate: metadata.publishedAt,
     ...(metadata.duration ? { duration: metadata.duration } : {}),
     embedUrl: `https://www.youtube-nocookie.com/embed/${metadata.videoId}`,
