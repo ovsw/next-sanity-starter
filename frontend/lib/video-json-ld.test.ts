@@ -159,6 +159,38 @@ describe("collectAuthoredVideoMetadata", () => {
       },
     ]);
   });
+
+  it("fills missing metadata from a later duplicate video occurrence", () => {
+    expect(
+      collectAuthoredVideoMetadata(
+        [
+          {
+            _type: "videoFeature",
+            title: "Shared Video",
+            youtubeUrl: "https://youtu.be/ccccccccccc",
+          },
+        ],
+        [
+          {
+            _type: "youtube",
+            duration: "PT5M",
+            publishedAt: "2026-08-03",
+            title: "Ignored Duplicate Title",
+            url: "https://www.youtube.com/watch?v=ccccccccccc",
+          },
+        ],
+      ),
+    ).toEqual([
+      {
+        description: null,
+        duration: "PT5M",
+        publishedAt: "2026-08-03",
+        thumbnailUrl: "https://img.youtube.com/vi/ccccccccccc/hqdefault.jpg",
+        title: "Shared Video",
+        videoId: "ccccccccccc",
+      },
+    ]);
+  });
 });
 
 describe("createVideoObjectJsonLd", () => {

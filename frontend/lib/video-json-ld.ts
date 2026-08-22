@@ -53,11 +53,24 @@ function getFallbackThumbnailUrl(videoId: string) {
 
 function addVideo(
   videos: AuthoredVideoMetadata[],
-  seen: Set<string>,
+  videoIndexById: Map<string, number>,
   source: AuthoredVideoMetadata,
 ) {
-  if (seen.has(source.videoId)) return;
-  seen.add(source.videoId);
+  const existingIndex = videoIndexById.get(source.videoId);
+  if (existingIndex !== undefined) {
+    const existing = videos[existingIndex];
+    videos[existingIndex] = {
+      ...existing,
+      description: existing.description ?? source.description,
+      duration: existing.duration ?? source.duration,
+      publishedAt: existing.publishedAt ?? source.publishedAt,
+      thumbnailUrl: existing.thumbnailUrl ?? source.thumbnailUrl,
+      title: existing.title ?? source.title,
+    };
+    return;
+  }
+
+  videoIndexById.set(source.videoId, videos.length);
   videos.push(source);
 }
 
@@ -69,7 +82,7 @@ export function collectAuthoredVideoMetadata(
   postBody?: readonly unknown[],
 ): AuthoredVideoMetadata[] {
   const videos: AuthoredVideoMetadata[] = [];
-  const seen = new Set<string>();
+  const videoIndexById = new Map<string, number>();
 
   const walk = (value: unknown) => {
     if (Array.isArray(value)) {
@@ -87,7 +100,7 @@ export function collectAuthoredVideoMetadata(
     ) {
       const videoId = getYouTubeVideoId(stegaClean(node.youtubeUrl));
       if (videoId) {
-        addVideo(videos, seen, {
+        addVideo(videos, videoIndexById, {
           description: getString(node.description),
           duration: getString(node.videoDuration),
           publishedAt: getString(node.videoPublishedAt),
@@ -108,7 +121,7 @@ export function collectAuthoredVideoMetadata(
         if (isYouTubeVideoId(candidate)) videoId = candidate;
       }
       if (videoId) {
-        addVideo(videos, seen, {
+        addVideo(videos, videoIndexById, {
           description: getString(node.description),
           duration: getString(node.duration),
           publishedAt: getString(node.publishedAt),
