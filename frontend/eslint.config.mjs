@@ -7,7 +7,7 @@ export default defineConfig([
   ...nextTypeScript,
   globalIgnores([
     ".next/**",
-    "PHXHomeLoan-web-prototype/**",
+    "legacy-donor-prototype/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

@@ -20,22 +20,13 @@ import {
 } from "@sanity/ui";
 import { set, type ObjectInputProps } from "sanity";
 import {
-  getLoanIcon,
-  isLoanIconName,
-  searchLoanIcons,
-} from "../../../shared/loan-icons";
-import {
   canonicalLucideIconNames,
   isCanonicalLucideIconName,
 } from "./lucide-icon-catalog";
-import { LoanIcon } from "./loan-icon";
 
 const PAGE_SIZE = 60;
 
 function IconGlyph({ name, size = 20 }: { name: string; size?: number }) {
-  if (isLoanIconName(name)) {
-    return <LoanIcon name={name} size={size} />;
-  }
   if (!isCanonicalLucideIconName(name)) return null;
 
   return (
@@ -124,16 +115,14 @@ export default function NavigationIconInput(props: ObjectInputProps) {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const value = props.value as NavigationIconValue | undefined;
   const selectedName = value?.name;
-  const selectedLoanIcon = getLoanIcon(selectedName);
 
   const normalizedQuery = query.trim().toLowerCase().replaceAll(" ", "-");
-  const filteredLoanIcons = useMemo(() => searchLoanIcons(query), [query]);
   const filteredLucideNames = useMemo(() => {
     if (!normalizedQuery) return canonicalLucideIconNames;
     return canonicalLucideIconNames.filter((name) => name.includes(normalizedQuery));
   }, [normalizedQuery]);
   const visibleLucideNames = filteredLucideNames.slice(0, limit);
-  const matchingCount = filteredLoanIcons.length + filteredLucideNames.length;
+  const matchingCount = filteredLucideNames.length;
 
   const close = () => setOpen(false);
   const openPicker = () => {
@@ -142,14 +131,6 @@ export default function NavigationIconInput(props: ObjectInputProps) {
     setOpen(true);
   };
   const selectIcon = async (name: string) => {
-    // Loan icons are shipped with the frontend, so only the name is stored;
-    // Lucide icons carry their SVG markup so the frontend never imports Lucide.
-    if (isLoanIconName(name)) {
-      props.onChange(set({ name }));
-      close();
-      return;
-    }
-
     const svg = await renderLucideIconSvg(name);
     if (!svg) {
       // Saving a Lucide icon without its artwork would fail validation and
@@ -176,7 +157,7 @@ export default function NavigationIconInput(props: ObjectInputProps) {
         onBlur={props.elementProps.onBlur}
         onClick={openPicker}
         onFocus={props.elementProps.onFocus}
-        text={selectedLoanIcon?.title || selectedName || "Choose an icon"}
+        text={selectedName || "Choose an icon"}
         type="button"
         width="fill"
       />
@@ -204,25 +185,6 @@ export default function NavigationIconInput(props: ObjectInputProps) {
               <Text muted size={1}>
                 {matchingCount} matching icon{matchingCount === 1 ? "" : "s"}
               </Text>
-
-              {filteredLoanIcons.length ? (
-                <Stack space={3}>
-                  <Text size={1} weight="semibold">
-                    Custom icons
-                  </Text>
-                  <Grid columns={[2, 3, 4, 5]} gap={2}>
-                    {filteredLoanIcons.map(({ title, value }) => (
-                      <PickerOption
-                        key={value}
-                        label={title}
-                        name={value}
-                        onSelect={selectIcon}
-                        selected={value === selectedName}
-                      />
-                    ))}
-                  </Grid>
-                </Stack>
-              ) : null}
 
               {visibleLucideNames.length ? (
                 <Stack space={3}>

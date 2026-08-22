@@ -27,14 +27,13 @@ export type BlogPostingJsonLd = {
     "@id": string;
   };
   author: {
-    "@type": "Person";
+    "@type": "Organization";
     "@id": string;
   };
 };
 
-// Builds one BlogPosting from the post data already fetched for the page. The
-// author is a bare reference to the site-wide Person entity. Returns null
-// instead of emitting invalid schema when a required field is missing.
+// Builds one BlogPosting from the post data already fetched for the page.
+// Returns null instead of emitting invalid schema when a required field is missing.
 export function createBlogPostingJsonLd(
   post: BlogPostingJsonLdPost,
   siteUrl: string,
@@ -73,8 +72,8 @@ export function createBlogPostingJsonLd(
       "@id": url,
     },
     author: {
-      "@type": "Person",
-      "@id": `${normalizedSiteUrl}/#jimmy`,
+      "@type": "Organization",
+      "@id": `${normalizedSiteUrl}/#organization`,
     },
   };
 }

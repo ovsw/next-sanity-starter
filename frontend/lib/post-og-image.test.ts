@@ -11,9 +11,9 @@ import {
 } from "./post-og-image";
 
 const identity = {
-  slug: "why-mortgage-rates-are-going-up",
+  slug: "why-market-trends-are-going-up",
   revision: createPostOgImageRevision({
-    title: "Why Mortgage Rates Are Going Up",
+    title: "Why Market Trends Change",
     publishedAt: "2026-08-15T12:00:00Z",
   }),
 };
@@ -31,10 +31,10 @@ describe("post OG image URLs", () => {
     const url = new URL(
       buildPostOgImageUrl({
         ...identity,
-        origin: "https://phxhomeloan.com",
+        origin: "https://example.com",
         publishedAt: "2026-08-15T12:00:00Z",
         secret: "secret",
-        title: "Why Mortgage Rates Are Going Up",
+        title: "Why Market Trends Change",
       }),
     );
 

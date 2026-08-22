@@ -5,7 +5,6 @@ import {
   blocksField,
   contentBlocksField,
   contentPageBuilderBlockTypes,
-  legacyBlockTypes,
   pageBuilderBlockTypes,
 } from "./schemas/blocks/page-builder.ts";
 import {
@@ -28,11 +27,7 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
     "teamMembers",
     "ctaBanner",
   ]);
-  assert.deepEqual(
-    blocksField.of.filter(({ hidden }) => hidden).map(({ type }) => type),
-    [...legacyBlockTypes],
-  );
-  assert.equal(typeof blocksField.components?.input, "function");
+  assert.equal(blocksField.of.some(({ hidden }) => hidden), false);
   assert.equal(new Set(pageBuilderBlockTypes).size, pageBuilderBlockTypes.length);
 });
 

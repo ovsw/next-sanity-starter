@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const routes = [
-  { heading: "Build your next website from a clean starting point.", path: "/" },
+  { heading: "Starter Home", path: "/" },
   { heading: "Getting Started", path: "/getting-started" },
   { heading: "Blog", path: "/blog" },
   { heading: "Welcome to Your Site", path: "/blog/welcome" },

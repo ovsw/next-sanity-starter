@@ -26,7 +26,7 @@ describe("blog post count cache", () => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest("https://www.phxhomeloan.com/blog"),
+      new NextRequest("https://www.example.com/blog"),
     );
 
     expect(response.status).toBe(200);
@@ -37,7 +37,7 @@ describe("blog post count cache", () => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest("https://www.phxhomeloan.com/blog/first-post"),
+      new NextRequest("https://www.example.com/blog/first-post"),
     );
 
     expect(response.status).toBe(200);
@@ -50,7 +50,7 @@ describe("blog post count cache", () => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest("https://www.phxhomeloan.com/blog/2/", {
+      new NextRequest("https://www.example.com/blog/2/", {
         headers: { cookie: "__prerender_bypass=preview-id" },
       }),
     );
@@ -64,7 +64,7 @@ describe("blog post count cache", () => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest("https://www.phxhomeloan.com/blog/2/"),
+      new NextRequest("https://www.example.com/blog/2/"),
     );
 
     expect(response.status).toBe(404);
@@ -81,7 +81,7 @@ describe("blog post count cache", () => {
     );
     const { proxy: freshProxy } = await import("@/proxy");
     const requests = [1, 2, 3].map(() =>
-      freshProxy(new NextRequest("https://www.phxhomeloan.com/blog/2/")),
+      freshProxy(new NextRequest("https://www.example.com/blog/2/")),
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe("blog post count cache", () => {
     fetchMock.mockResolvedValueOnce(30).mockResolvedValueOnce(30);
     const { proxy: freshProxy } = await import("@/proxy");
     const request = () =>
-      freshProxy(new NextRequest("https://www.phxhomeloan.com/blog/2/"));
+      freshProxy(new NextRequest("https://www.example.com/blog/2/"));
 
     await request();
     vi.advanceTimersByTime(59_999);
@@ -115,7 +115,7 @@ describe("blog post count cache", () => {
       .mockResolvedValueOnce(30);
     const { proxy: freshProxy } = await import("@/proxy");
     const request = () =>
-      freshProxy(new NextRequest("https://www.phxhomeloan.com/blog/2/"));
+      freshProxy(new NextRequest("https://www.example.com/blog/2/"));
 
     await expect(request()).rejects.toThrow("Sanity unavailable");
     await expect(request()).resolves.toMatchObject({ status: 200 });
@@ -127,7 +127,7 @@ describe("blog post count cache", () => {
 
     const response = await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/loan-types/",
+        "https://www.example.com/blog/category/categories/",
       ),
     );
 
@@ -136,15 +136,15 @@ describe("blog post count cache", () => {
   });
 
   test.each([
-    "/blog/category/loan-types/1",
-    "/blog/category/loan-types/abc",
-    "/blog/category/loan-types/2/extra",
-    "/blog/category/loan-types/2/3",
+    "/blog/category/categories/1",
+    "/blog/category/categories/abc",
+    "/blog/category/categories/2/extra",
+    "/blog/category/categories/2/3",
   ])("rejects malformed category route %s", async (pathname) => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest(`https://www.phxhomeloan.com${pathname}`),
+      new NextRequest(`https://www.example.com${pathname}`),
     );
 
     expect(response.status).toBe(404);
@@ -153,13 +153,13 @@ describe("blog post count cache", () => {
 
   test("uses the full category count at the 12/13-post boundary", async () => {
     fetchMock.mockResolvedValueOnce([
-      { postCount: 12, slug: "loan-types" },
+      { postCount: 12, slug: "categories" },
     ]);
     const { proxy: freshProxy } = await import("@/proxy");
     const request = () =>
       freshProxy(
         new NextRequest(
-          "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+          "https://www.example.com/blog/category/categories/2/",
         ),
       );
 
@@ -169,41 +169,41 @@ describe("blog post count cache", () => {
 
   test("keeps category counts isolated by slug", async () => {
     fetchMock.mockResolvedValueOnce([
-      { postCount: 12, slug: "loan-types" },
+      { postCount: 12, slug: "categories" },
       { postCount: 13, slug: "buyer-education" },
     ]);
     const { proxy: freshProxy } = await import("@/proxy");
 
-    const loanTypesResponse = await freshProxy(
+    const serviceTypesResponse = await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+        "https://www.example.com/blog/category/categories/2/",
       ),
     );
     const buyerEducationResponse = await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/buyer-education/2/",
+        "https://www.example.com/blog/category/buyer-education/2/",
       ),
     );
 
-    expect(loanTypesResponse.status).toBe(404);
+    expect(serviceTypesResponse.status).toBe(404);
     expect(buyerEducationResponse.status).toBe(200);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   test("passes through unknown category slugs from the cached snapshot", async () => {
     fetchMock.mockResolvedValueOnce([
-      { postCount: 13, slug: "loan-types" },
+      { postCount: 13, slug: "categories" },
     ]);
     const { proxy: freshProxy } = await import("@/proxy");
 
     await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+        "https://www.example.com/blog/category/categories/2/",
       ),
     );
     const response = await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/made-up/2/",
+        "https://www.example.com/blog/category/made-up/2/",
       ),
     );
 
@@ -217,7 +217,7 @@ describe("blog post count cache", () => {
 
     const response = await freshProxy(
       new NextRequest(
-        "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+        "https://www.example.com/blog/category/categories/2/",
         { headers: { cookie: "__prerender_bypass=preview-id" } },
       ),
     );
@@ -235,18 +235,18 @@ describe("blog post count cache", () => {
         }),
     );
     const { proxy: freshProxy } = await import("@/proxy");
-    const requests = ["loan-types", "buyer-education", "requirements"].map(
+    const requests = ["categories", "buyer-education", "requirements"].map(
       (slug) =>
         freshProxy(
           new NextRequest(
-            `https://www.phxhomeloan.com/blog/category/${slug}/2/`,
+            `https://www.example.com/blog/category/${slug}/2/`,
           ),
         ),
     );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     resolveFetch([
-      { postCount: 13, slug: "loan-types" },
+      { postCount: 13, slug: "categories" },
       { postCount: 13, slug: "buyer-education" },
       { postCount: 13, slug: "requirements" },
     ]);
@@ -259,13 +259,13 @@ describe("blog post count cache", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-01T00:00:00Z"));
     fetchMock
-      .mockResolvedValueOnce([{ postCount: 12, slug: "loan-types" }])
-      .mockResolvedValueOnce([{ postCount: 13, slug: "loan-types" }]);
+      .mockResolvedValueOnce([{ postCount: 12, slug: "categories" }])
+      .mockResolvedValueOnce([{ postCount: 13, slug: "categories" }]);
     const { proxy: freshProxy } = await import("@/proxy");
     const request = () =>
       freshProxy(
         new NextRequest(
-          "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+          "https://www.example.com/blog/category/categories/2/",
         ),
       );
 
@@ -280,12 +280,12 @@ describe("blog post count cache", () => {
   test("fails open and clears a rejected category snapshot refresh", async () => {
     fetchMock
       .mockRejectedValueOnce(new Error("Sanity unavailable"))
-      .mockResolvedValueOnce([{ postCount: 13, slug: "loan-types" }]);
+      .mockResolvedValueOnce([{ postCount: 13, slug: "categories" }]);
     const { proxy: freshProxy } = await import("@/proxy");
     const request = () =>
       freshProxy(
         new NextRequest(
-          "https://www.phxhomeloan.com/blog/category/loan-types/2/",
+          "https://www.example.com/blog/category/categories/2/",
         ),
       );
 

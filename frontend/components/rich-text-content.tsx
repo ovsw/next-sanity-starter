@@ -7,28 +7,15 @@ import { buttonVariants } from "@/components/ui/button";
 import { CustomLinkMarkRenderer } from "@/components/portable-text/custom-link-mark";
 import { getSafeLinkHref } from "@/lib/safe-href";
 import { cn } from "@/lib/utils";
-import { getYouTubeVideoId } from "@/lib/youtube-video-id";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import { RichTextYoutubeEmbed } from "@/components/portable-text/rich-text-youtube-embed";
 
 type GetHeadingId = (block: { _key?: string }) => string | undefined;
 type RichTextBlockComponents = Extract<
   NonNullable<PortableTextProps["components"]>["block"],
   Record<string, unknown>
 >;
-
-function getSafeIframeSrc(value: unknown) {
-  if (typeof value !== "string") return null;
-
-  try {
-    const url = new URL(value);
-    return ["http:", "https:"].includes(url.protocol) ? url.toString() : null;
-  } catch {
-    return null;
-  }
-}
 
 function getButtonVariant(value: unknown) {
   const variant = stegaClean(value);
@@ -190,65 +177,6 @@ export const richTextContentComponents: PortableTextProps["components"] = {
           {title ? <p className="mb-2 font-semibold text-foreground">{title}</p> : null}
           {body ? <p className="my-0 text-muted-foreground">{body}</p> : null}
         </aside>
-      );
-    },
-    youtube: ({ value }) => {
-      const videoId = getYouTubeVideoId(stegaClean(value.url));
-      const fallbackHref = getSafeLinkHref(value.url);
-      if (!videoId) {
-        return fallbackHref ? (
-          <p className="mb-4">
-            <a
-              className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
-              href={fallbackHref}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Watch video
-            </a>
-          </p>
-        ) : null;
-      }
-      const thumbnail = value.thumbnailImage?.resolvedAsset;
-      const title = stegaClean(value.title)?.trim() || "Video";
-      const description = stegaClean(value.description)?.trim();
-
-      return (
-        <RichTextYoutubeEmbed
-          description={description || undefined}
-          thumbnail={
-            thumbnail?.url
-              ? {
-                  alt: stegaClean(value.thumbnailImage?.alt) || title,
-                  blurDataURL: thumbnail.metadata?.lqip || undefined,
-                  height: thumbnail.metadata?.dimensions?.height ?? 720,
-                  url: thumbnail.url,
-                  width: thumbnail.metadata?.dimensions?.width ?? 1280,
-                }
-              : undefined
-          }
-          title={title}
-          videoId={videoId}
-        />
-      );
-    },
-    iframeEmbed: ({ value }) => {
-      const src = getSafeIframeSrc(value.src);
-      if (!src) return null;
-
-      return (
-        <div className="my-8 overflow-hidden rounded-card bg-muted">
-          <iframe
-            allowFullScreen
-            className="w-full"
-            height={value.height ?? 450}
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-            sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
-            src={src}
-            title={value.title || "Embedded content"}
-          />
-        </div>
       );
     },
   },

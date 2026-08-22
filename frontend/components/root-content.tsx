@@ -2,7 +2,6 @@ import { createDataAttribute, stegaClean } from "next-sanity";
 import Blocks from "@/components/blocks";
 import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
 import FaqPageJsonLd from "@/components/faq-json-ld";
-import VideoJsonLd from "@/components/video-json-ld";
 import { siteUrl } from "@/lib/site-url";
 import PostHero from "@/components/blocks/post-hero";
 import {
@@ -31,7 +30,7 @@ function PageContent({
 }) {
   const blocks = page.blocks ?? [];
   const needsTitleHeader =
-    !["hero", "homeHero", "pageHeader"].includes(blocks[0]?._type) &&
+    blocks[0]?._type !== "hero" &&
     stegaClean(page.title)?.trim();
   const rootDataAttribute = stega
     ? (path: "description" | "title") =>
@@ -48,7 +47,6 @@ function PageContent({
   return (
     <>
       <FaqPageJsonLd blocks={blocks} />
-      <VideoJsonLd blocks={blocks} siteUrl={siteUrl} />
       {needsTitleHeader ? (
         <header>
           <h1 data-sanity={rootDataAttribute?.("title")}>{page.title}</h1>
@@ -111,7 +109,6 @@ function PostContent({
   return (
     <section>
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
-      <VideoJsonLd blocks={[]} postBody={body} siteUrl={siteUrl} />
       <PostHero post={post} readTime={readTime} stega={stega} />
       <div data-post-layout={layoutName}>
         {bodyModel.showTableOfContents ? (

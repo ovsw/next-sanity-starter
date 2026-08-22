@@ -165,8 +165,8 @@ test("uses one category indexability rule for post count, description, and noind
 });
 
 test("makes metadata titles unique after page one", () => {
-  assert.equal(getBlogPageTitle("Mortgage insights", 1), "Mortgage insights");
-  assert.equal(getBlogPageTitle("Mortgage insights", 2), "Mortgage insights - Page 2");
+  assert.equal(getBlogPageTitle("Insights", 1), "Insights");
+  assert.equal(getBlogPageTitle("Insights", 2), "Insights - Page 2");
 });
 
 test("reports result counts for the regular collection only", () => {

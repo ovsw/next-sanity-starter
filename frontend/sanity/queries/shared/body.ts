@@ -6,11 +6,5 @@ export const bodyQuery = `
   ${customLinkMarkDefsQuery},
   _type == "image" => {
     ${imageQuery}
-  },
-  _type == "youtube" => {
-    ...,
-    thumbnailImage {
-      ${imageQuery}
-    }
   }
 `;

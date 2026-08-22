@@ -36,7 +36,7 @@ function sharingImage(url: string, title: string, alt = `${title} | ${siteName}`
 function fallbackSharingImage() {
   return sharingImage(
     `${siteOrigin}/images/og-post-fallback.png`,
-    "Straightforward mortgage guidance",
+    "Helpful website content",
   );
 }
 

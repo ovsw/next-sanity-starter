@@ -12,14 +12,14 @@ import { verifyOgImageSignature } from "./post-og-image";
 describe("page OG image URLs", () => {
   it.each<[PageOgImageTarget, string]>([
     [{ kind: "home" }, "/api/og/page/home"],
-    [{ kind: "page", slug: "about/jimmy" }, "/api/og/page/page/about/jimmy"],
+    [{ kind: "page", slug: "about/jordan" }, "/api/og/page/page/about/jordan"],
     [{ kind: "blog", page: 2 }, "/api/og/page/blog/2"],
-    [{ kind: "category", slug: "mortgage-rates", page: 3 }, "/api/og/page/category/mortgage-rates/3"],
+    [{ kind: "category", slug: "market-trends", page: 3 }, "/api/og/page/category/market-trends/3"],
   ])("builds a signed, finite URL for %j", (target, pathname) => {
-    const title = "Mortgage guidance";
+    const title = "Useful guidance";
     const url = new URL(
       buildPageOgImageUrl({
-        origin: "https://phxhomeloan.com",
+        origin: "https://example.com",
         secret: "secret",
         target,
         title,
@@ -51,7 +51,7 @@ describe("page OG image URLs", () => {
     expect(parsePageOgImageTarget(["page", "../private"])).toBeNull();
     expect(() =>
       buildPageOgImageUrl({
-        origin: "https://phxhomeloan.com",
+        origin: "https://example.com",
         secret: "secret",
         target: { kind: "page", slug: "../private" },
         title: "Private",
@@ -59,7 +59,7 @@ describe("page OG image URLs", () => {
     ).toThrow("invalid page target");
     expect(() =>
       buildPageOgImageUrl({
-        origin: "https://phxhomeloan.com",
+        origin: "https://example.com",
         secret: "secret",
         target: { kind: "category", slug: "nested/slug" },
         title: "Nested",
@@ -73,8 +73,8 @@ describe("page OG image URLs", () => {
         "Example services | Next.js + Sanity Starter",
       ),
     ).toBe("Example services");
-    expect(getPageOgImageTitle("Mortgage Refinancing")).toBe(
-      "Mortgage Refinancing",
+    expect(getPageOgImageTitle("Service Planning")).toBe(
+      "Service Planning",
     );
   });
 });

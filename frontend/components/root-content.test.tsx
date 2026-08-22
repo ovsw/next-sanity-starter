@@ -1,30 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { PAGE_QUERY_RESULT, POST_QUERY_RESULT } from "@/sanity.types";
 import type { BlogPostSidebar } from "@/components/post-sidebar/model";
 import { RootContentView } from "./root-content";
-
-vi.mock("@/components/video-json-ld", () => ({
-  default: function MockVideoJsonLd({
-    postBody,
-  }: {
-    postBody?: readonly unknown[];
-  }) {
-    if (!postBody?.length) return null;
-
-    return (
-      <script
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "VideoObject",
-          }),
-        }}
-        type="application/ld+json"
-      />
-    );
-  },
-}));
 
 const page = {
   _id: "page-1",
@@ -182,32 +160,15 @@ describe("RootContentView", () => {
     expect(jsonLdNodesByType(container, "BlogPosting")).toHaveLength(0);
   });
 
-  it("passes post body videos to VideoObject JSON-LD", () => {
-    const videoPost = {
-      ...post,
-      body: [{ _type: "youtube", url: "https://youtu.be/abc123def45" }],
-    } as unknown as NonNullable<POST_QUERY_RESULT>;
-
-    const { container } = render(
-      <RootContentView
-        content={videoPost}
-        perspective="published"
-        stega={false}
-      />,
-    );
-
-    expect(jsonLdNodesByType(container, "VideoObject")).toHaveLength(1);
-  });
-
-  it("does not emit donor loan structured data for pages or posts", () => {
+  it("does not emit donor service structured data for pages or posts", () => {
     const { container, rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,
     );
-    expect(jsonLdNodesByType(container, "LoanOrCredit")).toHaveLength(0);
+    expect(jsonLdNodesByType(container, "FinancialProduct")).toHaveLength(0);
 
     rerender(
       <RootContentView content={post} perspective="published" stega={false} />,
     );
-    expect(jsonLdNodesByType(container, "LoanOrCredit")).toHaveLength(0);
+    expect(jsonLdNodesByType(container, "FinancialProduct")).toHaveLength(0);
   });
 });
