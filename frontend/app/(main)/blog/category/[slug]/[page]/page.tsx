@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props) {
     params: { slug },
     perspective: "published",
   })) as { data: CategoryArchive | null };
-  if (!category) notFound();
+  if (!category) return {};
   return generateCategoryMetadata({ category, page });
 }
 

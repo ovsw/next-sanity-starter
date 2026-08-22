@@ -13,7 +13,6 @@ import {
   type CategoryStaticParam,
 } from "@/sanity/queries/category";
 import { draftMode } from "next/headers";
-import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -33,7 +32,7 @@ export async function generateMetadata({ params }: Props) {
     params: { slug },
     perspective: "published",
   })) as { data: CategoryArchive | null };
-  if (!category) notFound();
+  if (!category) return {};
   return generateCategoryMetadata({ category, page: 1 });
 }
 
