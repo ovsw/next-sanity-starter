@@ -62,10 +62,10 @@ describe("createBlogPostingJsonLd", () => {
       image: "https://cdn.sanity.io/images/post.jpg",
       datePublished: "2025-04-01T12:00:00.000Z",
       dateModified: "2025-04-03T15:30:00.000Z",
-      url: "https://phxhomeloan.com/va-home-loan-guide/",
+      url: "https://phxhomeloan.com/blog/va-home-loan-guide",
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": "https://phxhomeloan.com/va-home-loan-guide/",
+        "@id": "https://phxhomeloan.com/blog/va-home-loan-guide",
       },
       author: {
         "@type": "Person",

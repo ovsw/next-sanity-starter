@@ -2,7 +2,6 @@ import { createClient } from "@sanity/client";
 import { sanity } from "next-sanity/live/cache-life";
 
 import { compileNextRedirects } from "./lib/redirects.mjs";
-import { HARD_CODED_GONE_ROUTE_PATHS } from "./lib/gone-routes.ts";
 import { REDIRECTS_QUERY } from "./sanity/queries/redirects.ts";
 
 function requiredEnvironmentValue(name) {
@@ -15,8 +14,6 @@ function requiredEnvironmentValue(name) {
 const nextConfig = {
   cacheComponents: true,
   cacheLife: { default: sanity },
-  trailingSlash: true,
-  skipTrailingSlashRedirect: true,
   async redirects() {
     const client = createClient({
       projectId: requiredEnvironmentValue("NEXT_PUBLIC_SANITY_PROJECT_ID"),
@@ -27,9 +24,7 @@ const nextConfig = {
       useCdn: false,
     });
     const redirects = await client.fetch(REDIRECTS_QUERY);
-    return compileNextRedirects(redirects, {
-      reservedSources: HARD_CODED_GONE_ROUTE_PATHS,
-    });
+    return compileNextRedirects(redirects);
   },
   images: {
     qualities: [75, 100],

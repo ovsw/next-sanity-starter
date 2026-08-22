@@ -1,5 +1,8 @@
-export function contentPath(value?: string | null) {
-  const slug = value?.replace(/^\/+|\/+$/g, "");
-  if (!slug) return "/";
-  return `/${slug}/`;
-}
+export {
+  categoryPath,
+  isApplicationPath,
+  isRouteSlug,
+  normalizePublicPath,
+  pagePath,
+  postPath,
+} from "../../shared/content-routes";

@@ -1,4 +1,4 @@
-import { contentPath } from "@/lib/routes";
+import { categoryPath, postPath } from "@/lib/routes";
 import { dataset, projectId } from "@/sanity/lib/env";
 import { urlFor } from "@/sanity/lib/image";
 import type { BlogPost } from "@/sanity/queries/blog-index";
@@ -89,9 +89,12 @@ export function documentDataAttribute({
 export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean }) {
   const slug = stegaClean(post.slug?.current);
   if (!slug) return null;
+  const postHref = postPath(slug);
+  if (!postHref) return null;
   const category = post.category;
   const categoryLabel = stegaClean(category?.title);
   const categorySlug = stegaClean(category?.slug?.current);
+  const categoryHref = categoryPath(categorySlug);
   const dataAttribute = documentDataAttribute({ id: post._id, stega, type: "post" });
   const categoryDataAttribute = category
     ? documentDataAttribute({ id: category._id, stega, type: "category" })
@@ -99,14 +102,14 @@ export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean
   return (
     <article className="relative grid overflow-hidden rounded-card border border-border bg-card shadow-sm lg:grid-cols-2">
       {!stega ? (
-        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={contentPath(slug)} />
+        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={postHref} />
       ) : null}
       <BlogImage dataAttribute={dataAttribute} featured post={post} />
-      {categoryLabel && categorySlug ? (
+      {categoryLabel && categoryHref ? (
         <Link
           className="absolute left-3.5 top-3.5 z-10 rounded-full bg-[rgba(12,19,41,0.82)] px-3 py-1.5 typo-meta-label text-white no-underline backdrop-blur-sm lg:left-[calc(50%+0.875rem)]"
           data-sanity={categoryDataAttribute?.("title")}
-          href={`/blog/category/${categorySlug}/`}
+          href={categoryHref}
         >
           {categoryLabel}
         </Link>
@@ -117,7 +120,7 @@ export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean
           className="mt-4 text-balance text-3xl font-semibold leading-tight text-card-foreground"
           data-sanity={dataAttribute?.("title")}
         >
-          {stega ? <Link className="pointer-events-auto" href={contentPath(slug)}>{post.title}</Link> : post.title}
+          {stega ? <Link className="pointer-events-auto" href={postHref}>{post.title}</Link> : post.title}
         </h3>
         {post.excerpt ? (
           <p
@@ -135,9 +138,12 @@ export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean
 export function RegularPostCard({ post, stega }: { post: BlogPost; stega: boolean }) {
   const slug = stegaClean(post.slug?.current);
   if (!slug) return null;
+  const postHref = postPath(slug);
+  if (!postHref) return null;
   const categoryReference = post.category;
   const category = stegaClean(categoryReference?.title);
   const categorySlug = stegaClean(categoryReference?.slug?.current);
+  const categoryHref = categoryPath(categorySlug);
   const dataAttribute = documentDataAttribute({ id: post._id, stega, type: "post" });
   const categoryDataAttribute = categoryReference
     ? documentDataAttribute({ id: categoryReference._id, stega, type: "category" })
@@ -145,15 +151,15 @@ export function RegularPostCard({ post, stega }: { post: BlogPost; stega: boolea
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-border bg-card transition-[box-shadow,translate] motion-base hover:-translate-y-1 hover:shadow-interactive-lift dark:hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
       {!stega ? (
-        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={contentPath(slug)} />
+        <Link aria-label={`Read post: ${stegaClean(post.title)}`} className="absolute inset-0 z-0" href={postHref} />
       ) : null}
       <div className="relative bg-muted">
         <BlogImage dataAttribute={dataAttribute} post={post} />
-        {category && categorySlug ? (
+        {category && categoryHref ? (
           <Link
             className="absolute left-3.5 top-3.5 z-10 rounded-full bg-[rgba(12,19,41,0.82)] px-3 py-1.5 typo-meta-label text-white no-underline backdrop-blur-sm"
             data-sanity={categoryDataAttribute?.("title")}
-            href={`/blog/category/${categorySlug}/`}
+            href={categoryHref}
           >
             {category}
           </Link>
@@ -165,7 +171,7 @@ export function RegularPostCard({ post, stega }: { post: BlogPost; stega: boolea
           className="text-balance typo-card-title text-card-foreground"
           data-sanity={dataAttribute?.("title")}
         >
-          {stega ? <Link className="pointer-events-auto" href={contentPath(slug)}>{post.title}</Link> : post.title}
+          {stega ? <Link className="pointer-events-auto" href={postHref}>{post.title}</Link> : post.title}
         </h3>
         {post.excerpt ? (
           <p

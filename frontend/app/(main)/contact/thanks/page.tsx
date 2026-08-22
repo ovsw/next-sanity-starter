@@ -19,7 +19,7 @@ export default function ContactThanksPage() {
           Jimmy and his team typically respond the same business day.
         </p>
         <Button asChild className="mt-8">
-          <Link href="/contact/">Back to contact</Link>
+          <Link href="/contact">Back to contact</Link>
         </Button>
       </div>
     </section>

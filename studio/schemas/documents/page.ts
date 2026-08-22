@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 import { Files } from "lucide-react";
 import meta from "../blocks/shared/meta";
 import { blocksField } from "../blocks/page-builder";
-import { uniqueRootSlug } from "../validation/unique-root-slug";
+import { uniqueRoutedSlug } from "../validation/routed-slug";
 
 export default defineType({
   name: "page",
@@ -79,7 +79,7 @@ export default defineType({
         source: "title",
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required().custom(uniqueRootSlug),
+      validation: (Rule) => Rule.required().custom(uniqueRoutedSlug),
     }),
     defineField({
       name: "showQuickNav",

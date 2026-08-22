@@ -46,7 +46,7 @@ describe("submitContactForm", () => {
         method: "POST",
       }),
     );
-    expect(redirectMock).toHaveBeenCalledWith("/contact/thanks/");
+    expect(redirectMock).toHaveBeenCalledWith("/contact/thanks");
   });
 
   it("rejects invalid form data before contacting Formspark", async () => {

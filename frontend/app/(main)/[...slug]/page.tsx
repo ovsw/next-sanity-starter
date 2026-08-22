@@ -1,12 +1,9 @@
 import { RootContentView } from "@/components/root-content";
+import { isApplicationPath, isRouteSlug, pagePath } from "@/lib/routes";
 import {
   fetchSanityPageBySlug,
-  fetchSanityPostBySlug,
-  fetchBlogPostSettings,
   PAGES_SLUGS_QUERY,
-  POSTS_SLUGS_QUERY,
 } from "@/sanity/lib/fetch";
-import { getBlogPostSidebar } from "@/components/post-sidebar/model";
 import {
   getDynamicFetchOptions,
   sanityFetchMetadata,
@@ -14,133 +11,91 @@ import {
   type DynamicFetchOptions,
 } from "@/sanity/lib/live";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
-import { contentPath } from "@/lib/routes";
 import { PAGE_QUERY } from "@/sanity/queries/page";
-import { POST_QUERY } from "@/sanity/queries/post";
 import type {
   PAGE_QUERY_RESULT,
   PAGES_SLUGS_QUERY_RESULT,
-  POST_QUERY_RESULT,
-  POSTS_SLUGS_QUERY_RESULT,
 } from "@/sanity.types";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 export const instant = false;
 
-function resolveRootContent(
-  page: PAGE_QUERY_RESULT,
-  post: POST_QUERY_RESULT,
-  slug: string,
-) {
-  if (page && post) {
-    throw new Error(`Root route collision for /${slug}/`);
-  }
-  return page || post || null;
+function readPageSlug(segments: string[]) {
+  if (segments.length !== 1 || !isRouteSlug(segments[0])) return null;
+  const path = pagePath(segments[0]);
+  return path && !isApplicationPath(path) ? segments[0] : null;
 }
 
 export async function generateStaticParams() {
-  const [{ data: pages }, { data: posts }] = await Promise.all([
-    sanityFetchStaticParams({ query: PAGES_SLUGS_QUERY }) as Promise<{
-      data: PAGES_SLUGS_QUERY_RESULT;
-    }>,
-    sanityFetchStaticParams({ query: POSTS_SLUGS_QUERY }) as Promise<{
-      data: POSTS_SLUGS_QUERY_RESULT;
-    }>,
-  ]);
+  const { data: pages } = (await sanityFetchStaticParams({
+    query: PAGES_SLUGS_QUERY,
+  })) as { data: PAGES_SLUGS_QUERY_RESULT };
 
-  const slugs = [
-    ...pages.map((page) => page.slug?.current),
-    ...posts.map((post) => post.slug?.current),
-  ];
-
-  return slugs.flatMap((value) => {
-    const slug = value?.replace(/^\/+|\/+$/g, "");
-    if (!slug) return [];
-    return [{ slug: slug.split("/").filter(Boolean) }];
+  return pages.flatMap((page) => {
+    const slug = page.slug?.current?.replace(/^\/+|\/+$/g, "");
+    return slug && readPageSlug([slug]) ? [{ slug: [slug] }] : [];
   });
 }
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>;
 }) {
-  const { slug } = await props.params;
-  const slugPath = slug.join("/");
-  const [{ data: page }, { data: post }] = await Promise.all([
-    sanityFetchMetadata({
-      query: PAGE_QUERY,
-      params: { slug: slugPath },
-      perspective: "published",
-    }) as Promise<{ data: PAGE_QUERY_RESULT }>,
-    sanityFetchMetadata({
-      query: POST_QUERY,
-      params: { slug: slugPath },
-      perspective: "published",
-    }) as Promise<{ data: POST_QUERY_RESULT }>,
-  ]);
-  const content = resolveRootContent(page, post, slugPath);
+  const { slug: segments } = await props.params;
+  const slug = readPageSlug(segments);
+  if (!slug) return {};
+
+  const { data: page } = (await sanityFetchMetadata({
+    query: PAGE_QUERY,
+    params: { slug },
+    perspective: "published",
+  })) as { data: PAGE_QUERY_RESULT };
   // The page renderer owns 404s. Metadata only sees published content, so a
   // 404 here would prevent draft-only routes from reaching Presentation.
-  if (!content) return {};
+  if (!page) return {};
+  const path = pagePath(slug);
+  if (!path) return {};
 
-  return generatePageMetadata({ page: content, path: contentPath(slugPath) });
+  return generatePageMetadata({ page, path });
 }
 
-export default async function RootContentPage(props: {
+export default async function PageRoute(props: {
   params: Promise<{ slug: string[] }>;
 }) {
   const { isEnabled: isDraftMode } = await draftMode();
+  if (isDraftMode) return <DynamicPage params={props.params} />;
 
-  if (isDraftMode) {
-    return <DynamicRootContent params={props.params} />;
-  }
-
-  const { slug } = await props.params;
-  return (
-    <CachedRootContent
-      slug={slug.join("/")}
-      perspective="published"
-      stega={false}
-    />
-  );
+  const { slug: segments } = await props.params;
+  const slug = readPageSlug(segments);
+  if (!slug) notFound();
+  return <CachedPage slug={slug} perspective="published" stega={false} />;
 }
 
-async function DynamicRootContent({
+async function DynamicPage({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-  const [{ slug }, { perspective, stega }] = await Promise.all([
+  const [{ slug: segments }, options] = await Promise.all([
     params,
     getDynamicFetchOptions(),
   ]);
-
-  return (
-    <CachedRootContent
-      slug={slug.join("/")}
-      perspective={perspective}
-      stega={stega}
-    />
-  );
+  const slug = readPageSlug(segments);
+  if (!slug) notFound();
+  return <CachedPage slug={slug} {...options} />;
 }
 
-async function CachedRootContent({
+async function CachedPage({
   slug,
   perspective,
   stega,
 }: { slug: string } & DynamicFetchOptions) {
-  const [page, post, blogPostSettings] = await Promise.all([
-    fetchSanityPageBySlug({ slug, perspective, stega }),
-    fetchSanityPostBySlug({ slug, perspective, stega }),
-    fetchBlogPostSettings({ perspective, stega }).catch(() => null),
-  ]);
-  const content = resolveRootContent(page, post, slug);
-  if (!content) notFound();
+  const page = await fetchSanityPageBySlug({ slug, perspective, stega });
+  if (!page) notFound();
 
   return (
     <RootContentView
-      blogPostSidebar={getBlogPostSidebar(blogPostSettings)}
-      content={content}
+      content={page}
       perspective={perspective}
       stega={stega}
     />

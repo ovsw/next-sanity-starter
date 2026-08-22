@@ -31,7 +31,7 @@ describe("createLoanJsonLd", () => {
       name: "VA Loan",
       loanType: "VA Loan",
       description: "Arizona VA loan guidance.",
-      url: "https://phxhomeloan.com/phoenix-va-loan/",
+      url: "https://phxhomeloan.com/phoenix-va-loan",
       provider: {
         "@id": "https://phxhomeloan.com/#jimmy",
       },
@@ -82,7 +82,7 @@ describe("createLoanJsonLd", () => {
       name: "FHA Loan",
       loanType: "FHA Loan",
       description: "Flexible financing.",
-      url: "https://phxhomeloan.com/phoenix-fha-loan/",
+      url: "https://phxhomeloan.com/phoenix-fha-loan",
     });
   });
 

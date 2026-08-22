@@ -64,7 +64,7 @@ export async function CategoryArchiveRoute({
           <nav aria-label="Breadcrumb" className="mb-[1.375rem] flex items-center gap-2.5 text-[0.8125rem] font-medium text-white/55">
             <Link className="text-white/65 no-underline hover:text-white" href="/">Home</Link>
             <span aria-hidden="true" className="opacity-50">/</span>
-            <Link className="text-white/65 no-underline hover:text-white" href="/blog/">Blog</Link>
+            <Link className="text-white/65 no-underline hover:text-white" href="/blog">Blog</Link>
             <span aria-hidden="true" className="opacity-50">/</span>
             <span className="text-xs font-semibold uppercase leading-none tracking-[0.24em] text-label-on-dark">{title}</span>
           </nav>

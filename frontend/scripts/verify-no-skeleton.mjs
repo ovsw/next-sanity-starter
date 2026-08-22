@@ -80,7 +80,7 @@ function normalizeSlug(value) {
 }
 
 function routeFromSlug(slug) {
-  return `/${slug.split("/").map(encodeURIComponent).join("/")}/`;
+  return `/${slug.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 function categoryHasValidSlug(category) {
@@ -107,8 +107,14 @@ const [pages, posts, eligiblePostCount, rawCategories] = await Promise.all([
   client.fetch(CATEGORY_STATIC_PARAMS_QUERY),
 ]);
 
-const rootContentSlugs = new Set(
-  [...pages, ...posts].flatMap(({ slug }) => {
+const pageSlugs = new Set(
+  pages.flatMap(({ slug }) => {
+    const normalized = normalizeSlug(slug?.current);
+    return normalized ? [normalized] : [];
+  }),
+);
+const postSlugs = new Set(
+  posts.flatMap(({ slug }) => {
     const normalized = normalizeSlug(slug?.current);
     return normalized ? [normalized] : [];
   }),
@@ -116,34 +122,39 @@ const rootContentSlugs = new Set(
 const categories = rawCategories.filter(categoryHasValidSlug);
 const knownRoutes = new Map([["/", "home"]]);
 
-for (const slug of rootContentSlugs) knownRoutes.set(routeFromSlug(slug), "content");
-knownRoutes.set("/blog/", "blog");
+for (const slug of pageSlugs) knownRoutes.set(routeFromSlug(slug), "page");
+for (const slug of postSlugs) knownRoutes.set(`/blog${routeFromSlug(slug)}`, "post");
+knownRoutes.set("/blog", "blog");
 
 const regularPostCount = Math.max(Number(eligiblePostCount) - 1, 0);
 const blogTotalPages = totalPages(regularPostCount);
 for (let page = 2; page <= blogTotalPages; page += 1) {
-  knownRoutes.set(`/blog/${page}/`, "blog pagination");
+  knownRoutes.set(`/blog/${page}`, "blog pagination");
 }
 
 for (const category of categories) {
-  const categoryPath = `/blog/category/${encodeURIComponent(category.slug)}/`;
+  const categoryPath = `/blog/category/${encodeURIComponent(category.slug)}`;
   knownRoutes.set(categoryPath, "category");
   const categoryTotalPages = totalPages(category.publishedPostCount);
   for (let page = 2; page <= categoryTotalPages; page += 1) {
-    knownRoutes.set(`${categoryPath}${page}/`, "category pagination");
+    knownRoutes.set(`${categoryPath}/${page}`, "category pagination");
   }
 }
 
 const unique = crypto.randomUUID();
 let unknownSlug = `verify-no-skeleton-${unique}`;
-while (rootContentSlugs.has(unknownSlug) || categories.some(({ slug }) => slug === unknownSlug)) {
+while (
+  pageSlugs.has(unknownSlug) ||
+  postSlugs.has(unknownSlug) ||
+  categories.some(({ slug }) => slug === unknownSlug)
+) {
   unknownSlug = `verify-no-skeleton-${crypto.randomUUID()}`;
 }
 
 const unknownRoutes = new Map([
-  [`/${unknownSlug}/`, "unknown content"],
-  [`/blog/${Math.max(blogTotalPages + 1, 2)}/`, "unknown blog pagination"],
-  [`/blog/category/${unknownSlug}/`, "unknown category"],
+  [`/${unknownSlug}`, "unknown content"],
+  [`/blog/${Math.max(blogTotalPages + 1, 2)}`, "unknown blog pagination"],
+  [`/blog/category/${unknownSlug}`, "unknown category"],
 ]);
 
 const largestCategory = categories.reduce(
@@ -153,11 +164,11 @@ const largestCategory = categories.reduce(
 );
 if (largestCategory) {
   unknownRoutes.set(
-    `/blog/category/${encodeURIComponent(largestCategory.slug)}/${Math.max(totalPages(largestCategory.publishedPostCount) + 1, 2)}/`,
+    `/blog/category/${encodeURIComponent(largestCategory.slug)}/${Math.max(totalPages(largestCategory.publishedPostCount) + 1, 2)}`,
     "unknown category pagination",
   );
 } else {
-  unknownRoutes.set(`/blog/category/${unknownSlug}/2/`, "unknown category pagination");
+  unknownRoutes.set(`/blog/category/${unknownSlug}/2`, "unknown category pagination");
 }
 
 const failures = [];

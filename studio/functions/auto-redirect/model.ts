@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 
+import { isApplicationPath } from "../../../shared/content-routes.ts";
 import { getPresentationPath } from "../../presentation/routes.ts";
 import {
-  CODE_OWNED_GONE_ROUTE_PATHS,
   normalizeRedirectPath,
   readRedirectPath,
   toStoredRedirectPath,
@@ -52,12 +52,6 @@ type AutoRedirectPlan =
     };
 
 const ROUTED_DOCUMENT_TYPES = new Set(["page", "post", "category"]);
-const RESERVED_SOURCE_PATHS = new Set([
-  "/",
-  "/blog",
-  ...CODE_OWNED_GONE_ROUTE_PATHS,
-]);
-
 export function shouldWriteAutoRedirect(local?: boolean) {
   return local !== true;
 }
@@ -104,7 +98,7 @@ export function planAutoRedirect({
   const source = normalizeRedirectPath(
     getPresentationPath(event.documentType, event.beforeSlug),
   );
-  const destination = normalizeRedirectPath(
+  let destination = normalizeRedirectPath(
     getPresentationPath(event.documentType, event.slug),
   );
   if (!source || !destination) {
@@ -113,11 +107,26 @@ export function planAutoRedirect({
   if (source === destination) {
     return { action: "skip", reason: "The normalized route did not change" };
   }
-  if (RESERVED_SOURCE_PATHS.has(source)) {
+  if (isApplicationPath(source)) {
     return { action: "skip", reason: "The previous route is reserved" };
   }
-  if (RESERVED_SOURCE_PATHS.has(destination)) {
+  if (isApplicationPath(destination)) {
     return { action: "skip", reason: "The new route is reserved" };
+  }
+
+  const activeRedirects = redirects.filter(isActive);
+  const destinationRedirect = activeRedirects.find(
+    (redirect) =>
+      normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
+  );
+  if (destinationRedirect) {
+    const flattenedDestination = normalizeRedirectPath(
+      readRedirectPath(destinationRedirect.destination),
+    );
+    if (!flattenedDestination || flattenedDestination === source) {
+      return { action: "skip", reason: "The rename would create a redirect cycle" };
+    }
+    destination = flattenedDestination;
   }
 
   const liveCollision = liveRoutes.find((route) => {
@@ -150,7 +159,6 @@ export function planAutoRedirect({
     };
   }
 
-  const activeRedirects = redirects.filter(isActive);
   const directRedirect = sourceRedirect;
   if (
     directRedirect &&
@@ -158,14 +166,6 @@ export function planAutoRedirect({
       destination
   ) {
     return { action: "skip", reason: "The previous route already redirects elsewhere" };
-  }
-
-  const destinationRedirect = activeRedirects.find(
-    (redirect) =>
-      normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
-  );
-  if (destinationRedirect) {
-    return { action: "skip", reason: "The new route is already a redirect source" };
   }
 
   const incoming = activeRedirects.filter(

@@ -1,5 +1,5 @@
 import { stegaClean } from "next-sanity";
-import { contentPath } from "@/lib/routes";
+import { postPath } from "@/lib/routes";
 import type { POST_QUERY_RESULT } from "@/sanity.types";
 
 export type BlogPostingJsonLdPost = Pick<
@@ -56,7 +56,7 @@ export function createBlogPostingJsonLd(
       ? post._updatedAt
       : undefined;
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
-  const url = `${normalizedSiteUrl}${contentPath(slug)}`;
+  const url = `${normalizedSiteUrl}${postPath(slug)}`;
 
   return {
     "@context": "https://schema.org",

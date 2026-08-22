@@ -1,5 +1,9 @@
 import type { ValidationContext } from "sanity";
 
+import {
+  isApplicationPath,
+  normalizePublicPath,
+} from "../../../shared/content-routes.ts";
 import { getPresentationPath } from "../../presentation/routes.ts";
 
 export type RedirectRecord = {
@@ -24,33 +28,16 @@ type RedirectValidationData = {
 };
 
 const LIVE_SYSTEM_PATHS = new Set(["/", "/blog"]);
-export const CODE_OWNED_GONE_ROUTE_PATHS = [
-  "/home-office-ideas-that-will-inspire-you",
-  "/staycation-ideas-your-family-will-enjoy",
-  "/top-10-interior-design-trends-in-2020-to-freshen-up-your-home",
-  "/phoenix-home-loan-payoff-vision-board",
-  "/make-home-attractive-before-putting-on-market",
-  "/virtual-showings-what-you-need-to-know",
-  "/spring-2021-buyers-guide",
-] as const;
-const CODE_OWNED_SOURCE_PATHS = new Set<string>(CODE_OWNED_GONE_ROUTE_PATHS);
 const MISSING_DESTINATION_ERROR =
   "Can't redirect to a non-existent or non-published page. " +
   "No published page with this slug exists. Please create one.";
 
 export function normalizeRedirectPath(value?: string | null) {
-  const trimmed = value?.trim();
-  if (!trimmed || trimmed.includes("\\")) return "";
-
-  const pathOnly = trimmed.split(/[?#]/, 1)[0] ?? "";
-  const parts = pathOnly.split("/").filter(Boolean);
-  return parts.length === 0 ? "/" : `/${parts.join("/")}`;
+  return normalizePublicPath(value);
 }
 
 export function toStoredRedirectPath(value?: string | null) {
-  const normalized = normalizeRedirectPath(value);
-  if (!normalized || normalized === "/") return normalized;
-  return `${normalized}/`;
+  return normalizeRedirectPath(value);
 }
 
 export function readRedirectPath(value: RedirectRecord["source"]) {
@@ -141,7 +128,7 @@ export function getRedirectValidationIssues({
 
   if (
     source &&
-    (LIVE_SYSTEM_PATHS.has(source) || CODE_OWNED_SOURCE_PATHS.has(source))
+    isApplicationPath(source)
   ) {
     errors.source = "This source is reserved by an existing site route";
   }
@@ -155,12 +142,12 @@ export function getRedirectValidationIssues({
 
   if (active(current)) {
     const activeRedirects = redirects.filter(active);
-    const duplicateSource = activeRedirects.find(
+    const duplicateSource = redirects.find(
       (redirect) =>
         normalizeRedirectPath(readRedirectPath(redirect.source)) === source,
     );
     if (source && duplicateSource) {
-      errors.source = "Another active redirect already uses this source";
+      errors.source = "Another redirect already uses this source";
     }
 
     const sourcesPointingHere = activeRedirects.filter(

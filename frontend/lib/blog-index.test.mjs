@@ -84,7 +84,8 @@ test("listing cards clamp excerpts and expose every visible post field to Presen
     latestArticlesSource.indexOf("function SectionLink"),
   );
   assert.match(latestArticlesSource, /stegaClean\(slug\)/);
-  assert.match(latestArticlesSource, /`\/blog\/category\/\$\{cleanSlug\}\/`/);
+  assert.match(latestArticlesSource, /postPath\(cleanSlug\)/);
+  assert.match(latestArticlesSource, /categoryPath\(cleanSlug\)/);
   assert.match(articleCardSource, /return \(\s*<article/);
   assert.doesNotMatch(articleCardSource, /return \(\s*<Link\s/);
 });
@@ -104,14 +105,14 @@ test("rejects page one aliases and pages beyond the regular-list total", () => {
   assert.equal(isBlogPageOutOfRange(6, 5), true);
 });
 
-test("builds trailing-slash pagination URLs and self-canonical paths", () => {
-  assert.equal(getBlogPaginationUrl(1), "/blog/");
-  assert.equal(getBlogPaginationUrl(2), "/blog/2/");
-  assert.equal(getBlogCanonicalPath(1), "/blog/");
-  assert.equal(getBlogCanonicalPath(3), "/blog/3/");
-  assert.equal(getBlogPaginationUrl(1, "/blog/category/loan-types/"), "/blog/category/loan-types/");
-  assert.equal(getBlogPaginationUrl(2, "/blog/category/loan-types/"), "/blog/category/loan-types/2/");
-  assert.equal(getCategoryArchivePath("loan-types"), "/blog/category/loan-types/");
+test("builds canonical pagination and category paths", () => {
+  assert.equal(getBlogPaginationUrl(1), "/blog");
+  assert.equal(getBlogPaginationUrl(2), "/blog/2");
+  assert.equal(getBlogCanonicalPath(1), "/blog");
+  assert.equal(getBlogCanonicalPath(3), "/blog/3");
+  assert.equal(getBlogPaginationUrl(1, "/blog/category/news/"), "/blog/category/news");
+  assert.equal(getBlogPaginationUrl(2, "/blog/category/news/"), "/blog/category/news/2");
+  assert.equal(getCategoryArchivePath("news"), "/blog/category/news");
 });
 
 test("keeps category static generation non-empty before archive copy or pagination exists", () => {

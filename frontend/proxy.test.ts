@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
 
-import { HARD_CODED_GONE_ROUTE_PATHS } from "@/lib/gone-routes";
-import { config, proxy } from "@/proxy";
+import { config } from "@/proxy";
 import {
   BLOG_CATEGORY_POST_COUNTS_QUERY,
   publishedPostFilter,
@@ -13,49 +12,6 @@ const { fetchMock } = vi.hoisted(() => ({ fetchMock: vi.fn() }));
 vi.mock("@/sanity/lib/client", () => ({
   client: { fetch: fetchMock },
 }));
-
-const EXPECTED_GONE_ROUTES = [
-  "/home-office-ideas-that-will-inspire-you",
-  "/staycation-ideas-your-family-will-enjoy",
-  "/top-10-interior-design-trends-in-2020-to-freshen-up-your-home",
-  "/phoenix-home-loan-payoff-vision-board",
-  "/make-home-attractive-before-putting-on-market",
-  "/virtual-showings-what-you-need-to-know",
-  "/spring-2021-buyers-guide",
-];
-
-describe("legacy 410 Gone routes", () => {
-  test("keeps the exact legacy route inventory", () => {
-    expect(HARD_CODED_GONE_ROUTE_PATHS).toEqual(EXPECTED_GONE_ROUTES);
-    expect(config.matcher).toEqual(["/((?!_next|api|.*\\..*).*)"]);
-  });
-
-  test("preserves trailing-slash redirects for ordinary routes", async () => {
-    const response = await proxy(
-      new NextRequest("https://www.phxhomeloan.com/ordinary-page"),
-    );
-
-    expect(response.status).toBe(308);
-    expect(response.headers.get("location")).toBe(
-      "https://www.phxhomeloan.com/ordinary-page/",
-    );
-  });
-
-  test.each(EXPECTED_GONE_ROUTES)("returns 410 for %s with both slash forms", async (route) => {
-    for (const pathname of [route, `${route}/`]) {
-      const response = await proxy(
-        new NextRequest(`https://www.phxhomeloan.com${pathname}`),
-      );
-
-      expect(response.status).toBe(410);
-      expect(await response.text()).toBe("Gone");
-      expect(response.headers.get("content-type")).toBe(
-        "text/plain; charset=utf-8",
-      );
-      expect(response.headers.get("x-robots-tag")).toBe("noindex");
-    }
-  });
-});
 
 describe("blog post count cache", () => {
   beforeEach(() => {
@@ -72,11 +28,23 @@ describe("blog post count cache", () => {
     const { proxy: freshProxy } = await import("@/proxy");
 
     const response = await freshProxy(
-      new NextRequest("https://www.phxhomeloan.com/blog/"),
+      new NextRequest("https://www.phxhomeloan.com/blog"),
     );
 
     expect(response.status).toBe(200);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test("passes post routes through without treating their slug as pagination", async () => {
+    const { proxy: freshProxy } = await import("@/proxy");
+
+    const response = await freshProxy(
+      new NextRequest("https://www.phxhomeloan.com/blog/first-post"),
+    );
+
+    expect(response.status).toBe(200);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(config.matcher).toEqual(["/((?!_next|api|.*\\..*).*)"]);
   });
 
   test("does not query Sanity for validated draft-mode pagination", async () => {
@@ -170,11 +138,10 @@ describe("blog post count cache", () => {
   });
 
   test.each([
-    "/blog/category/loan-types",
-    "/blog/category/loan-types/1/",
-    "/blog/category/loan-types/abc/",
-    "/blog/category/loan-types/2/extra/",
-    "/blog/category/loan-types/2/3/",
+    "/blog/category/loan-types/1",
+    "/blog/category/loan-types/abc",
+    "/blog/category/loan-types/2/extra",
+    "/blog/category/loan-types/2/3",
   ])("rejects malformed category route %s", async (pathname) => {
     const { proxy: freshProxy } = await import("@/proxy");
 
@@ -182,7 +149,7 @@ describe("blog post count cache", () => {
       new NextRequest(`https://www.phxhomeloan.com${pathname}`),
     );
 
-    expect(response.status).toBe(pathname.endsWith("/") ? 404 : 308);
+    expect(response.status).toBe(404);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
