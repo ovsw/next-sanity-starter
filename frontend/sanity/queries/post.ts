@@ -5,7 +5,7 @@ import { imageQuery } from "./shared/image";
 import { metaQuery } from "./shared/meta";
 import { richTextContentQuery } from "./shared/rich-text-content";
 
-const postProjection = groq`{
+const POST_PROJECTION = groq`{
     // richTextContent V2
     _id,
     _type,
@@ -51,11 +51,11 @@ const postProjection = groq`{
     ${metaQuery},
 }`;
 
-export const POST_QUERY = groq`*[_type == "post" && ${ROOT_SLUG_FILTER}][0]${postProjection}`;
+export const POST_QUERY = groq`*[_type == "post" && ${ROOT_SLUG_FILTER}][0]${POST_PROJECTION}`;
 
 export const PUBLISHED_POST_QUERY = groq`*[
   ${publishedPostFilter} && ${ROOT_SLUG_FILTER}
-][0]${postProjection}`;
+][0]${POST_PROJECTION}`;
 
 export const POST_OG_IMAGE_QUERY = groq`*[
   _type == "post" && ${ROOT_SLUG_FILTER}
