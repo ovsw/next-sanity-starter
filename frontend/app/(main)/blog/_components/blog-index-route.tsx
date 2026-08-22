@@ -48,6 +48,7 @@ export async function BlogIndexRoute({
   const postsHeading = currentPage === 1 && latestPost ? "More posts" : "All posts";
   const emptyPostsMessage =
     currentPage === 1 && latestPost ? "No more posts yet." : "No posts yet.";
+  const hasRegularPosts = regularPosts.length > 0;
 
   const fieldDataAttribute = stega
     ? (path: "description" | "title") =>
@@ -95,7 +96,7 @@ export async function BlogIndexRoute({
             regularPostCount,
           )}
         </p>
-        {latestPost ? (
+        {hasRegularPosts ? (
           <>
             <div>
               {regularPosts.map((post) => (

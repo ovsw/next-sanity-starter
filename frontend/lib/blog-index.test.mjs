@@ -174,3 +174,14 @@ test("reports result counts for the regular collection only", () => {
   assert.equal(getBlogResultsLabel(5, 9, 57), "Showing 49–57 of 57 posts");
   assert.equal(getBlogResultsLabel(1, 0, 0), "No posts");
 });
+
+test("the first blog page shows a clear one-post archive empty state", () => {
+  const source = readFileSync(
+    new URL("../app/(main)/blog/_components/blog-index-route.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /const hasRegularPosts = regularPosts\.length > 0/);
+  assert.match(source, /hasRegularPosts \?/);
+  assert.match(source, /No more posts yet\./);
+});

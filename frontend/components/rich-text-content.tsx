@@ -1,4 +1,3 @@
-import { YouTubeEmbed } from "@next/third-parties/google";
 import {
   PortableText,
   type PortableTextBlockComponent,
@@ -12,6 +11,7 @@ import { getYouTubeVideoId } from "@/lib/youtube-video-id";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { RichTextYoutubeEmbed } from "@/components/portable-text/rich-text-youtube-embed";
 
 type GetHeadingId = (block: { _key?: string }) => string | undefined;
 type RichTextBlockComponents = Extract<
@@ -211,30 +211,25 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       }
       const thumbnail = value.thumbnailImage?.resolvedAsset;
       const title = stegaClean(value.title)?.trim() || "Video";
+      const description = stegaClean(value.description)?.trim();
 
       return (
-        <figure className="my-8 max-w-[45rem]">
-          {thumbnail?.url ? (
-            <Image
-              alt={stegaClean(value.thumbnailImage?.alt) || title}
-              blurDataURL={thumbnail.metadata?.lqip || undefined}
-              className="mb-3 h-auto w-full rounded-card"
-              height={thumbnail.metadata?.dimensions?.height ?? 720}
-              placeholder={thumbnail.metadata?.lqip ? "blur" : undefined}
-              sizes="(min-width: 1024px) 720px, calc(100vw - 2rem)"
-              src={thumbnail.url}
-              width={thumbnail.metadata?.dimensions?.width ?? 1280}
-            />
-          ) : null}
-          <div className="aspect-video overflow-hidden rounded-card">
-            <YouTubeEmbed videoid={videoId} params="rel=0" />
-          </div>
-          {value.description ? (
-            <figcaption className="mt-2 text-sm text-muted-foreground">
-              {value.description}
-            </figcaption>
-          ) : null}
-        </figure>
+        <RichTextYoutubeEmbed
+          description={description || undefined}
+          thumbnail={
+            thumbnail?.url
+              ? {
+                  alt: stegaClean(value.thumbnailImage?.alt) || title,
+                  blurDataURL: thumbnail.metadata?.lqip || undefined,
+                  height: thumbnail.metadata?.dimensions?.height ?? 720,
+                  url: thumbnail.url,
+                  width: thumbnail.metadata?.dimensions?.width ?? 1280,
+                }
+              : undefined
+          }
+          title={title}
+          videoId={videoId}
+        />
       );
     },
     iframeEmbed: ({ value }) => {
