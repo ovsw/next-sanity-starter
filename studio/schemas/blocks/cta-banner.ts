@@ -19,8 +19,8 @@ export default defineType({
         text: "Start a conversation",
         url: {
           _type: "customUrl",
-          type: "external",
-          external: "/",
+          type: "internal",
+          internal: { _type: "reference", _ref: "homePage" },
           openInNewTab: false,
         },
         variant: "default",

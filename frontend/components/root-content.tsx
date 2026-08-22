@@ -55,22 +55,12 @@ function PageContent({
       <VideoJsonLd blocks={blocks} siteUrl={siteUrl} />
       {isRichTextOnlyPage && stegaClean(page.title)?.trim() ? (
         <header>
-          <div>
-            <div>
-              <h1
-                data-sanity={rootDataAttribute?.("title")}
-              >
-                {page.title}
-              </h1>
-              {stegaClean(page.description)?.trim() ? (
-                <p
-                  data-sanity={rootDataAttribute?.("description")}
-                >
-                  {page.description}
-                </p>
-              ) : null}
-            </div>
-          </div>
+          <h1 data-sanity={rootDataAttribute?.("title")}>{page.title}</h1>
+          {stegaClean(page.description)?.trim() ? (
+            <p data-sanity={rootDataAttribute?.("description")}>
+              {page.description}
+            </p>
+          ) : null}
         </header>
       ) : null}
       {heroBlocks.length > 0 ? (
@@ -136,26 +126,24 @@ function PostContent({
     <section>
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
       <VideoJsonLd blocks={[]} postBody={body} siteUrl={siteUrl} />
-      <div>
-        <PostHero post={post} readTime={readTime} stega={stega} />
-        <div data-post-layout={layoutName}>
-          {bodyModel.showTableOfContents ? (
-            <PostTableOfContentsRail headings={bodyModel.headings} />
+      <PostHero post={post} readTime={readTime} stega={stega} />
+      <div data-post-layout={layoutName}>
+        {bodyModel.showTableOfContents ? (
+          <PostTableOfContentsRail headings={bodyModel.headings} />
+        ) : null}
+        <article>
+          {body.length ? (
+            <RichTextContent
+              dataSanity={bodyDataAttribute}
+              getHeadingId={bodyModel.getHeadingId}
+              value={body}
+            />
           ) : null}
-          <article>
-            {body.length ? (
-              <RichTextContent
-                dataSanity={bodyDataAttribute}
-                getHeadingId={bodyModel.getHeadingId}
-                value={body}
-              />
-            ) : null}
-          </article>
-          <PostSidebar
-            dataAttribute={blogPostSettingsDataAttribute}
-            sidebar={blogPostSidebar}
-          />
-        </div>
+        </article>
+        <PostSidebar
+          dataAttribute={blogPostSettingsDataAttribute}
+          sidebar={blogPostSidebar}
+        />
       </div>
     </section>
   );

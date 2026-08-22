@@ -11,7 +11,7 @@ export const heroQuery = groq`
     body[]{
       ${bodyQuery}
     },
-    buttons[]{
+    "buttons": array::compact(buttons[]{
       _key,
       _type,
       text,
@@ -22,7 +22,7 @@ export const heroQuery = groq`
         url.type == "external" => url.external,
         url.href
       )
-    },
+    }),
     image {
       ${imageQuery}
     }

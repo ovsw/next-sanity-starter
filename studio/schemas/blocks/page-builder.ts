@@ -1,4 +1,4 @@
-import { defineField } from "sanity";
+import { defineField, type ArrayOfObjectsInputProps } from "sanity";
 
 export const generalPageBuilderBlockTypes = [
   "hero",
@@ -11,7 +11,7 @@ export const homePagePageBuilderBlockTypes = generalPageBuilderBlockTypes;
 
 type PageBuilderBlockType = (typeof generalPageBuilderBlockTypes)[number];
 
-const legacyBlockTypes = [
+export const legacyBlockTypes = [
   "homeHero",
   "loanFeatureCards",
   "videoFeature",
@@ -37,6 +37,20 @@ const legacyBlockTypes = [
   "loanRequirements",
 ] as const;
 
+const legacyBlockTypeNames = new Set<string>(legacyBlockTypes);
+
+function PageBuilderInput(props: ArrayOfObjectsInputProps) {
+  return props.renderDefault({
+    ...props,
+    schemaType: {
+      ...props.schemaType,
+      of: props.schemaType.of.filter(
+        (member) => !legacyBlockTypeNames.has(member.name),
+      ),
+    },
+  });
+}
+
 function validateBlocks(
   blocks: Array<{ _type?: string }> | undefined,
 ): true | string {
@@ -59,6 +73,7 @@ function createBlocksField(blockTypes: readonly PageBuilderBlockType[]) {
     title: "Page sections",
     type: "array",
     group: "content",
+    components: { input: PageBuilderInput },
     of: [
       ...blockTypes.map((type) => ({ type })),
       ...legacyBlockTypes.map((type) => ({ type, hidden: true })),

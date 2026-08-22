@@ -13,7 +13,6 @@ function Logo({
       alt={alt}
       height={logo.height}
       priority
-      quality={100}
       src={logo.src}
       width={logo.width}
     />
@@ -25,5 +24,6 @@ export function HeaderBrand({ brand }: { brand: HeaderBrandModel }) {
     return <span>{brand.label}</span>;
   }
 
-  return <Logo alt={brand.label} logo={brand.light ?? brand.dark!} />;
+  const logo = brand.light ?? brand.dark;
+  return logo ? <Logo alt={brand.label} logo={logo} /> : null;
 }

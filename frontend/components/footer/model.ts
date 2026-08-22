@@ -21,7 +21,6 @@ export type FooterModel = {
       src: string;
       width: number;
       height: number;
-      invert: boolean;
     } | null;
   };
   intro: string | null;
@@ -115,7 +114,7 @@ type RawImage = {
 };
 
 function logo(settings: RawFooterSettings): FooterModel["brand"]["image"] {
-  const source = settings?.logo?.dark ?? settings?.logo?.light;
+  const source = settings?.logo?.light ?? settings?.logo?.dark;
   if (!source) return null;
   const dimensions = (source as RawImage).asset?.metadata?.dimensions;
   try {
@@ -123,7 +122,6 @@ function logo(settings: RawFooterSettings): FooterModel["brand"]["image"] {
       src: urlFor(source as Parameters<typeof urlFor>[0]).url(),
       width: dimensions?.width ?? 216,
       height: dimensions?.height ?? 48,
-      invert: !settings?.logo?.dark,
     };
   } catch {
     return null;
@@ -136,10 +134,9 @@ function contactLink(
 ): FooterLinkModel | null {
   const label = text(value);
   if (!label) return null;
-  const href =
-    kind === "email"
-      ? `mailto:${label}`
-      : `tel:${label.replace(/[^+\d]/g, "")}`;
+  const phone = kind === "phone" ? label.replace(/[^+\d]/g, "") : null;
+  if (kind === "phone" && !/\d/.test(phone ?? "")) return null;
+  const href = kind === "email" ? `mailto:${label}` : `tel:${phone}`;
   return {
     key: `contact-${kind}`,
     label,

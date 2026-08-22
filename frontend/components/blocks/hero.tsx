@@ -79,7 +79,7 @@ export default function Hero({
           <Image
             alt={image.alt || ""}
             data-sanity={dataAttribute?.("image")}
-            height={800}
+            height={1600}
             priority
             src={urlFor(image).width(1400).height(1600).fit("crop").url()}
             width={1400}

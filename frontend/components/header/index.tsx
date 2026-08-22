@@ -1,13 +1,15 @@
 import { createHeaderBrandModel, createHeaderNavigationModel } from "./model";
-import { Header } from "./site-header";
+import { Header, HeaderNavigation } from "./site-header";
+import type { HeaderNavigationModel } from "./model";
 import { fetchSanityNavigation, fetchSanitySettings } from "@/sanity/lib/fetch";
 import { getDynamicFetchOptions, type DynamicFetchOptions } from "@/sanity/lib/live";
 export { Header } from "./site-header";
 
-function HeaderUnavailable() {
+function HeaderUnavailable({ navigation }: { navigation: HeaderNavigationModel }) {
   return (
     <header data-header-state="unavailable">
-      Site identity is unavailable.
+      <p>Site identity is unavailable.</p>
+      <HeaderNavigation navigation={navigation} />
     </header>
   );
 }
@@ -22,12 +24,13 @@ export async function CachedHeader({ perspective, stega }: DynamicFetchOptions) 
     fetchSanitySettings({ perspective, stega }),
     fetchSanityNavigation({ perspective, stega }),
   ]);
+  const navigation = createHeaderNavigationModel(rawNavigation);
   const brand = createHeaderBrandModel(settings);
-  if (!brand) return <HeaderUnavailable />;
+  if (!brand) return <HeaderUnavailable navigation={navigation} />;
 
   const model = {
     brand,
-    navigation: createHeaderNavigationModel(rawNavigation),
+    navigation,
   };
 
   return <Header model={model} />;

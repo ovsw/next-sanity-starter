@@ -105,9 +105,9 @@ const footerColumn = defineType({
   ],
   preview: {
     select: { title: "heading", links: "links" },
-    prepare: ({ title, links = [] }) => ({
+    prepare: ({ title, links }) => ({
       title,
-      subtitle: `${links.length} link${links.length === 1 ? "" : "s"}`,
+      subtitle: `${links?.length ?? 0} link${links?.length === 1 ? "" : "s"}`,
     }),
   },
 });

@@ -76,7 +76,16 @@ export function SiteFooter({
         © <span data-sanity={dataAttribute?.("copyrightStartYear")}>{model.copyrightYears}</span>{" "}
         <span data-sanity={dataAttribute?.("copyrightOwner")}>{model.copyrightOwner}</span>
       </p>
-      <LinkList links={[...model.socialLinks, ...model.legalLinks]} />
+      {model.socialLinks.length ? (
+        <nav aria-label="Social links">
+          <LinkList links={model.socialLinks} />
+        </nav>
+      ) : null}
+      {model.legalLinks.length ? (
+        <nav aria-label="Legal links">
+          <LinkList links={model.legalLinks} />
+        </nav>
+      ) : null}
     </footer>
   );
 }

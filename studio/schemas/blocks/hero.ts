@@ -35,8 +35,8 @@ export default defineType({
         text: "Explore our work",
         url: {
           _type: "customUrl",
-          type: "external",
-          external: "/",
+          type: "internal",
+          internal: { _type: "reference", _ref: "homePage" },
           openInNewTab: false,
         },
         variant: "default",
@@ -69,8 +69,7 @@ export default defineType({
       name: "image",
       type: "image",
       options: { hotspot: true },
-      description:
-        "Optional. Without an image, the Website uses the Starter's original geometric artwork.",
+      description: "Optional image shown with the introduction.",
       fields: [
         defineField({
           name: "alt",

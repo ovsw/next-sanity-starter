@@ -24,7 +24,7 @@ describe("NavigationIcon", () => {
     '<script>alert("nope")</script>',
     '<svg><script>alert("nope")</script></svg>',
     '<svg onload="alert(1)"><path d="M0 0" /></svg>',
-  ])("omits unsafe stored markup", (svg) => {
+  ])("omits unsafe stored markup: %s", (svg) => {
     const { container } = render(
       <NavigationIcon icon={{ name: "landmark", svg }} />,
     );

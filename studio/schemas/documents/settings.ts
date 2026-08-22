@@ -1,4 +1,4 @@
-import { AtSign, Contact, Globe2, ImageIcon, Settings } from "lucide-react";
+import { Contact, Globe2, ImageIcon, Settings } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 const socialLink = defineType({
@@ -29,7 +29,7 @@ const contactDetails = defineType({
   type: "object",
   icon: Contact,
   fields: [
-    defineField({ name: "email", type: "email", icon: AtSign }),
+    defineField({ name: "email", type: "email" }),
     defineField({
       name: "phone",
       type: "string",
