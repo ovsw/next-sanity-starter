@@ -1,13 +1,12 @@
 import { advisorCtaQuery } from "./advisor-cta";
 import { awardCtaQuery } from "./award-cta";
 import { benefitCardsQuery } from "./benefit-cards";
-import { bigVideoFeatureQuery } from "./big-video-feature";
 import { comparisonTableQuery } from "./comparison-table";
+import { bigVideoFeatureQuery } from "./big-video-feature";
 import { contactFormQuery } from "./contact-form";
 import { ctaBannerQuery } from "./cta-banner";
 import { editorialChapterQuery } from "./editorial-chapter";
 import { faqAccordionQuery } from "./faq-accordion";
-import { heroQuery } from "./hero";
 import { homeHeroQuery } from "./home-hero";
 import { homebotWidgetQuery } from "./homebot-widget";
 import { latestArticlesQuery } from "./latest-articles";
@@ -24,9 +23,8 @@ import { storyFeatureQuery } from "./story-feature";
 import { teamMembersQuery } from "./team-members";
 import { videoFeatureQuery } from "./video-feature";
 import { youtubeChannelFeatureQuery } from "./youtube-channel-feature";
+import { heroQuery } from "./hero";
 
-// Legacy projections remain until issue #7 deletes the hidden donor sections.
-// Keeping them here preserves generated types while that cleanup is pending.
 export const pageBuilderQuery = `
   blocks[]{
     _key,
@@ -34,9 +32,6 @@ export const pageBuilderQuery = `
     sectionNav{
       navLabel
     },
-    ${heroQuery},
-    ${richTextBlockQuery},
-    ${ctaBannerQuery},
     ${homeHeroQuery},
     ${loanFeatureCardsQuery},
     ${videoFeatureQuery},
@@ -55,10 +50,13 @@ export const pageBuilderQuery = `
     ${personContactCtaQuery},
     ${contactFormQuery},
     ${teamMembersQuery},
+    ${richTextBlockQuery},
     ${advisorCtaQuery},
     ${processStepsQuery},
+    ${ctaBannerQuery},
     ${benefitCardsQuery},
     ${comparisonTableQuery},
-    ${loanRequirementsQuery}
+    ${loanRequirementsQuery},
+    ${heroQuery}
   }
 `;
