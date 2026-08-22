@@ -30,6 +30,10 @@ If local env files already exist, setup stops instead of replacing them. Use `pn
 
 Setup never asks for a token. Add optional preview and integration credentials to the local env files only when the matching feature needs them. The committed `.env.local.example` files list the supported names.
 
+For repository-scoped Sanity MCP access in Codex, add `SANITY_AUTH_TOKEN` to
+an ignored `.env.local` at the repository root. The committed Codex
+configuration loads it when starting the MCP server.
+
 Start both apps:
 
 ```bash

@@ -1,3 +1,6 @@
 [mcp_servers.sanity]
-url = "https://mcp.sanity.io"
-bearer_token_env_var = "SANITY_AUTH_TOKEN"
+command = "sh"
+args = [
+  "-c",
+  'set -a; . ./.env.local; set +a; : "${SANITY_AUTH_TOKEN:?Add SANITY_AUTH_TOKEN to .env.local}"; exec npx -y mcp-remote@0.1.38 https://mcp.sanity.io --transport http-only --header "Authorization: Bearer \${SANITY_AUTH_TOKEN}"',
+]
