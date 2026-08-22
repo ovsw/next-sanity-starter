@@ -52,7 +52,7 @@ export async function CategoryArchiveRoute({
   const canonicalPath = getBlogCanonicalPath(currentPage, basePath);
 
   return (
-    <main>
+    <>
       <BreadcrumbJsonLd
         items={[
           { name: "Home", path: "/" },
@@ -91,6 +91,6 @@ export async function CategoryArchiveRoute({
         )}
         <BlogPagination basePath={basePath} pagination={pagination} />
       </section>
-    </main>
+    </>
   );
 }

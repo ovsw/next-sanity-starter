@@ -29,3 +29,7 @@ test("category routes share the runtime indexability rule and editable fields", 
   assert.match(archiveSource, /fieldDataAttribute\?\.\("title"\)/);
   assert.match(archiveSource, /fieldDataAttribute\?\.\("description"\)/);
 });
+
+test("category archive does not nest a main landmark inside the app layout", () => {
+  assert.doesNotMatch(archiveSource, /<main\b/);
+});
