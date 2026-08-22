@@ -45,12 +45,34 @@ pnpm dev
 
 Before using Presentation, add the Website and Studio origins to your own Sanity project's CORS settings.
 
+## Optional sample content
+
+After setup, you can seed a new empty dataset with neutral example content:
+
+```bash
+pnpm seed
+```
+
+The seed is manual. It never runs during install, setup, development, build, or deploy. It refuses to write unless the target dataset is empty.
+
+Seeding needs a Sanity write token in `SANITY_AUTH_TOKEN`, either in the shell or in an ignored root `.env.local`.
+
+The sample content creates global settings, navigation, footer, the homepage, a normal `/about/` page, Blog settings, authors, categories, a Blog Post, FAQ, Team Member, Testimonial, relevant SEO values, and every retained Page Builder section. Use it to confirm Website rendering and Studio editing, then remove it before adding real project content:
+
+```bash
+pnpm unseed
+```
+
+Unseed removes only marked Starter sample documents and their Starter sample asset. It refuses partial or unmarked targets instead of emptying a dataset generally.
+
 ## Workspace commands
 
 ```bash
 pnpm dev
 pnpm dev:frontend
 pnpm dev:studio
+pnpm seed
+pnpm unseed
 pnpm lint
 pnpm typecheck
 pnpm test

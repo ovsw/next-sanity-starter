@@ -54,7 +54,7 @@ test("writes ignored env files and refuses to replace them by default", async ()
     assert.match(frontend, /NEXT_PUBLIC_SITE_URL=https:\/\/example\.com/);
     await assert.rejects(
       writeSetupFiles(directory, values),
-      /frontend\/\.env\.local already exists/,
+      /(frontend|studio)\/\.env\.local already exists/,
     );
   } finally {
     await rm(directory, { recursive: true });
