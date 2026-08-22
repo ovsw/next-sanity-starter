@@ -1,4 +1,3 @@
-import { YouTubeEmbed } from "@next/third-parties/google";
 import {
   PortableText,
   type PortableTextBlockComponent,
@@ -8,37 +7,17 @@ import { buttonVariants } from "@/components/ui/button";
 import { CustomLinkMarkRenderer } from "@/components/portable-text/custom-link-mark";
 import { getSafeLinkHref } from "@/lib/safe-href";
 import { cn } from "@/lib/utils";
+import { getYouTubeVideoId } from "@/lib/youtube-video-id";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { RichTextYoutubeEmbed } from "@/components/portable-text/rich-text-youtube-embed";
 
 type GetHeadingId = (block: { _key?: string }) => string | undefined;
 type RichTextBlockComponents = Extract<
   NonNullable<PortableTextProps["components"]>["block"],
   Record<string, unknown>
 >;
-
-function getYouTubeVideoId(value: unknown) {
-  if (typeof value !== "string") return null;
-
-  try {
-    const url = new URL(value);
-    const hostname = url.hostname.replace(/^www\./, "");
-
-    if (hostname === "youtu.be") {
-      return url.pathname.split("/").filter(Boolean)[0] ?? null;
-    }
-    if (hostname === "youtube.com" || hostname === "youtube-nocookie.com") {
-      return url.pathname.startsWith("/embed/")
-        ? (url.pathname.split("/").filter(Boolean)[1] ?? null)
-        : url.searchParams.get("v");
-    }
-  } catch {
-    return null;
-  }
-
-  return null;
-}
 
 function getSafeIframeSrc(value: unknown) {
   if (typeof value !== "string") return null;
@@ -214,7 +193,7 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       );
     },
     youtube: ({ value }) => {
-      const videoId = getYouTubeVideoId(value.url);
+      const videoId = getYouTubeVideoId(stegaClean(value.url));
       const fallbackHref = getSafeLinkHref(value.url);
       if (!videoId) {
         return fallbackHref ? (
@@ -230,11 +209,27 @@ export const richTextContentComponents: PortableTextProps["components"] = {
           </p>
         ) : null;
       }
+      const thumbnail = value.thumbnailImage?.resolvedAsset;
+      const title = stegaClean(value.title)?.trim() || "Video";
+      const description = stegaClean(value.description)?.trim();
 
       return (
-        <div className="my-8 aspect-video max-w-[45rem] overflow-hidden rounded-card">
-          <YouTubeEmbed videoid={videoId} params="rel=0" />
-        </div>
+        <RichTextYoutubeEmbed
+          description={description || undefined}
+          thumbnail={
+            thumbnail?.url
+              ? {
+                  alt: stegaClean(value.thumbnailImage?.alt) || title,
+                  blurDataURL: thumbnail.metadata?.lqip || undefined,
+                  height: thumbnail.metadata?.dimensions?.height ?? 720,
+                  url: thumbnail.url,
+                  width: thumbnail.metadata?.dimensions?.width ?? 1280,
+                }
+              : undefined
+          }
+          title={title}
+          videoId={videoId}
+        />
       );
     },
     iframeEmbed: ({ value }) => {

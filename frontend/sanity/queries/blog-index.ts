@@ -3,6 +3,7 @@ import { pageBuilderQuery } from "./page-builder";
 import { imageQuery } from "./shared/image";
 import { metaQuery } from "./shared/meta";
 import type { LATEST_POST_QUERY_RESULT } from "@/sanity.types";
+import { blogPostOrder, publishedPostFilter } from "./blog-post-listing";
 
 export type CategoryReference = {
   _id: string;
@@ -23,10 +24,6 @@ const blogPostProjection = `
   image {${imageQuery}},
   category->{_id, title, slug}
 `;
-
-export const publishedPostFilter =
-  `_type == "post" && defined(slug.current) && defined(publishedAt)`;
-export const blogPostOrder = `publishedAt desc, _createdAt desc, _id asc`;
 
 export const BLOG_INDEX_QUERY = groq`
   *[_id == "blogIndex"][0]{

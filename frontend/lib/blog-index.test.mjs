@@ -50,9 +50,24 @@ test("the regular-post GROQ excludes the one latest post and uses deterministic 
     new URL("../sanity/queries/blog-index.ts", import.meta.url),
     "utf8",
   );
+  const listingSource = readFileSync(
+    new URL("../sanity/queries/blog-post-listing.ts", import.meta.url),
+    "utf8",
+  );
   assert.match(source, /_id != \$latestPostId/);
-  assert.match(source, /publishedAt desc, _createdAt desc, _id asc/);
+  assert.match(listingSource, /publishedAt desc, _createdAt desc, _id asc/);
   assert.match(source, /order\(\$\{blogPostOrder\}\)\[0\]/);
+});
+
+test("latest-posts sections use the same published-post rule as blog archives", () => {
+  const source = readFileSync(
+    new URL("../sanity/queries/latest-articles.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /publishedPostFilter/);
+  assert.doesNotMatch(source, /coalesce\(publishedAt, _createdAt\)/);
+  assert.match(source, /publishedAt,/);
 });
 
 test("listing cards expose every visible post field to Presentation", () => {
@@ -158,4 +173,15 @@ test("reports result counts for the regular collection only", () => {
   assert.equal(getBlogResultsLabel(1, 12, 57), "Showing 1–12 of 57 posts");
   assert.equal(getBlogResultsLabel(5, 9, 57), "Showing 49–57 of 57 posts");
   assert.equal(getBlogResultsLabel(1, 0, 0), "No posts");
+});
+
+test("the first blog page shows a clear one-post archive empty state", () => {
+  const source = readFileSync(
+    new URL("../app/(main)/blog/_components/blog-index-route.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /const hasRegularPosts = regularPosts\.length > 0/);
+  assert.match(source, /hasRegularPosts \?/);
+  assert.match(source, /No more posts yet\./);
 });

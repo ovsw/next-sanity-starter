@@ -45,6 +45,10 @@ export async function BlogIndexRoute({
   if (isBlogPageOutOfRange(currentPage, pagination.totalPages)) {
     notFound();
   }
+  const postsHeading = currentPage === 1 && latestPost ? "More posts" : "All posts";
+  const emptyPostsMessage =
+    currentPage === 1 && latestPost ? "No more posts yet." : "No posts yet.";
+  const hasRegularPosts = regularPosts.length > 0;
 
   const fieldDataAttribute = stega
     ? (path: "description" | "title") =>
@@ -84,9 +88,15 @@ export async function BlogIndexRoute({
       ) : null}
 
       <section aria-labelledby="all-posts-heading">
-        <h2 id="all-posts-heading">All posts</h2>
-        <p>{getBlogResultsLabel(currentPage, regularPosts.length, regularPostCount)}</p>
-        {latestPost ? (
+        <h2 id="all-posts-heading">{postsHeading}</h2>
+        <p>
+          {getBlogResultsLabel(
+            currentPage,
+            regularPosts.length,
+            regularPostCount,
+          )}
+        </p>
+        {hasRegularPosts ? (
           <>
             <div>
               {regularPosts.map((post) => (
@@ -96,7 +106,7 @@ export async function BlogIndexRoute({
             <BlogPagination pagination={pagination} />
           </>
         ) : (
-          <p>No posts yet.</p>
+          <p>{emptyPostsMessage}</p>
         )}
       </section>
 

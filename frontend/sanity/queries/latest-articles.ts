@@ -1,4 +1,5 @@
 import { groq } from "next-sanity";
+import { blogPostOrder, publishedPostFilter } from "./blog-post-listing";
 import { imageQuery } from "./shared/image";
 import { urlInternalHref } from "./shared/internal-href";
 
@@ -24,21 +25,17 @@ export const latestArticlesQuery = groq`
       ${imageQuery}
     },
     "articles": *[
-      _type == "post" &&
-      defined(slug.current) &&
+      ${publishedPostFilter} &&
       meta.noindex != true &&
       seoHideFromLists != true &&
       seoNoIndex != true
-    ] | order(
-      coalesce(publishedAt, _createdAt) desc,
-      _updatedAt desc
-    )[0...6]{
+    ] | order(${blogPostOrder})[0...6]{
       _type,
       _id,
       title,
       "description": coalesce(meta.description, pt::text(excerpt)),
       "slug": slug.current,
-      "publishedAt": coalesce(publishedAt, _createdAt),
+      publishedAt,
       image{
         ${imageQuery}
       },
