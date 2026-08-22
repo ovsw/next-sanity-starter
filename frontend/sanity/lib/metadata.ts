@@ -13,17 +13,18 @@ import {
 } from "@/lib/blog-index";
 import type { CategoryArchive } from "@/sanity/queries/category";
 import { buildPostOgImageUrl, isValidOgSlug } from "@/lib/post-og-image";
+import { siteName } from "@/lib/site-name";
 import {
   buildPageOgImageUrl,
   getPageOgImageTitle,
   type PageOgImageTarget,
 } from "@/lib/page-og-image";
-import { resolveSeoTitle, TITLE_SUFFIX } from "../../../shared/seo-title";
+import { resolveSeoTitle } from "../../../shared/seo-title";
 const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 
 const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-function sharingImage(url: string, title: string, alt = `${title}${TITLE_SUFFIX}`) {
+function sharingImage(url: string, title: string, alt = `${title} | ${siteName}`) {
   return {
     url,
     width: 1200,
@@ -53,12 +54,14 @@ function resolveArchiveTitles({
   const baseTitleResolution = resolveSeoTitle({
     fallbackTitle: contentTitle || fallbackTitle,
     overrideTitle,
+    siteName,
   });
   const pageTitleResolution = resolveSeoTitle({
     fallbackTitle: getBlogPageTitle(baseTitleResolution.pageTitle, page),
     ...(overrideTitle?.includes("|")
       ? { overrideTitle: getBlogPageTitle(baseTitleResolution.finalTitle, page) }
       : {}),
+    siteName,
   });
   const cardTitle = getBlogPageTitle(
     getPageOgImageTitle(contentTitle || overrideTitle || fallbackTitle),
@@ -81,6 +84,7 @@ export function generatePageMetadata({
     fallbackTitle: page?.title,
     isHomepage,
     overrideTitle: page?.meta?.title,
+    siteName,
   });
   const postTitle = isPost ? page.title?.trim() : undefined;
   // Slugs the signed OG routes cannot represent fall through to the generic

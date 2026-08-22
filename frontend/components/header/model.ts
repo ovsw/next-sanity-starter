@@ -122,10 +122,7 @@ export function createHeaderBrandModel(
   );
 
   return {
-    label:
-      settings?.siteName?.trim() === SITE_NAME
-        ? settings.siteName.trim()
-        : SITE_NAME,
+    label: settings?.siteName?.trim() || siteName,
     light: main.light,
     dark: main.dark,
     secondary: {
@@ -245,4 +242,4 @@ export type HeaderBrandModel = {
     dark: HeaderLogoModel | null;
   };
 };
-import { SITE_NAME } from "../../../shared/seo-title";
+import { siteName } from "@/lib/site-name";

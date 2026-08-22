@@ -1,4 +1,5 @@
 import { getBlogPageTitle } from "@/lib/blog-index";
+import { siteName } from "@/lib/site-name";
 import {
   createOgImageResponse,
   ogImageFallbackResponse,
@@ -58,7 +59,10 @@ async function fetchTitle(
     // stays in metadata and image alt text.
     return getPageOgImageTitle(
       data.title ||
-        resolveSeoTitle({ overrideTitle: data.overrideTitle }).pageTitle,
+        resolveSeoTitle({
+          overrideTitle: data.overrideTitle,
+          siteName,
+        }).pageTitle,
     );
   }
 

@@ -91,7 +91,7 @@ describe("generatePageMetadata", () => {
     expect(metadata.openGraph.type).toBe("article");
     expect(metadata.title).toBe("Mortgage rates");
     expect(metadata.openGraph.title).toBe(
-      "Mortgage rates | Next.js + Sanity Starter",
+      "Mortgage rates | Example Company",
     );
     expect(metadata.openGraph).toHaveProperty(
       "publishedTime",
@@ -100,11 +100,11 @@ describe("generatePageMetadata", () => {
     expect(image).toMatchObject({
       width: 1200,
       height: 630,
-      alt: `${post.title} | Next.js + Sanity Starter`,
+      alt: `${post.title} | Example Company`,
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Mortgage rates | Next.js + Sanity Starter",
+      title: "Mortgage rates | Example Company",
       images: [image],
     });
     expect(
@@ -166,7 +166,7 @@ describe("generatePageMetadata", () => {
 
     expect(metadata.title).toBe("About");
     expect(metadata.openGraph.title).toBe(
-      "About | Next.js + Sanity Starter",
+      "About | Example Company",
     );
   });
 

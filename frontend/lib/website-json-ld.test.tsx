@@ -12,7 +12,7 @@ describe("WebsiteJsonLd", () => {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "@id": "https://example.com/#website",
-      name: "Next.js + Sanity Starter",
+      name: "Example Company",
       url: "https://example.com",
     });
   });
