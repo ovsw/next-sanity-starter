@@ -2,7 +2,6 @@ import { createDataAttribute, stegaClean } from "next-sanity";
 import Blocks from "@/components/blocks";
 import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
 import FaqPageJsonLd from "@/components/faq-json-ld";
-import LoanJsonLd from "@/components/loan-json-ld";
 import VideoJsonLd from "@/components/video-json-ld";
 import { siteUrl } from "@/lib/site-url";
 import QuickNav from "@/components/quick-nav";
@@ -17,7 +16,6 @@ import {
   PostSidebar,
   PostTableOfContentsRail,
 } from "@/components/post-sidebar/post-sidebar";
-import { cn } from "@/lib/utils";
 import { documentDataAttribute } from "@/components/blog-card";
 import RichTextContent from "@/components/rich-text-content";
 import { dataset, projectId } from "@/sanity/lib/env";
@@ -54,27 +52,18 @@ function PageContent({
   return (
     <>
       <FaqPageJsonLd blocks={blocks} />
-      <LoanJsonLd
-        loanType={page.loanType}
-        metaDescription={page.meta?.description}
-        pageDescription={page.description}
-        siteUrl={siteUrl}
-        slug={page.slug}
-      />
       <VideoJsonLd blocks={blocks} siteUrl={siteUrl} />
       {isRichTextOnlyPage && stegaClean(page.title)?.trim() ? (
-        <header className="surface-white border-b border-border py-14 md:py-20">
-          <div className="container">
-            <div className="max-w-4xl">
+        <header>
+          <div>
+            <div>
               <h1
-                className="text-balance text-[clamp(2.5rem,5vw,4rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground"
                 data-sanity={rootDataAttribute?.("title")}
               >
                 {page.title}
               </h1>
               {stegaClean(page.description)?.trim() ? (
                 <p
-                  className="mt-5 max-w-3xl text-pretty text-lg leading-8 text-muted-foreground md:text-xl"
                   data-sanity={rootDataAttribute?.("description")}
                 >
                   {page.description}
@@ -117,13 +106,6 @@ function PostContent({
   const bodyModel = createPostBodyModel(body);
   const hasPostSidebar = Boolean(blogPostSidebar?.actions?.length);
   const hasTableOfContents = bodyModel.showTableOfContents;
-  const layoutClassName = hasTableOfContents
-    ? hasPostSidebar
-      ? "lg:grid-cols-[15rem_minmax(0,1fr)_17rem]"
-      : "lg:grid-cols-[15rem_minmax(0,48rem)] lg:justify-center"
-    : hasPostSidebar
-      ? "lg:grid-cols-[minmax(0,48rem)_20rem] lg:justify-center"
-      : "lg:grid-cols-[minmax(0,48rem)] lg:justify-center";
   const layoutName = hasTableOfContents
     ? hasPostSidebar
       ? "three-column"
@@ -151,22 +133,16 @@ function PostContent({
     : undefined;
 
   return (
-    <section className="surface-cream">
+    <section>
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
       <VideoJsonLd blocks={[]} postBody={body} siteUrl={siteUrl} />
-      <div className="container py-16 md:py-24">
+      <div>
         <PostHero post={post} readTime={readTime} stega={stega} />
-        <div
-          className={cn(
-            "mt-12 grid grid-cols-1 gap-10 lg:mt-16 lg:gap-12",
-            layoutClassName,
-          )}
-          data-post-layout={layoutName}
-        >
+        <div data-post-layout={layoutName}>
           {bodyModel.showTableOfContents ? (
             <PostTableOfContentsRail headings={bodyModel.headings} />
           ) : null}
-          <article className="min-w-0">
+          <article>
             {body.length ? (
               <RichTextContent
                 dataSanity={bodyDataAttribute}

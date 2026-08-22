@@ -8,7 +8,9 @@ import testimonial from "./schemas/documents/testimonial";
 import navigation, {
   navigationSchemaTypes,
 } from "./schemas/documents/navigation";
-import settings from "./schemas/documents/settings";
+import settings, {
+  settingsSchemaTypes,
+} from "./schemas/documents/settings";
 import teamMember from "./schemas/documents/team-member";
 import blogIndex from "./schemas/documents/blog-index";
 import blogPostSettings from "./schemas/documents/blog-post-settings";
@@ -34,6 +36,7 @@ import {
   blogPostSidebarAction,
 } from "./schemas/blocks/shared/blog-post-sidebar";
 // Schema UI objects
+import hero from "./schemas/blocks/hero";
 import hero1 from "./schemas/blocks/hero/hero-1";
 import homeHero from "./schemas/blocks/home-hero";
 import loanFeatureCards from "./schemas/blocks/loan-feature-cards";
@@ -72,6 +75,7 @@ export const schemaTypes = [
   navigation,
   ...navigationSchemaTypes,
   settings,
+  ...settingsSchemaTypes,
   teamMember,
   blogIndex,
   blogPostSettings,
@@ -95,6 +99,7 @@ export const schemaTypes = [
   blogPostSidebarAction,
   blogPostSidebar,
   // blocks
+  hero,
   hero1,
   homeHero,
   loanFeatureCards,

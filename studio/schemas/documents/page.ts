@@ -62,7 +62,12 @@ export default defineType({
     },
   ],
   fields: [
-    defineField({ name: "title", type: "string", group: "content" }),
+    defineField({
+      name: "title",
+      type: "string",
+      group: "content",
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: "description",
       title: "Description",
@@ -89,26 +94,6 @@ export default defineType({
       initialValue: true,
       description:
         "Show a sticky “On this page” quick nav below the hero. It only appears when at least two sections have a quick nav label.",
-    }),
-    defineField({
-      name: "loanType",
-      title: "Loan type",
-      type: "string",
-      group: "settings",
-      description:
-        "Set only on pages describing a single loan product. Drives automatic structured data (SEO). Leave empty otherwise.",
-      options: {
-        list: [
-          "VA Loan",
-          "FHA Loan",
-          "Conventional Loan",
-          "Jumbo Loan",
-          "USDA Loan",
-          "Construction-to-Permanent Loan",
-          "Adjustable-Rate Mortgage (ARM)",
-          "Refinance Loan",
-        ],
-      },
     }),
     blocksField,
     meta,

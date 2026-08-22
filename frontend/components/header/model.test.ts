@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { createHeaderNavigationModel } from "./model";
+import {
+  createHeaderBrandModel,
+  createHeaderNavigationModel,
+} from "./model";
 
 const testSvg =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 22h18"></path></svg>';
@@ -16,16 +19,16 @@ describe("createHeaderNavigationModel", () => {
           destination: { href: "contact", openInNewTab: false },
         },
         {
-          _key: "loans",
+          _key: "services",
           kind: "group",
-          label: "Loan Types",
+          label: "Services",
           links: [
             {
-              _key: "va",
-              label: "VA Loan",
-              description: "Benefits for eligible service members.",
+              _key: "strategy",
+              label: "Strategy",
+              description: "Find the clearest path through a hard problem.",
               icon: { name: "shield-check", svg: testSvg },
-              destination: { href: "/phoenix-va-loan", openInNewTab: false },
+              destination: { href: "/strategy", openInNewTab: false },
             },
           ],
         },
@@ -33,7 +36,7 @@ describe("createHeaderNavigationModel", () => {
       actions: [
         {
           _key: "schedule",
-          label: "Schedule Consult",
+          label: "Start a project",
           destination: {
             href: "https://example.com/book",
             openInNewTab: true,
@@ -51,18 +54,18 @@ describe("createHeaderNavigationModel", () => {
           link: { href: "/contact", label: "Contact", openInNewTab: false },
         },
         {
-          key: "loans",
+          key: "services",
           kind: "group",
-          label: "Loan Types",
+          label: "Services",
           links: [
             {
-              key: "va",
-              label: "VA Loan",
-              description: "Benefits for eligible service members.",
+              key: "strategy",
+              label: "Strategy",
+              description: "Find the clearest path through a hard problem.",
               icon: { name: "shield-check", svg: testSvg },
               link: {
-                href: "/phoenix-va-loan",
-                label: "VA Loan",
+                href: "/strategy",
+                label: "Strategy",
                 openInNewTab: false,
               },
             },
@@ -74,7 +77,7 @@ describe("createHeaderNavigationModel", () => {
           key: "schedule",
           link: {
             href: "https://example.com/book",
-            label: "Schedule Consult",
+            label: "Start a project",
             openInNewTab: true,
           },
         },
@@ -103,5 +106,12 @@ describe("createHeaderNavigationModel", () => {
     });
 
     expect(model).toEqual({ items: [], actions: [] });
+  });
+
+  it("uses only the authored Sanity identity", () => {
+    expect(createHeaderBrandModel(null)).toBeNull();
+    expect(
+      createHeaderBrandModel({ siteName: "Northline", logo: null } as never),
+    ).toEqual({ dark: null, label: "Northline", light: null });
   });
 });

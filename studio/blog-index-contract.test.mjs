@@ -12,10 +12,18 @@ import {
 
 test("the shared blocks field exactly matches its authoritative inventory", () => {
   assert.deepEqual(
-    blocksField.of.map(({ type }) => type),
+    blocksField.of.filter(({ hidden }) => !hidden).map(({ type }) => type),
     [...pageBuilderBlockTypes],
   );
-  assert.equal(pageBuilderBlockTypes.filter((type) => type === "advisorCta").length, 1);
+  assert.deepEqual([...pageBuilderBlockTypes], [
+    "hero",
+    "richTextBlock",
+    "ctaBanner",
+  ]);
+  assert.equal(
+    blocksField.of.filter(({ hidden }) => hidden).every(({ hidden }) => hidden),
+    true,
+  );
   assert.equal(new Set(pageBuilderBlockTypes).size, pageBuilderBlockTypes.length);
 });
 

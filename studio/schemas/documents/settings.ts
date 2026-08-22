@@ -1,104 +1,114 @@
-import { defineField, defineType } from "sanity";
-import { Settings } from "lucide-react";
+import { AtSign, Contact, Globe2, ImageIcon, Settings } from "lucide-react";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
-export default defineType({
-  name: "settings",
-  title: "Settings",
-  type: "document",
-  icon: Settings,
+const socialLink = defineType({
+  name: "socialLink",
+  title: "Social link",
+  type: "object",
+  icon: Globe2,
   fields: [
     defineField({
+      name: "label",
+      type: "string",
+      description: "The network or community name shown to visitors.",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "url",
+      type: "url",
+      validation: (rule) =>
+        rule.required().uri({ scheme: ["http", "https"] }),
+    }),
+  ],
+  preview: { select: { title: "label", subtitle: "url" } },
+});
+
+const contactDetails = defineType({
+  name: "contactDetails",
+  title: "Contact details",
+  type: "object",
+  icon: Contact,
+  fields: [
+    defineField({ name: "email", type: "email", icon: AtSign }),
+    defineField({
+      name: "phone",
+      type: "string",
+      description: "Include the country or area code visitors should dial.",
+    }),
+    defineField({
+      name: "addressLines",
+      title: "Address",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+      validation: (rule) => rule.max(4),
+    }),
+  ],
+});
+
+const settings = defineType({
+  name: "settings",
+  title: "Global Settings",
+  type: "document",
+  icon: Settings,
+  groups: [
+    { name: "identity", title: "Identity", default: true },
+    { name: "contact", title: "Contact" },
+  ],
+  fields: [
+    defineField({
+      name: "siteName",
+      title: "Site name",
+      type: "string",
+      group: "identity",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "logo",
-      title: "Main logo",
-      description:
-        "The primary brand lockup. Sits at the left of the header, with the secondary logo beside it.",
+      title: "Logo",
       type: "object",
+      icon: ImageIcon,
+      group: "identity",
+      description:
+        "Optional. When no logo is supplied, the header uses the site name as text.",
       fields: [
         defineField({
-          name: "dark",
-          type: "image",
-          options: { hotspot: true },
-        }),
-        defineField({
           name: "light",
+          title: "For light backgrounds",
           type: "image",
           options: { hotspot: true },
         }),
         defineField({
-          name: "width",
-          type: "number",
-          title: "Width",
-          description:
-            "The width of the logo. Default is dimensions of the image.",
-        }),
-        defineField({
-          name: "height",
-          type: "number",
-          title: "Height",
-          description:
-            "The height of the logo. Default is dimensions of the image.",
+          name: "dark",
+          title: "For dark backgrounds",
+          type: "image",
+          options: { hotspot: true },
         }),
       ],
     }),
     defineField({
-      name: "secondaryLogo",
-      title: "Secondary logo",
-      type: "object",
-      description:
-        "Optional parent-brand or partner mark shown beside the main logo.",
-      fields: [
-        defineField({
-          name: "dark",
-          type: "image",
-          title: "Dark mode (optional)",
-          description:
-            "Optional. Leave empty to invert the light asset instead. Multi-color marks rarely invert cleanly, so supply a dedicated file once one is available.",
-          options: { hotspot: true },
-        }),
-        defineField({
-          name: "light",
-          type: "image",
-          title: "Light mode",
-          description:
-            "Compact horizontal lockup. Used on light backgrounds, and inverted for dark mode until a dedicated dark asset is supplied.",
-          options: { hotspot: true },
-        }),
-        defineField({
-          name: "width",
-          type: "number",
-          title: "Width",
-          description:
-            "The width of the logo. Default is dimensions of the image.",
-        }),
-        defineField({
-          name: "height",
-          type: "number",
-          title: "Height",
-          description:
-            "The height of the logo. Default is dimensions of the image.",
-        }),
-      ],
+      name: "contact",
+      type: "contactDetails",
+      group: "contact",
     }),
     defineField({
-      name: "blogPostSidebar",
-      title: "Blog Post Sidebar",
-      type: "blogPostSidebar",
-      deprecated: {
-        reason: "Moved to Blog > Blog Post Settings.",
-      },
-      hidden: true,
-      readOnly: true,
+      name: "socialLinks",
+      title: "Social links",
+      type: "array",
+      group: "contact",
+      of: [defineArrayMember({ type: "socialLink" })],
+      validation: (rule) => rule.unique(),
     }),
   ],
   preview: {
-    select: {
-      media: "logo",
-    },
-    prepare({ media }) {
-      return {
-        title: "Site Settings",
-        media,
-      };
-    },
+    select: { media: "logo.light", title: "siteName" },
+    prepare: ({ media, title }) => ({
+      title: title || "Global Settings",
+      subtitle: "Site identity and contact details",
+      media,
+    }),
   },
 });
+
+export const settingsSchemaTypes = [socialLink, contactDetails];
+
+export default settings;

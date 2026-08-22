@@ -4,6 +4,14 @@ import { fetchSanityNavigation, fetchSanitySettings } from "@/sanity/lib/fetch";
 import { getDynamicFetchOptions, type DynamicFetchOptions } from "@/sanity/lib/live";
 export { Header } from "./site-header";
 
+function HeaderUnavailable() {
+  return (
+    <header data-header-state="unavailable">
+      Site identity is unavailable.
+    </header>
+  );
+}
+
 export async function DynamicHeader() {
   const { perspective, stega } = await getDynamicFetchOptions();
   return <CachedHeader perspective={perspective} stega={stega} />;
@@ -14,8 +22,11 @@ export async function CachedHeader({ perspective, stega }: DynamicFetchOptions) 
     fetchSanitySettings({ perspective, stega }),
     fetchSanityNavigation({ perspective, stega }),
   ]);
+  const brand = createHeaderBrandModel(settings);
+  if (!brand) return <HeaderUnavailable />;
+
   const model = {
-    brand: createHeaderBrandModel(settings),
+    brand,
     navigation: createHeaderNavigationModel(rawNavigation),
   };
 

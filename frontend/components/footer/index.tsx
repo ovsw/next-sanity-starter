@@ -9,7 +9,7 @@ export { SiteFooter } from "./site-footer";
 
 function FooterUnavailable() {
   return (
-    <footer className="bg-[#0c1329] px-4 py-16 text-center text-sm text-white/75" data-footer-state="unavailable">
+    <footer data-footer-state="unavailable">
       Footer information is temporarily unavailable.
     </footer>
   );

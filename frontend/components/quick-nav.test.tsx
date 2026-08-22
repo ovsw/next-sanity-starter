@@ -28,14 +28,10 @@ describe("QuickNav", () => {
     document.documentElement.style.removeProperty("--site-header-offset");
   });
 
-  it("follows the live site-header offset", () => {
+  it("links to each section", () => {
     render(<QuickNav items={items} />);
 
-    const nav = screen.getByRole("navigation", { name: "On this page" });
-
-    expect(nav).toHaveClass(
-      "top-[var(--site-header-offset,var(--header-height))]",
-    );
+    expect(screen.getByRole("navigation", { name: "On this page" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Why refinance" })).toHaveAttribute(
       "href",
       "#why-refinance",
@@ -79,7 +75,6 @@ describe("QuickNav", () => {
     fireEvent.scroll(window);
     act(() => vi.runOnlyPendingTimers());
     expect(whyLink).toHaveAttribute("aria-current", "location");
-    expect(whyLink).toHaveClass("bg-white", "font-semibold", "text-accent");
     expect(optionsLink).not.toHaveAttribute("aria-current");
 
     optionsTop = 120;

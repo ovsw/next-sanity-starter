@@ -13,7 +13,12 @@ export default defineType({
     { name: "seo", title: "SEO" },
   ],
   fields: [
-    defineField({ name: "title", type: "string", group: "content" }),
+    defineField({
+      name: "title",
+      type: "string",
+      group: "content",
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: "description",
       title: "Description",

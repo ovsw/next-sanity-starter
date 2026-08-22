@@ -1,7 +1,7 @@
 "use client";
 
-// Currently unused: the site ships light-only for launch. Kept for the
-// template. See docs/adr/0001-light-theme-only-for-launch.md to re-enable.
+// Intentionally unused. The Website follows the visitor's system preference
+// without rendering a theme control, but copied projects can opt into one.
 
 import * as React from "react";
 import { Check, Moon, Sun } from "lucide-react";

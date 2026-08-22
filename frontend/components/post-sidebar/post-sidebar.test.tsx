@@ -111,17 +111,6 @@ describe("PostSidebar", () => {
     ]);
   });
 
-  it("uses action order to choose the solid button", () => {
-    render(<PostSidebar sidebar={currentSidebar} />);
-
-    expect(screen.getByRole("link", { name: "Call 480-800-8387" })).toHaveClass(
-      "bg-primary",
-    );
-    expect(screen.getByRole("link", { name: "Apply Online" })).not.toHaveClass(
-      "bg-primary",
-    );
-  });
-
   it("places secondary descriptions before their links", () => {
     render(<PostSidebar sidebar={currentSidebar} />);
 

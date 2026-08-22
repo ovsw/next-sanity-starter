@@ -9,7 +9,6 @@ export const PAGE_QUERY = groq`
     _type,
     title,
     description,
-    loanType,
     "slug": slug.current,
     showQuickNav,
     ${pageBuilderQuery},
