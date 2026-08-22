@@ -32,7 +32,7 @@ export default function Logo({
   const fallbackLogo =
     settings?.logo?.[themeToUse === "dark" ? "light" : "dark"];
   const logoToUse = selectedLogo || fallbackLogo;
-  const label = settings?.siteName?.trim() || siteName;
+  const label = siteName;
 
   return logoToUse ? (
     <Image

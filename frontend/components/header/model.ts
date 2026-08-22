@@ -122,7 +122,7 @@ export function createHeaderBrandModel(
   );
 
   return {
-    label: settings?.siteName?.trim() || siteName,
+    label: siteName,
     light: main.light,
     dark: main.dark,
     secondary: {

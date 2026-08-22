@@ -7849,13 +7849,6 @@
         },
         "optional": true
       },
-      "siteName": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "blogPostSidebar": {
         "type": "objectAttribute",
         "value": {

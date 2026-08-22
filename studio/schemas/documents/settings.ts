@@ -80,12 +80,6 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "siteName",
-      type: "string",
-      description: "The public site name used in visible branding.",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "blogPostSidebar",
       title: "Blog Post Sidebar",
       type: "blogPostSidebar",
@@ -98,12 +92,11 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: "siteName",
       media: "logo",
     },
-    prepare({ title, media }) {
+    prepare({ media }) {
       return {
-        title: title || "Site Settings",
+        title: "Site Settings",
         media,
       };
     },

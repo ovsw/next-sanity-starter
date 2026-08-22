@@ -2,7 +2,6 @@ import { groq } from "next-sanity";
 
 export const SETTINGS_QUERY = groq`*[_type == "settings" && _id == "settings"][0]{
   _type,
-  siteName,
   logo{
     dark{
       ...,
