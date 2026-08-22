@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import { Archivo, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { siteUrl } from "@/lib/site-url";
+import { siteName } from "@/lib/site-name";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { SITE_NAME, TITLE_SUFFIX } from "../../shared/seo-title";
 
 const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    template: `%s${TITLE_SUFFIX}`,
-    default: SITE_NAME,
+    template: `%s | ${siteName}`,
+    default: siteName,
   },
   openGraph: {
     images: [
@@ -61,8 +61,6 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased overscroll-none",
         )}
       >
-        {/* Light-only for launch; see docs/adr/0001-light-theme-only-for-launch.md
-            to re-enable dark mode (swap forcedTheme for the commented props). */}
         <ThemeProvider
           attribute="class"
           forcedTheme="light"

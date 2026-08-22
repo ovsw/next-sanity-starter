@@ -3,8 +3,8 @@ import { type StringInputProps, useFormValue } from "sanity";
 import {
   getSeoTitleWarnings,
   resolveSeoTitle,
-  TITLE_SUFFIX,
 } from "../../../shared/seo-title";
+import { studioSiteName } from "../../site-name";
 
 export function SeoTitleInput(props: StringInputProps) {
   const documentTitle = useFormValue(["title"]);
@@ -12,9 +12,17 @@ export function SeoTitleInput(props: StringInputProps) {
     typeof documentTitle === "string" ? documentTitle : undefined;
   const overrideTitle =
     typeof props.value === "string" ? props.value : undefined;
-  const { finalTitle } = resolveSeoTitle({ fallbackTitle, overrideTitle });
-  const fallback = resolveSeoTitle({ fallbackTitle });
-  const warnings = getSeoTitleWarnings({ fallbackTitle, overrideTitle });
+  const { finalTitle } = resolveSeoTitle({
+    fallbackTitle,
+    overrideTitle,
+    siteName: studioSiteName,
+  });
+  const fallback = resolveSeoTitle({ fallbackTitle, siteName: studioSiteName });
+  const warnings = getSeoTitleWarnings({
+    fallbackTitle,
+    overrideTitle,
+    siteName: studioSiteName,
+  });
 
   return (
     <Stack space={3}>
@@ -38,8 +46,8 @@ export function SeoTitleInput(props: StringInputProps) {
             {overrideTitle?.includes("|")
               ? "Using the complete title exactly as written. The automatic suffix is disabled."
               : overrideTitle?.trim()
-                ? `Using the override above. “${TITLE_SUFFIX.trim()}” is added automatically.`
-                : `Using the content title. “${TITLE_SUFFIX.trim()}” is added automatically.`}
+                ? `Using the override above. “| ${studioSiteName}” is added automatically.`
+                : `Using the content title. “| ${studioSiteName}” is added automatically.`}
           </Text>
           {warnings.map((warning) => (
             <Text key={warning} size={1}>

@@ -6,6 +6,7 @@ import {
   signOgImage,
 } from "./post-og-image";
 import { stripLegacySeoTitleSuffix } from "../../shared/seo-title";
+import { siteName } from "./site-name";
 
 export type PageOgImageTarget =
   | { kind: "home" }
@@ -73,7 +74,7 @@ export function createPageOgImageRevision(title: string) {
 }
 
 export function getPageOgImageTitle(title: string) {
-  return stripLegacySeoTitleSuffix(title);
+  return stripLegacySeoTitleSuffix(title, siteName);
 }
 
 export function buildPageOgImageUrl({

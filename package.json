@@ -1,22 +1,26 @@
 {
-  "name": "phxhomeloancom-2026",
-  "version": "2.0.0",
-  "description": "phxhomeloan.com website and CMS",
+  "name": "next-sanity-starter",
+  "version": "1.0.0",
+  "description": "Reusable Next.js website and Sanity Studio starter",
   "private": true,
   "scripts": {
+    "setup": "node scripts/setup.mjs",
     "dev": "pnpm --parallel -r run dev",
-    "dev:frontend": "pnpm run dev --workspace=frontend",
-    "dev:prototype": "python3 -m http.server 8000 --bind 127.0.0.1 --directory frontend/PHXHomeLoan-web-prototype",
-    "dev:studio": "pnpm run dev --workspace=studio",
-    "audit:seo-titles": "pnpm --dir studio audit:seo-titles",
-    "typegen": "cd studio && pnpm typegen",
+    "dev:frontend": "pnpm --dir frontend dev",
+    "dev:studio": "pnpm --dir studio dev",
+    "build": "pnpm --dir frontend build && pnpm --dir studio build",
+    "typegen": "pnpm --dir studio typegen",
     "typecheck": "pnpm --dir frontend typecheck && pnpm --dir studio typecheck",
     "lint": "pnpm --dir frontend lint",
-    "test": "pnpm --dir frontend test && node --test 'frontend/**/*.test.mjs' 'studio/**/*.test.mjs'",
+    "test": "pnpm --dir frontend test && node --test 'frontend/**/*.test.mjs' 'studio/**/*.test.mjs' && pnpm test:setup",
+    "test:setup": "node --test scripts/setup.test.mjs",
     "test:e2e": "pnpm --dir frontend test:e2e",
-    "test:smoke": "pnpm --dir frontend test:smoke",
-    "export": "cd studio && sanity dataset export production sample-data.tar.gz"
+    "test:smoke": "pnpm --dir frontend test:smoke"
+  },
+  "engines": {
+    "node": "24.x",
+    "pnpm": "11.10.0"
   },
   "packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8",
-  "homepage": "https://www.phxhomeloan.com/"
+  "homepage": "https://github.com/ovsw/next-sanity-starter"
 }

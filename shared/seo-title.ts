@@ -1,18 +1,6 @@
-export const SITE_NAME = "PHX Home Loan";
-export const DEFAULT_TITLE_SUFFIX = "The Vercellino Team";
-export const TITLE_SUFFIX = ` | ${DEFAULT_TITLE_SUFFIX}`;
+export const SITE_NAME = "Next.js + Sanity Starter";
 
-const LEGACY_SITE_NAMES = [
-  SITE_NAME,
-  "Phoenix Mortgage Lenders",
-  "Phoenix Mortgage Lender",
-  "Phoenix Mortgage",
-  "Mortgage Lenders",
-  "Mortgage Lender",
-  "Phoenix Home Loan",
-] as const;
-
-const IMPORTANT_TERMS = ["mortgage", "loan", "lender"] as const;
+const IMPORTANT_TERMS = ["website", "company", "service"] as const;
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -23,16 +11,23 @@ export function normalizeSeoTitle(value: string | null | undefined) {
 }
 
 /** Removes only recognized, trailing legacy brand phrases during migration. */
-export function stripLegacySeoTitleSuffix(value: string | null | undefined) {
+export function stripLegacySeoTitleSuffix(
+  value: string | null | undefined,
+  siteName = SITE_NAME,
+) {
   let title = normalizeSeoTitle(value);
   let previousTitle = "";
+  const recognizedSiteNames = new Set([siteName, SITE_NAME]);
 
   while (title && title !== previousTitle) {
     previousTitle = title;
-    for (const siteName of LEGACY_SITE_NAMES) {
+    for (const recognizedSiteName of recognizedSiteNames) {
       title = title
         .replace(
-          new RegExp(`\\s*(?:\\||-)\\s*${escapeRegExp(siteName)}$`, "i"),
+          new RegExp(
+            `\\s*(?:\\||-)\\s*${escapeRegExp(recognizedSiteName)}$`,
+            "i",
+          ),
           "",
         )
         .trim();
@@ -46,30 +41,32 @@ export function resolveSeoTitle({
   fallbackTitle,
   isHomepage = false,
   overrideTitle,
+  siteName = SITE_NAME,
 }: {
   fallbackTitle?: string | null;
   isHomepage?: boolean;
   overrideTitle?: string | null;
+  siteName?: string;
 }) {
   const normalizedOverride = normalizeSeoTitle(overrideTitle);
   const hasManualSuffix = normalizedOverride.includes("|");
   const pageTitle = hasManualSuffix
     ? normalizedOverride
-    : stripLegacySeoTitleSuffix(normalizedOverride) ||
-      stripLegacySeoTitleSuffix(fallbackTitle) ||
-      SITE_NAME;
+    : stripLegacySeoTitleSuffix(normalizedOverride, siteName) ||
+      stripLegacySeoTitleSuffix(fallbackTitle, siteName) ||
+      siteName;
   const finalTitle = hasManualSuffix
     ? pageTitle
-    : pageTitle.toLowerCase() === SITE_NAME.toLowerCase()
-      ? SITE_NAME
-      : `${pageTitle}${TITLE_SUFFIX}`;
+    : pageTitle.toLowerCase() === siteName.toLowerCase()
+      ? siteName
+      : `${pageTitle} | ${siteName}`;
 
   return {
     finalTitle,
     // A pipe means the editor supplied the complete title. Absolute titles
     // bypass the layout template so the default suffix is not added twice.
     metadataTitle:
-      isHomepage || hasManualSuffix || finalTitle === SITE_NAME
+      isHomepage || hasManualSuffix || finalTitle === siteName
         ? { absolute: finalTitle }
         : pageTitle,
     openGraphTitle: finalTitle,
@@ -81,21 +78,25 @@ export function resolveSeoTitle({
 export function getSeoTitleWarnings({
   fallbackTitle,
   overrideTitle,
+  siteName = SITE_NAME,
 }: {
   fallbackTitle?: string | null;
   overrideTitle?: string | null;
+  siteName?: string;
 }) {
   const normalizedOverride = normalizeSeoTitle(overrideTitle);
   const { finalTitle, pageTitle } = resolveSeoTitle({
     fallbackTitle,
     overrideTitle,
+    siteName,
   });
   const warnings: string[] = [];
 
   if (
     !normalizedOverride.includes("|") &&
     normalizedOverride &&
-    stripLegacySeoTitleSuffix(normalizedOverride) !== normalizedOverride
+    stripLegacySeoTitleSuffix(normalizedOverride, siteName) !==
+      normalizedOverride
   ) {
     warnings.push("Remove the manual legacy suffix; the default suffix is automatic.");
   }

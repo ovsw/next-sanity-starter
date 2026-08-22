@@ -55,7 +55,7 @@ const rawFooter: RawFooter = {
 
 describe("createFooterModel", () => {
   it("normalizes ordered columns, omits invalid destinations, and retains map links as ordinary links", () => {
-    const model = createFooterModel(rawFooter, { siteName: "PHX Home Loan" }, 2026);
+    const model = createFooterModel(rawFooter, {}, 2026);
 
     expect(model?.columns).toEqual([
       {
@@ -75,6 +75,7 @@ describe("createFooterModel", () => {
       },
     ]);
     expect(model?.contact.email.href).toBe("mailto:jimmy@example.com");
+    expect(model?.brand.label).toBe("Example Company");
     expect(model?.compliance.copyrightYears).toBe("2019-2026");
   });
 
@@ -88,7 +89,7 @@ describe("createFooterModel", () => {
           { _key: "renamed", heading: "Community", links: [rawLink("news", "News", "/news")] },
         ],
       },
-      { siteName: "PHX Home Loan" },
+      {},
       2026,
     );
 
@@ -99,14 +100,14 @@ describe("createFooterModel", () => {
   });
 
   it("returns the explicit unavailable outcome for the wrong singleton or missing required data", () => {
-    expect(createFooterModel({ ...rawFooter, _id: "another-footer" }, { siteName: "PHX" }, 2026)).toBeNull();
+    expect(createFooterModel({ ...rawFooter, _id: "another-footer" }, {}, 2026)).toBeNull();
     expect(
       createFooterModel(
         { ...rawFooter, compliance: { ...rawFooter!.compliance, disclaimer: null } },
-        { siteName: "PHX" },
+        {},
         2026,
       ),
     ).toBeNull();
-    expect(createFooterModel({ ...rawFooter, columns: [] }, { siteName: "PHX" }, 2026)).toBeNull();
+    expect(createFooterModel({ ...rawFooter, columns: [] }, {}, 2026)).toBeNull();
   });
 });

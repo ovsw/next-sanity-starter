@@ -7,7 +7,6 @@
     "dev": "sanity dev --port 3333",
     "start": "sanity start",
     "build": "sanity build",
-    "audit:seo-titles": "sanity exec scripts/audit-seo-titles.ts --with-user-token --",
     "deploy": "sanity deploy",
     "generate:lucide-icons": "node scripts/generate-lucide-icon-catalog.mjs",
     "test:presentation": "node --test presentation/presentation.test.mjs",
@@ -39,12 +38,10 @@
     "@sanity/blueprints": "^0.20.2",
     "@sanity/client": "^7.23.0",
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@sanity/migrate": "7.0.3",
     "@sanity/types": "^6.4.0",
     "@types/node": "^26.1.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "dotenv": "^17.4.2",
     "eslint": "^9.39.2",
     "typescript": "^6.0.3"
   }

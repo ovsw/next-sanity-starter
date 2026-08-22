@@ -1,4 +1,5 @@
 import type { SanityImageSource } from "@sanity/image-url";
+import { siteName } from "@/lib/site-name";
 import { urlFor } from "@/sanity/lib/image";
 
 export type FooterLinkModel = {
@@ -87,7 +88,6 @@ export type RawFooter = {
 } | null;
 
 export type RawFooterSettings = {
-  siteName?: string | null;
   logo?: {
     light?: SanityImageSource | null;
     dark?: SanityImageSource | null;
@@ -164,7 +164,7 @@ export function createFooterModel(
 ): FooterModel | null {
   if (raw?._id !== "footer") return null;
 
-  const label = text(settings?.siteName);
+  const label = siteName;
   const brandPhone = link(raw.brand?.phone, "brand-phone");
   const addressLines = (raw.brand?.addressLines ?? []).flatMap((line) => {
     const value = text(line);

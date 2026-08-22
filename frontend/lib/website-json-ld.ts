@@ -1,10 +1,10 @@
-import { SITE_NAME } from "../../shared/seo-title";
+import { siteName } from "./site-name";
 
 export type WebsiteJsonLd = {
   "@context": "https://schema.org";
   "@type": "WebSite";
   "@id": string;
-  name: typeof SITE_NAME;
+  name: string;
   url: string;
 };
 
@@ -15,7 +15,7 @@ export function createWebsiteJsonLd(siteUrl: string): WebsiteJsonLd {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${normalizedSiteUrl}/#website`,
-    name: SITE_NAME,
+    name: siteName,
     url: normalizedSiteUrl,
   };
 }

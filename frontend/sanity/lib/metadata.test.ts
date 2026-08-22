@@ -91,7 +91,7 @@ describe("generatePageMetadata", () => {
     expect(metadata.openGraph.type).toBe("article");
     expect(metadata.title).toBe("Mortgage rates");
     expect(metadata.openGraph.title).toBe(
-      "Mortgage rates | The Vercellino Team",
+      "Mortgage rates | Example Company",
     );
     expect(metadata.openGraph).toHaveProperty(
       "publishedTime",
@@ -100,11 +100,11 @@ describe("generatePageMetadata", () => {
     expect(image).toMatchObject({
       width: 1200,
       height: 630,
-      alt: `${post.title} | The Vercellino Team`,
+      alt: `${post.title} | Example Company`,
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Mortgage rates | The Vercellino Team",
+      title: "Mortgage rates | Example Company",
       images: [image],
     });
     expect(
@@ -165,7 +165,9 @@ describe("generatePageMetadata", () => {
     });
 
     expect(metadata.title).toBe("About");
-    expect(metadata.openGraph.title).toBe("About | The Vercellino Team");
+    expect(metadata.openGraph.title).toBe(
+      "About | Example Company",
+    );
   });
 
   it("uses one absolute, branded homepage title", () => {

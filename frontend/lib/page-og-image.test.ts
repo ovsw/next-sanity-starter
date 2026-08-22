@@ -68,9 +68,11 @@ describe("page OG image URLs", () => {
   });
 
   it("removes a redundant brand suffix from the card title", () => {
-    expect(getPageOgImageTitle("Phoenix Mortgage Lender | PHX Home Loan")).toBe(
-      "Phoenix Mortgage Lender",
-    );
+    expect(
+      getPageOgImageTitle(
+        "Example services | Next.js + Sanity Starter",
+      ),
+    ).toBe("Example services");
     expect(getPageOgImageTitle("Mortgage Refinancing")).toBe(
       "Mortgage Refinancing",
     );

@@ -1,17 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { requireStudioDataset } from "./environment.ts";
+import { requireStudioEnvironmentValue } from "./environment.ts";
 
-test("requires an explicit Sanity Studio dataset", () => {
+test("names a missing Sanity Studio environment value", () => {
   for (const value of [undefined, "", "   "]) {
     assert.throws(
-      () => requireStudioDataset(value),
-      /SANITY_STUDIO_DATASET is required/,
+      () =>
+        requireStudioEnvironmentValue("SANITY_STUDIO_PROJECT_ID", value),
+      /Missing environment variable: SANITY_STUDIO_PROJECT_ID/,
     );
   }
 });
 
-test("returns the configured Sanity Studio dataset", () => {
-  assert.equal(requireStudioDataset("development"), "development");
+test("returns a trimmed Sanity Studio environment value", () => {
+  assert.equal(
+    requireStudioEnvironmentValue("SANITY_STUDIO_DATASET", " production "),
+    "production",
+  );
 });

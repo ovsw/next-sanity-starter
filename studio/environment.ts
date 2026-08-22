@@ -1,11 +1,12 @@
-export function requireStudioDataset(value: string | undefined) {
-  const dataset = value?.trim();
+export function requireStudioEnvironmentValue(
+  name: string,
+  value: string | undefined,
+) {
+  const result = value?.trim();
 
-  if (!dataset) {
-    throw new Error(
-      "SANITY_STUDIO_DATASET is required. Set it before starting or building Sanity Studio.",
-    );
+  if (!result) {
+    throw new Error(`Missing environment variable: ${name}`);
   }
 
-  return dataset;
+  return result;
 }

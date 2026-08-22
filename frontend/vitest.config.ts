@@ -14,6 +14,7 @@ export default defineConfig({
       NEXT_PUBLIC_SITE_URL: "https://phxhomeloan.test",
       NEXT_PUBLIC_SANITY_DATASET: "test",
       NEXT_PUBLIC_SANITY_PROJECT_ID: "test-project",
+      NEXT_PUBLIC_SITE_NAME: "Example Company",
       OG_IMAGE_SECRET: "test-only-og-image-secret",
     },
     environment: "jsdom",

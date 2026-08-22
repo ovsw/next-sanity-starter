@@ -67,9 +67,3 @@ Before adding or changing a Page Builder section, read `docs/agents/page-builder
 ### Development workflow
 
 Before changing workspace dependencies, Sanity schemas, GROQ queries, or development scripts, consult the relevant section of `README.md`.
-
-## Brand names (do not flag as errors)
-
-- **Luminate Bank** is the current lender brand.
-- **The Highly Motivated Vercellino Team** (capitalization intended) is the mortgage originator.
-- Both are correct, current branding in site copy. Do not report them as outdated or wrong-company references.

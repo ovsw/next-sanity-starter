@@ -3,9 +3,16 @@
  * Go to https://www.sanity.io/docs/cli to learn more.
  **/
 import { defineCliConfig } from "sanity/cli";
+import { requireStudioEnvironmentValue } from "./environment";
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-const dataset = process.env.SANITY_STUDIO_DATASET;
+const projectId = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_PROJECT_ID",
+  process.env.SANITY_STUDIO_PROJECT_ID,
+);
+const dataset = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_DATASET",
+  process.env.SANITY_STUDIO_DATASET,
+);
 const appId = process.env.SANITY_STUDIO_APP_ID;
 
 export default defineCliConfig({

@@ -2,11 +2,11 @@ import { fitPostOgTitle } from "@/lib/post-og-image";
 
 export function PostOgImage({
   eyebrow,
-  portrait,
+  siteName,
   title,
 }: {
   eyebrow: string;
-  portrait: ArrayBuffer;
+  siteName: string;
   title: string;
 }) {
   const fittedTitle = fitPostOgTitle(title);
@@ -35,22 +35,6 @@ export function PostOgImage({
           backgroundImage:
             "linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 33%)",
           clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0 100%)",
-        }}
-      />
-
-      {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse requires a plain image element. */}
-      <img
-        alt="Jimmy Vercellino"
-        src={portrait as unknown as string}
-        style={{
-          position: "absolute",
-          right: "-5%",
-          bottom: 0,
-          width: "55%",
-          height: "100%",
-          objectFit: "contain",
-          objectPosition: "center bottom",
-          filter: "drop-shadow(-26px 22px 34px rgba(0, 0, 0, 0.28))",
         }}
       />
 
@@ -106,7 +90,7 @@ export function PostOgImage({
           letterSpacing: "0.14em",
         }}
       >
-        PHXHOMELOAN.COM
+        {siteName}
       </div>
 
       <div
