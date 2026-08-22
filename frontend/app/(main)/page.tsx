@@ -1,5 +1,6 @@
 import Blocks from "@/components/blocks";
 import FaqPageJsonLd from "@/components/faq-json-ld";
+import VideoJsonLd from "@/components/video-json-ld";
 import WebsiteJsonLd from "@/components/website-json-ld";
 import { siteUrl } from "@/lib/site-url";
 import { fetchHomePage } from "@/sanity/lib/fetch";
@@ -54,6 +55,7 @@ async function CachedIndexPage({ perspective, stega }: DynamicFetchOptions) {
     <>
       <WebsiteJsonLd siteUrl={siteUrl} />
       <FaqPageJsonLd blocks={page.blocks ?? []} />
+      <VideoJsonLd content={page.blocks ?? []} />
       {!hasLeadingHero && stegaClean(page.title)?.trim() ? (
         <header>
           <h1>{page.title}</h1>
