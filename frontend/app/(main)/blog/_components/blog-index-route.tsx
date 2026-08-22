@@ -64,7 +64,7 @@ export async function BlogIndexRoute({
     : undefined;
 
   return (
-    <main>
+    <>
       <BreadcrumbJsonLd
         items={[
           { name: "Home", path: "/" },
@@ -124,6 +124,6 @@ export async function BlogIndexRoute({
         perspective={perspective}
         stega={stega}
       />
-    </main>
+    </>
   );
 }
