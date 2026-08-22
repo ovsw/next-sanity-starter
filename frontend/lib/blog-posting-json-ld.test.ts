@@ -36,12 +36,12 @@ function post(
   overrides: Partial<BlogPostingJsonLdPost> = {},
 ): BlogPostingJsonLdPost {
   return {
-    title: "  VA Home Loan Guide  ",
+    title: "  Service Guide  ",
     excerpt: "  A practical guide for Arizona veterans.  ",
     image: image("https://cdn.sanity.io/images/post.jpg"),
     publishedAt: "2025-04-01T12:00:00.000Z",
     _updatedAt: "2025-04-03T15:30:00.000Z",
-    slug: { _type: "slug", current: "/va-home-loan-guide/" },
+    slug: { _type: "slug", current: "/service-guide/" },
     meta: meta(
       "Meta description",
       image("https://cdn.sanity.io/images/meta.jpg"),
@@ -51,25 +51,25 @@ function post(
 }
 
 describe("createBlogPostingJsonLd", () => {
-  it("builds a complete BlogPosting referencing the Person entity by @id only", () => {
+  it("builds a complete BlogPosting referencing the site organization by @id only", () => {
     expect(
-      createBlogPostingJsonLd(post(), "https://phxhomeloan.com/"),
+      createBlogPostingJsonLd(post(), "https://example.com/"),
     ).toEqual({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      headline: "VA Home Loan Guide",
+      headline: "Service Guide",
       description: "A practical guide for Arizona veterans.",
       image: "https://cdn.sanity.io/images/post.jpg",
       datePublished: "2025-04-01T12:00:00.000Z",
       dateModified: "2025-04-03T15:30:00.000Z",
-      url: "https://phxhomeloan.com/blog/va-home-loan-guide",
+      url: "https://example.com/blog/service-guide",
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": "https://phxhomeloan.com/blog/va-home-loan-guide",
+        "@id": "https://example.com/blog/service-guide",
       },
       author: {
-        "@type": "Person",
-        "@id": "https://phxhomeloan.com/#jimmy",
+        "@type": "Organization",
+        "@id": "https://example.com/#organization",
       },
     });
   });
@@ -77,11 +77,11 @@ describe("createBlogPostingJsonLd", () => {
   it("falls back to the meta description and omits it when both are empty", () => {
     const fallback = createBlogPostingJsonLd(
       post({ excerpt: "", meta: meta("  Meta fallback.  ", null) }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
     const omitted = createBlogPostingJsonLd(
       post({ excerpt: "  ", meta: meta(null, null) }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
 
     expect(fallback).toHaveProperty("description", "Meta fallback.");
@@ -94,11 +94,11 @@ describe("createBlogPostingJsonLd", () => {
         image: null,
         meta: meta(null, image("https://cdn.sanity.io/images/fallback.jpg")),
       }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
     const omitted = createBlogPostingJsonLd(
       post({ image: null, meta: meta(null, null) }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
 
     expect(fallback).toHaveProperty(
@@ -115,7 +115,7 @@ describe("createBlogPostingJsonLd", () => {
     ["slug", post({ slug: null })],
   ])("returns null when %s is missing", (_field, input) => {
     expect(
-      createBlogPostingJsonLd(input, "https://phxhomeloan.com"),
+      createBlogPostingJsonLd(input, "https://example.com"),
     ).toBeNull();
   });
 
@@ -125,7 +125,7 @@ describe("createBlogPostingJsonLd", () => {
       expect(
         createBlogPostingJsonLd(
           post({ slug: { _type: "slug", current } }),
-          "https://phxhomeloan.com",
+          "https://example.com",
         ),
       ).toBeNull();
     },
@@ -138,7 +138,7 @@ describe("createBlogPostingJsonLd", () => {
         title: `Clean title${stega}`,
         excerpt: `Clean description${stega}`,
       }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
 
     expect(value).toMatchObject({
@@ -153,7 +153,7 @@ describe("createBlogPostingJsonLd", () => {
         publishedAt: "2025-04-03T15:30:00.000Z",
         _updatedAt: "2025-04-01T12:00:00.000Z",
       }),
-      "https://phxhomeloan.com",
+      "https://example.com",
     );
 
     expect(value).not.toHaveProperty("dateModified");
@@ -163,15 +163,15 @@ describe("createBlogPostingJsonLd", () => {
 describe("serializeBlogPostingJsonLd", () => {
   it("escapes < and round-trips as valid JSON", () => {
     const value = createBlogPostingJsonLd(
-      post({ title: "Loans <fast>" }),
-      "https://phxhomeloan.com",
+      post({ title: "Services <fast>" }),
+      "https://example.com",
     );
     expect(value).not.toBeNull();
     if (!value) return;
 
     const serialized = serializeBlogPostingJsonLd(value);
     expect(serialized).not.toContain("<");
-    expect(serialized).toContain("Loans \\u003cfast>");
+    expect(serialized).toContain("Services \\u003cfast>");
     expect(JSON.parse(serialized)).toEqual(value);
   });
 });

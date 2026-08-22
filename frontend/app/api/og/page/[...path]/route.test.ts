@@ -24,11 +24,11 @@ vi.mock("next/og", () => ({
 
 import { GET } from "./route";
 
-const title = "Straightforward Mortgage Guidance";
+const title = "Straightforward Guidance";
 
 function signedUrl() {
   return buildPageOgImageUrl({
-    origin: "https://phxhomeloan.test",
+    origin: "https://example.test",
     secret: "test-only-og-image-secret",
     target: { kind: "home" },
     title,
@@ -99,7 +99,7 @@ describe("page OG image route", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe(
-      "https://phxhomeloan.test/images/og-post-fallback.png",
+      "https://example.test/images/og-post-fallback.png",
     );
     consoleError.mockRestore();
   });

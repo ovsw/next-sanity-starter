@@ -13,7 +13,7 @@ test("does not treat an ordinary index slug as homepage identity", () => {
 });
 
 test("normalizes leading and trailing slashes", () => {
-  assert.equal(resolveContentPath("///mortgage-process///"), "/mortgage-process");
+  assert.equal(resolveContentPath("///method-process///"), "/method-process");
 });
 
 test("resolves a normal page slug to a canonical path", () => {
@@ -26,10 +26,10 @@ test("resolves a normal post slug to a canonical path", () => {
 
 test("resolves a category slug under the blog category namespace", () => {
   assert.equal(
-    getPresentationPath("category", "loan-types"),
-    "/blog/category/loan-types",
+    getPresentationPath("category", "categories"),
+    "/blog/category/categories",
   );
-  assert.equal(resolveCategoryPath("/loan-types/"), "/blog/category/loan-types");
+  assert.equal(resolveCategoryPath("/categories/"), "/blog/category/categories");
 });
 
 test("resolves the Blog Index singleton without an authored slug", () => {

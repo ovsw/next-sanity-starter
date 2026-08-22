@@ -40,23 +40,5 @@ export const richTextContentQuery = groq`
     ...,
     title,
     body
-  },
-  _type == "youtube" => {
-    ...,
-    thumbnailImage {
-      ...,
-      "resolvedAsset": asset->{
-        _id,
-        url,
-        mimeType,
-        metadata {
-          lqip,
-          dimensions {
-            width,
-            height
-          }
-        }
-      }
-    }
   }
 `;

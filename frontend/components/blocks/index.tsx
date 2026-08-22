@@ -1,33 +1,13 @@
 import { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from "@/sanity.types";
 import { type LivePerspective } from "next-sanity/live";
 import { createDataAttribute } from "next-sanity";
-import HomeHero from "@/components/blocks/home-hero";
-import LoanFeatureCards from "@/components/blocks/loan-feature-cards";
-import VideoFeature from "@/components/blocks/video-feature";
-import PhxEmbedSocialReviews from "@/components/blocks/phx-embed-social-reviews";
-import HomebotWidget from "@/components/blocks/homebot-widget";
 import LatestArticles from "@/components/blocks/latest-articles";
 import FaqAccordion from "@/components/blocks/faq-accordion";
-import AwardCta from "@/components/blocks/award-cta";
-import PageHeader from "@/components/blocks/page-header";
 import StoryFeature from "@/components/blocks/story-feature";
-import BigVideoFeature, {
-  type BigVideoDataAttributes,
-} from "@/components/blocks/big-video-feature";
-import EditorialChapter from "@/components/blocks/editorial-chapter";
-import YoutubeChannelFeature from "@/components/blocks/youtube-channel-feature";
-import PersonCta from "@/components/blocks/person-cta";
-import LocationMap from "@/components/blocks/location-map";
-import PersonContactCta from "@/components/blocks/person-contact-cta";
-import ContactForm from "@/components/blocks/contact-form";
 import TeamMembers from "@/components/blocks/team-members";
 import RichTextBlock from "@/components/blocks/rich-text-block";
-import AdvisorCta from "@/components/blocks/advisor-cta";
-import ProcessSteps from "@/components/blocks/process-steps";
 import CtaBanner from "@/components/blocks/cta-banner";
 import BenefitCards from "@/components/blocks/benefit-cards";
-import ComparisonTable from "@/components/blocks/comparison-table";
-import LoanRequirements from "@/components/blocks/loan-requirements";
 import Hero from "@/components/blocks/hero";
 import { dataset, projectId } from "@/sanity/lib/env";
 
@@ -37,7 +17,6 @@ type Block =
 
 type BlockEditingProps = {
   dataAttribute?: (path: string) => string | undefined;
-  dataAttributes?: BigVideoDataAttributes;
   memberDataAttribute?: (
     documentId: string,
     path: string,
@@ -46,23 +25,11 @@ type BlockEditingProps = {
 
 const serverFieldEditingBlockTypes = new Set<Block["_type"]>([
   "faqAccordion",
-  "pageHeader",
   "storyFeature",
-  "editorialChapter",
-  "youtubeChannelFeature",
-  "personCta",
-  "locationMap",
-  "personContactCta",
-  "contactForm",
   "teamMembers",
   "richTextBlock",
-  "homebotWidget",
-  "advisorCta",
-  "processSteps",
   "ctaBanner",
   "benefitCards",
-  "comparisonTable",
-  "loanRequirements",
   "hero",
 ]);
 
@@ -71,31 +38,13 @@ const componentMap: Partial<{
     Extract<Block, { _type: K }> & BlockEditingProps
   >;
 }> = {
-  homeHero: HomeHero,
-  loanFeatureCards: LoanFeatureCards,
-  videoFeature: VideoFeature,
-  phxEmbedSocialReviews: PhxEmbedSocialReviews,
-  homebotWidget: HomebotWidget,
   latestArticles: LatestArticles,
   faqAccordion: FaqAccordion,
-  awardCta: AwardCta,
-  pageHeader: PageHeader,
   storyFeature: StoryFeature,
-  bigVideoFeature: BigVideoFeature,
-  editorialChapter: EditorialChapter,
-  youtubeChannelFeature: YoutubeChannelFeature,
-  personCta: PersonCta,
-  locationMap: LocationMap,
-  personContactCta: PersonContactCta,
-  contactForm: ContactForm,
   teamMembers: TeamMembers,
   richTextBlock: RichTextBlock,
-  advisorCta: AdvisorCta,
-  processSteps: ProcessSteps,
   ctaBanner: CtaBanner,
   benefitCards: BenefitCards,
-  comparisonTable: ComparisonTable,
-  loanRequirements: LoanRequirements,
   hero: Hero,
 };
 
@@ -142,19 +91,7 @@ export default function Blocks({
               }).toString()
           : undefined;
         const editingProps: BlockEditingProps =
-          block._type === "bigVideoFeature"
-            ? {
-                dataAttributes: dataAttribute
-                  ? {
-                      description: dataAttribute("description"),
-                      eyebrow: dataAttribute("eyebrow"),
-                      thumbnailImage: dataAttribute("thumbnailImage"),
-                      title: dataAttribute("title"),
-                      youtubeUrl: dataAttribute("youtubeUrl"),
-                    }
-                  : undefined,
-              }
-            : block._type === "teamMembers"
+          block._type === "teamMembers"
               ? {
                   dataAttribute,
                   memberDataAttribute: stega

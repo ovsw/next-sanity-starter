@@ -4,7 +4,7 @@ import { getSafeLinkHref } from "./safe-href";
 describe("getSafeLinkHref", () => {
   it.each([
     "/",
-    "/loan-options/",
+    "/service-options/",
     "#eligibility",
     "https://example.com/path",
     "http://example.com",

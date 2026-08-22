@@ -1,6 +1,5 @@
 import Blocks from "@/components/blocks";
 import FaqPageJsonLd from "@/components/faq-json-ld";
-import VideoJsonLd from "@/components/video-json-ld";
 import WebsiteJsonLd from "@/components/website-json-ld";
 import { siteUrl } from "@/lib/site-url";
 import { fetchHomePage } from "@/sanity/lib/fetch";
@@ -49,15 +48,12 @@ async function CachedIndexPage({ perspective, stega }: DynamicFetchOptions) {
     return MissingSanityPage({ document: "homePage", documentId: "homePage" });
   }
 
-  const hasLeadingHero = ["hero", "homeHero", "pageHeader"].includes(
-    page.blocks?.[0]?._type ?? "",
-  );
+  const hasLeadingHero = page.blocks?.[0]?._type === "hero";
 
   return (
     <>
       <WebsiteJsonLd siteUrl={siteUrl} />
       <FaqPageJsonLd blocks={page.blocks ?? []} />
-      <VideoJsonLd blocks={page.blocks ?? []} siteUrl={siteUrl} />
       {!hasLeadingHero && stegaClean(page.title)?.trim() ? (
         <header>
           <h1>{page.title}</h1>

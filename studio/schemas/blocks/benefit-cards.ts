@@ -4,7 +4,6 @@ import NavigationIconInput, {
   createNavigationIconPreview,
 } from "../inputs/navigation-icon-input";
 import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
-import { isLoanIconName } from "../../../shared/loan-icons";
 
 const benefitCard = defineArrayMember({
   name: "featureGridItem",
@@ -32,7 +31,7 @@ const benefitCard = defineArrayMember({
           if (!isNavigationIconName(icon.name)) {
             return "Choose an icon from the icon picker";
           }
-          if (!isLoanIconName(icon.name) && !icon.svg) {
+          if (!icon.svg) {
             return "Re-pick this icon so its artwork is stored with the document";
           }
           return true;

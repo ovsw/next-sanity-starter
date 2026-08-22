@@ -19,11 +19,11 @@ const post = {
   _type: "post",
   _updatedAt: "2026-08-15T12:00:00Z",
   publishedAt: "2026-08-10T12:00:00Z",
-  slug: { _type: "slug", current: "mortgage-rates" },
-  title: "Why Mortgage Rates Are Going Up",
+  slug: { _type: "slug", current: "market-trends" },
+  title: "Why Market Trends Change",
   meta: {
-    title: "Mortgage rates",
-    description: "A practical mortgage rate explanation.",
+    title: "Market trends",
+    description: "A practical method rate explanation.",
     image: null,
     noindex: false,
   },
@@ -36,8 +36,8 @@ const page = {
   slug: "about",
   title: "About",
   meta: {
-    title: "About | Phoenix Mortgage Lenders",
-    description: "About PHX Home Loan.",
+    title: "About | About Example Company",
+    description: "About Example Company.",
     image: null,
     noindex: false,
   },
@@ -48,8 +48,8 @@ const homePage = {
   _type: "homePage",
   title: "Home",
   meta: {
-    title: "Phoenix Mortgage Lender | PHX Home Loan",
-    description: "A trusted Phoenix mortgage lender.",
+    title: "Example City Method Lender | Example Company",
+    description: "A trusted Example City method lender.",
     noindex: false,
   },
 } as unknown as NonNullable<HOME_PAGE_QUERY_RESULT>;
@@ -57,11 +57,11 @@ const homePage = {
 const blogIndex = {
   _id: "blogIndex",
   _type: "blogIndex",
-  title: "Mortgage Blog",
-  description: "Practical mortgage guidance.",
+  title: "Insights Blog",
+  description: "Practical method guidance.",
   meta: {
-    title: "Mortgage Advice | PHX Home Loan",
-    description: "Practical mortgage guidance.",
+    title: "Method Advice | Example Company",
+    description: "Practical method guidance.",
     image: null,
     noindex: false,
   },
@@ -70,13 +70,13 @@ const blogIndex = {
 const category = {
   _id: "category-1",
   _type: "category",
-  title: "Loan Types",
-  slug: { current: "loan-types" },
-  description: "Compare home loan options.",
+  title: "Categories",
+  slug: { current: "categories" },
+  description: "Compare service options.",
   publishedPostCount: 4,
   meta: {
-    title: "Home Loan Guides | Mortgage Lender",
-    description: "Compare home loan options.",
+    title: "Resource Guides | Example Company",
+    description: "Compare service options.",
     image: null,
     noindex: false,
   },
@@ -84,14 +84,14 @@ const category = {
 
 describe("generatePageMetadata", () => {
   it("uses one signed generated card for post Open Graph and Twitter metadata", () => {
-    const metadata = generatePageMetadata({ page: post, path: "/blog/mortgage-rates" });
+    const metadata = generatePageMetadata({ page: post, path: "/blog/market-trends" });
     const image = metadata.openGraph.images[0];
     const url = new URL(image.url);
 
     expect(metadata.openGraph.type).toBe("article");
-    expect(metadata.title).toBe("Mortgage rates");
+    expect(metadata.title).toBe("Market trends");
     expect(metadata.openGraph.title).toBe(
-      "Mortgage rates | Example Company",
+      "Market trends | Example Company",
     );
     expect(metadata.openGraph).toHaveProperty(
       "publishedTime",
@@ -104,13 +104,13 @@ describe("generatePageMetadata", () => {
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Mortgage rates | Example Company",
+      title: "Market trends | Example Company",
       images: [image],
     });
     expect(
       verifyPostOgImageSignature({
         identity: {
-          slug: "mortgage-rates",
+          slug: "market-trends",
           revision: url.searchParams.get("rev") || "",
           version: url.searchParams.get("v") || "",
         },
@@ -126,16 +126,16 @@ describe("generatePageMetadata", () => {
     const url = new URL(image.url);
 
     expect(metadata.openGraph).toMatchObject({
-      title: "About | Phoenix Mortgage Lenders",
+      title: "About | About Example Company",
       type: "website",
       images: [
-        { width: 1200, height: 630, alt: "About | Phoenix Mortgage Lenders" },
+        { width: 1200, height: 630, alt: "About | About Example Company" },
       ],
     });
     expect(url.pathname).toBe("/api/og/page/page/about");
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "About | Phoenix Mortgage Lenders",
+      title: "About | About Example Company",
       images: [image],
     });
     expect(
@@ -150,7 +150,7 @@ describe("generatePageMetadata", () => {
       }),
     ).toBe(true);
     expect(metadata.title).toEqual({
-      absolute: "About | Phoenix Mortgage Lenders",
+      absolute: "About | About Example Company",
     });
   });
 
@@ -174,16 +174,16 @@ describe("generatePageMetadata", () => {
     const metadata = generatePageMetadata({ page: homePage, path: "/" });
 
     expect(metadata.title).toEqual({
-      absolute: "Phoenix Mortgage Lender | PHX Home Loan",
+      absolute: "Example City Method Lender | Example Company",
     });
     expect(metadata.openGraph.title).toBe(
-      "Phoenix Mortgage Lender | PHX Home Loan",
+      "Example City Method Lender | Example Company",
     );
     expect(metadata.twitter.title).toBe(
-      "Phoenix Mortgage Lender | PHX Home Loan",
+      "Example City Method Lender | Example Company",
     );
     expect(metadata.openGraph.images[0].alt).toBe(
-      "Phoenix Mortgage Lender | PHX Home Loan",
+      "Example City Method Lender | Example Company",
     );
   });
 });
@@ -191,7 +191,7 @@ describe("generatePageMetadata", () => {
 describe("generateBlogIndexMetadata", () => {
   it("derives a unique branded title for pagination", () => {
     const metadata = generateBlogIndexMetadata({ blogIndex, page: 2 });
-    const title = "Mortgage Advice | PHX Home Loan - Page 2";
+    const title = "Method Advice | Example Company - Page 2";
 
     expect(metadata.title).toEqual({ absolute: title });
     expect(metadata.openGraph.title).toBe(title);
@@ -202,8 +202,8 @@ describe("generateBlogIndexMetadata", () => {
 
 describe("generateCategoryMetadata", () => {
   it.each([
-    [1, "Home Loan Guides | Mortgage Lender"],
-    [2, "Home Loan Guides | Mortgage Lender - Page 2"],
+    [1, "Resource Guides | Example Company"],
+    [2, "Resource Guides | Example Company - Page 2"],
   ])("derives the category title for page %i", (pageNumber, pageTitle) => {
     const metadata = generateCategoryMetadata({ category, page: pageNumber });
 

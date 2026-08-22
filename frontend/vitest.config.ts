@@ -11,7 +11,7 @@ export default defineConfig({
   test: {
     env: {
       NEXT_PUBLIC_SANITY_API_VERSION: "2026-08-02",
-      NEXT_PUBLIC_SITE_URL: "https://phxhomeloan.test",
+      NEXT_PUBLIC_SITE_URL: "https://example.test",
       NEXT_PUBLIC_SANITY_DATASET: "test",
       NEXT_PUBLIC_SANITY_PROJECT_ID: "test-project",
       NEXT_PUBLIC_SITE_NAME: "Example Company",

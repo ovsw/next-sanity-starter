@@ -37,31 +37,13 @@ import {
 // Schema UI objects
 import hero from "./schemas/blocks/hero";
 import hero1 from "./schemas/blocks/hero/hero-1";
-import homeHero from "./schemas/blocks/home-hero";
-import loanFeatureCards from "./schemas/blocks/loan-feature-cards";
-import videoFeature from "./schemas/blocks/video-feature";
-import phxEmbedSocialReviews from "./schemas/blocks/phx-embed-social-reviews";
-import homebotWidget from "./schemas/blocks/homebot-widget";
 import latestArticles from "./schemas/blocks/latest-articles";
 import faqAccordion from "./schemas/blocks/faq-accordion";
-import awardCta from "./schemas/blocks/award-cta";
-import pageHeader from "./schemas/blocks/page-header";
 import storyFeature from "./schemas/blocks/story-feature";
-import bigVideoFeature from "./schemas/blocks/big-video-feature";
-import editorialChapter from "./schemas/blocks/editorial-chapter";
-import youtubeChannelFeature from "./schemas/blocks/youtube-channel-feature";
-import personCta from "./schemas/blocks/person-cta";
-import locationMap from "./schemas/blocks/location-map";
-import personContactCta from "./schemas/blocks/person-contact-cta";
-import contactForm from "./schemas/blocks/contact-form";
 import teamMembers from "./schemas/blocks/team-members";
 import richTextBlock from "./schemas/blocks/rich-text-block";
-import advisorCta from "./schemas/blocks/advisor-cta";
-import processSteps from "./schemas/blocks/process-steps";
 import ctaBanner from "./schemas/blocks/cta-banner";
 import benefitCards from "./schemas/blocks/benefit-cards";
-import comparisonTable from "./schemas/blocks/comparison-table";
-import loanRequirements from "./schemas/blocks/loan-requirements";
 
 export const schemaTypes = [
   // documents
@@ -99,29 +81,11 @@ export const schemaTypes = [
   // blocks
   hero,
   hero1,
-  homeHero,
-  loanFeatureCards,
-  videoFeature,
-  phxEmbedSocialReviews,
-  homebotWidget,
   latestArticles,
   faqAccordion,
-  awardCta,
-  pageHeader,
   storyFeature,
-  bigVideoFeature,
-  editorialChapter,
-  youtubeChannelFeature,
-  personCta,
-  locationMap,
-  personContactCta,
-  contactForm,
   teamMembers,
   richTextBlock,
-  advisorCta,
-  processSteps,
   ctaBanner,
   benefitCards,
-  comparisonTable,
-  loanRequirements,
 ];

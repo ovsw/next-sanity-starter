@@ -24,13 +24,13 @@ vi.mock("next/og", () => ({
 
 import { GET } from "./route";
 
-const title = "Why Mortgage Rates Are Going Up";
+const title = "Why Market Trends Change";
 const publishedAt = "2026-08-15T12:00:00Z";
-const slug = "mortgage-rates";
+const slug = "market-trends";
 
 function signedUrl() {
   return buildPostOgImageUrl({
-    origin: "https://phxhomeloan.test",
+    origin: "https://example.test",
     publishedAt,
     secret: "test-only-og-image-secret",
     slug,
@@ -102,7 +102,7 @@ describe("post OG image route", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe(
-      "https://phxhomeloan.test/images/og-post-fallback.png",
+      "https://example.test/images/og-post-fallback.png",
     );
     consoleError.mockRestore();
   });

@@ -1,7 +1,5 @@
 import Blocks from "@/components/blocks";
 import FaqPageJsonLd from "@/components/faq-json-ld";
-import VideoJsonLd from "@/components/video-json-ld";
-import { siteUrl } from "@/lib/site-url";
 import { LatestPostCard, RegularPostCard } from "@/components/blog-card";
 import BlogPagination from "@/components/blog-pagination";
 import {
@@ -65,7 +63,6 @@ export async function BlogIndexRoute({
   return (
     <main>
       <FaqPageJsonLd blocks={blogIndex.blocks ?? []} />
-      <VideoJsonLd blocks={blogIndex.blocks ?? []} siteUrl={siteUrl} />
       <header>
         <nav aria-label="Breadcrumb">
           <Link href="/">Home</Link>

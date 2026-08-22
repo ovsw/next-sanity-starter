@@ -23,7 +23,7 @@ test("accepts a lowercase kebab-case category slug", async () => {
   const context = createContext();
 
   assert.equal(
-    await uniqueCategorySlug({ current: "loan-types" }, context),
+    await uniqueCategorySlug({ current: "resource-categories" }, context),
     true,
   );
   assert.equal(context.perspective, "raw");
@@ -40,12 +40,12 @@ test("rejects numeric-only category slugs separately", async () => {
 
 test("rejects slugs that are not lowercase kebab-case", async () => {
   for (const current of [
-    "Loan-Types",
-    "loan_types",
-    "/loan-types/",
-    "-loan-types",
-    "loan-types-",
-    "loan--types",
+    "Categories",
+    "two words",
+    "/categories/",
+    "-categories",
+    "categories-",
+    "category_types",
   ]) {
     const result = await uniqueCategorySlug({ current }, createContext());
     assert.match(result, /lowercase letters/);
@@ -54,15 +54,15 @@ test("rejects slugs that are not lowercase kebab-case", async () => {
 
 test("rejects a duplicate category slug", async () => {
   const result = await uniqueCategorySlug(
-    { current: "loan-types" },
+    { current: "categories" },
     createContext({
-      fetch: async () => ({ _id: "other-category", slug: "loan-types" }),
+      fetch: async () => ({ _id: "other-category", slug: "categories" }),
     }),
   );
 
   assert.equal(
     result,
-    "This slug is already used by another category: loan-types",
+    "This slug is already used by another category: categories",
   );
 });
 
@@ -70,12 +70,12 @@ test("catches a duplicate that exists only as a draft", async () => {
   const context = createContext({
     fetch: async () => ({
       _id: "drafts.other-category",
-      slug: "loan-types",
+      slug: "categories",
     }),
   });
 
   assert.match(
-    await uniqueCategorySlug({ current: "loan-types" }, context),
+    await uniqueCategorySlug({ current: "categories" }, context),
     /already used by another category/,
   );
   assert.equal(context.perspective, "raw");
@@ -94,7 +94,7 @@ test("excludes the current published and draft IDs from collision checks", async
   });
 
   assert.equal(
-    await uniqueCategorySlug({ current: "loan-types" }, context),
+    await uniqueCategorySlug({ current: "categories" }, context),
     true,
   );
   assert.match(query, /_type == "category"/);
@@ -103,7 +103,7 @@ test("excludes the current published and draft IDs from collision checks", async
   assert.match(query, /!sanity::versionOf\(\$publishedId\)/);
   assert.deepEqual(params, {
     publishedId: "category-id",
-    slug: "loan-types",
+    slug: "categories",
   });
 });
 
@@ -117,7 +117,7 @@ test("normalises a release version id down to the published id", () => {
     },
   });
 
-  return uniqueCategorySlug({ current: "loan-types" }, context).then(() => {
+  return uniqueCategorySlug({ current: "categories" }, context).then(() => {
     // sanity::versionOf rejects anything but a published id.
     assert.equal(params.publishedId, "category-id");
   });

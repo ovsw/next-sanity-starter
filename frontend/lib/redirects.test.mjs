@@ -77,7 +77,7 @@ test("rejects unsafe paths and application-owned sources", () => {
     "https://example.com/old",
     "/bad\\source",
     "/old?preview=true",
-    "/api/newsletter",
+    "/api/draft-mode/enable",
     "/blog/2",
     "/contact/thanks",
   ]) {

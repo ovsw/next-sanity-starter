@@ -68,7 +68,7 @@ const buttonVariants = cva(
         variant: "copper",
         emphasis: true,
         class:
-          "shadow-[0_14px_40px_-12px_var(--phx-copper-shadow)] hover:shadow-[0_14px_40px_-12px_var(--phx-copper-shadow)]",
+          "shadow-[0_14px_40px_-12px_rgb(171_88_45_/_0.35)] hover:shadow-[0_14px_40px_-12px_rgb(171_88_45_/_0.35)]",
       },
     ],
     defaultVariants: {

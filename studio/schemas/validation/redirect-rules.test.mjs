@@ -71,7 +71,7 @@ test("reserves application routes but allows old post and category paths", () =>
     "/blog/2",
     "/blog/category",
     "/blog/category/news/2",
-    "/api/newsletter",
+    "/api/draft-mode/enable",
     "/contact/thanks",
   ]) {
     assert.match(
