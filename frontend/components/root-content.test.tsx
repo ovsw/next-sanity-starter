@@ -44,16 +44,16 @@ const post = {
 const blogPostSidebar = {
   _id: "blogPostSettings",
   _type: "blogPostSettings",
-  title: "Contact Jimmy",
+  title: "Explore the topic",
   description: null,
   actions: [
     {
-      _key: "apply",
-      title: "Apply Now",
+      _key: "guide",
+      title: "Read the guide",
       description: null,
-      text: "Apply Now",
+      text: "Open guide",
       openInNewTab: true,
-      href: "https://applynow.example.com/",
+      href: "https://example.com/guide/",
     },
   ],
 } satisfies BlogPostSidebar;
@@ -105,7 +105,7 @@ describe("RootContentView", () => {
     const { rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,
     );
-    expect(screen.queryByRole("complementary", { name: "Post sidebar" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("complementary", { name: "Post actions" })).not.toBeInTheDocument();
 
     rerender(
       <RootContentView
@@ -116,7 +116,7 @@ describe("RootContentView", () => {
       />,
     );
     expect(
-      screen.getByRole("complementary", { name: "Post contact options" }),
+      screen.getByRole("complementary", { name: "Post actions" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Post introduction")).toBeInTheDocument();
   });
@@ -139,7 +139,7 @@ describe("RootContentView", () => {
     expect(screen.queryByRole("navigation", { name: "Table of Contents" })).not.toBeInTheDocument();
     expect(layout?.querySelector("article")?.nextElementSibling).toHaveAttribute(
       "aria-label",
-      "Post contact options",
+      "Post actions",
     );
   });
 

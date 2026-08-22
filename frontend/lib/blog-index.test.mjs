@@ -69,7 +69,7 @@ test("listing cards expose every visible post field to Presentation", () => {
     assert.match(cardSource, new RegExp(`dataAttribute\\?\\.\\("${path}"\\)`));
   }
   assert.match(cardSource, /categoryDataAttribute\?\.\("title"\)/);
-  assert.match(cardSource, /!stega \? \(/);
+  assert.match(cardSource, /<Link href=\{postHref\}>\{post\.title\}<\/Link>/);
   assert.match(querySource, /category->\{_id, title, slug\}/);
   assert.match(cardSource, /stegaClean\(categoryReference\?\.slug\?\.current\)/);
 
@@ -115,18 +115,18 @@ test("builds canonical pagination and category paths", () => {
 
 test("keeps category static generation non-empty before archive copy or pagination exists", () => {
   assert.deepEqual(getCategoryStaticParams([]), [{ slug: "__missing-category__" }]);
-  assert.deepEqual(getCategoryStaticParams([{ slug: "loan-types" }]), [{ slug: "loan-types" }]);
+  assert.deepEqual(getCategoryStaticParams([{ slug: "tutorials" }]), [{ slug: "tutorials" }]);
   assert.deepEqual(getCategoryPaginatedStaticParams([]), [{ page: "2", slug: "__missing-category__" }]);
   assert.deepEqual(
-    getCategoryPaginatedStaticParams([{ slug: "loan-types", publishedPostCount: 12 }]),
-    [{ page: "2", slug: "loan-types" }],
+    getCategoryPaginatedStaticParams([{ slug: "tutorials", publishedPostCount: 12 }]),
+    [{ page: "2", slug: "tutorials" }],
   );
   assert.deepEqual(
-    getCategoryPaginatedStaticParams([{ slug: "loan-types", publishedPostCount: 13 }]),
-    [{ page: "2", slug: "loan-types" }],
+    getCategoryPaginatedStaticParams([{ slug: "tutorials", publishedPostCount: 13 }]),
+    [{ page: "2", slug: "tutorials" }],
   );
   assert.deepEqual(
-    getCategoryStaticParams([{ slug: "/loan-types" }, { slug: "2" }]),
+    getCategoryStaticParams([{ slug: "/tutorials" }, { slug: "2" }]),
     [{ slug: "__missing-category__" }],
   );
 });

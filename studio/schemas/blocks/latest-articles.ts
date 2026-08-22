@@ -3,45 +3,39 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "latestArticles",
-  title: "Latest Articles",
+  title: "Latest Posts",
   type: "object",
   icon: Newspaper,
-  description: "Displays the latest published Educational Content articles",
+  description: "Displays the latest published Blog Posts.",
   fields: [
-    defineField({
-      name: "useCreamBackground",
-      title: "Use Cream Background",
-      type: "boolean",
-      description: "Turn on to use a cream background for this section. Leave off for white.",
-      initialValue: false,
-    }),
     defineField({
       name: "eyebrow",
       type: "string",
-      description: "Optional text shown above the section title",
+      description: "Optional short label shown before the section title.",
     }),
     defineField({
       name: "title",
       type: "string",
-      description: "The main heading for the latest Educational Content section",
+      description: "The main heading for the latest posts section.",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "description",
       type: "text",
-      description: "Optional supporting copy that explains what visitors can browse",
+      rows: 3,
+      description: "Optional supporting copy.",
     }),
     defineField({
       name: "buttons",
       type: "array",
-      description: "Optional links shown beside the section heading",
+      description: "Optional links shown with the section heading.",
       of: [defineArrayMember({ type: "button" })],
     }),
     defineField({
       name: "fallbackImage",
       title: "Fallback Image",
       type: "image",
-      description: "Optional image shown when an article has no image",
+      description: "Optional image shown when a post has no image.",
       options: { hotspot: true },
       fields: [
         defineField({
@@ -55,8 +49,8 @@ export default defineType({
   preview: {
     select: { title: "title", media: "fallbackImage" },
     prepare: ({ title, media }) => ({
-      title: title || "Latest Articles",
-      subtitle: "Latest Articles",
+      title: title || "Latest Posts",
+      subtitle: "Latest Posts",
       media,
     }),
   },

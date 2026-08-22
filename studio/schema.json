@@ -3821,13 +3821,6 @@
             "value": "latestArticles"
           }
         },
-        "useCreamBackground": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
         "eyebrow": {
           "type": "objectAttribute",
           "value": {
@@ -7957,6 +7950,21 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "latestArticles"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "faqAccordion"
                 }
               },
@@ -8063,21 +8071,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "homebotWidget"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "latestArticles"
                 }
               },
               {
@@ -8418,6 +8411,21 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "latestArticles"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "faqAccordion"
                 }
               },
@@ -8524,21 +8532,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "homebotWidget"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "latestArticles"
                 }
               },
               {
@@ -9627,6 +9620,21 @@
                 },
                 "rest": {
                   "type": "inline",
+                  "name": "latestArticles"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
                   "name": "faqAccordion"
                 }
               },
@@ -9733,21 +9741,6 @@
                 "rest": {
                   "type": "inline",
                   "name": "homebotWidget"
-                }
-              },
-              {
-                "type": "object",
-                "attributes": {
-                  "_key": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "rest": {
-                  "type": "inline",
-                  "name": "latestArticles"
                 }
               },
               {
