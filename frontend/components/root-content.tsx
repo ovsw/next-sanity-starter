@@ -1,9 +1,12 @@
 import { createDataAttribute, stegaClean } from "next-sanity";
 import Blocks from "@/components/blocks";
 import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
+import BreadcrumbJsonLd from "@/components/breadcrumb-json-ld";
 import FaqPageJsonLd from "@/components/faq-json-ld";
 import { siteUrl } from "@/lib/site-url";
+import VideoJsonLd from "@/components/video-json-ld";
 import PostHero from "@/components/blocks/post-hero";
+import { postPath } from "@/lib/routes";
 import {
   createPostBodyModel,
   getPostReadTime,
@@ -46,7 +49,15 @@ function PageContent({
 
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: page.title || "Page", path: `/${page.slug}` },
+        ]}
+        siteUrl={siteUrl}
+      />
       <FaqPageJsonLd blocks={blocks} />
+      <VideoJsonLd content={blocks} />
       {needsTitleHeader ? (
         <header>
           <h1 data-sanity={rootDataAttribute?.("title")}>{page.title}</h1>
@@ -88,6 +99,8 @@ function PostContent({
       ? "two-column"
       : "single-column";
   const readTime = getPostReadTime(body);
+  const postSlug = post.slug?.current?.replace(/^\/+|\/+$/g, "") || "";
+  const postCanonicalPath = postPath(postSlug) || "/blog";
   const blogPostSettingsDataAttribute = blogPostSidebar
     ? documentDataAttribute({
         id: blogPostSidebar._id,
@@ -108,7 +121,16 @@ function PostContent({
 
   return (
     <section>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: post.title || "Post", path: postCanonicalPath },
+        ]}
+        siteUrl={siteUrl}
+      />
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
+      <VideoJsonLd content={body} />
       <PostHero post={post} readTime={readTime} stega={stega} />
       <div data-post-layout={layoutName}>
         {bodyModel.showTableOfContents ? (

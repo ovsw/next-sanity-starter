@@ -45,7 +45,7 @@ describe("createFaqPageJsonLd", () => {
     expect(
       createFaqPageJsonLd([
         faqBlock([
-          faq("faq-1", "  What is preapproval?  ", "  A lender review.  "),
+          faq("faq-1", "  What is onboarding?  ", "  A setup review.  "),
         ]),
       ]),
     ).toEqual({
@@ -54,11 +54,11 @@ describe("createFaqPageJsonLd", () => {
       mainEntity: [
         {
           "@type": "Question",
-          name: "What is preapproval?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A lender review.",
-          },
+            name: "What is onboarding?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "A setup review.",
+            },
         },
       ],
     });

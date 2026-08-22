@@ -1,9 +1,11 @@
 import { RegularPostCard, documentDataAttribute } from "@/components/blog-card";
+import BreadcrumbJsonLd from "@/components/breadcrumb-json-ld";
 import BlogPagination from "@/components/blog-pagination";
 import {
   calculateBlogPagination,
   getBlogPostWindow,
   getBlogResultsLabel,
+  getBlogCanonicalPath,
   getCategoryArchivePath,
   isBlogPageOutOfRange,
 } from "@/lib/blog-index";
@@ -16,6 +18,7 @@ import type { DynamicFetchOptions } from "@/sanity/lib/live";
 import { notFound } from "next/navigation";
 import { stegaClean } from "next-sanity";
 import Link from "next/link";
+import { siteUrl } from "@/lib/site-url";
 
 export async function CategoryArchiveRoute({
   currentPage,
@@ -46,9 +49,18 @@ export async function CategoryArchiveRoute({
     type: "category",
   });
   const basePath = getCategoryArchivePath(stegaClean(category.slug?.current) || slug);
+  const canonicalPath = getBlogCanonicalPath(currentPage, basePath);
 
   return (
     <main>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: title, path: canonicalPath },
+        ]}
+        siteUrl={siteUrl}
+      />
       <header>
         <nav aria-label="Breadcrumb">
           <Link href="/">Home</Link>

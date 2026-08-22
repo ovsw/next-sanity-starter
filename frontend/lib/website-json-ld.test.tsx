@@ -10,18 +10,29 @@ describe("WebsiteJsonLd", () => {
   it("identifies the site with the public brand name", () => {
     expect(createWebsiteJsonLd("https://example.com/")).toEqual({
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "@id": "https://example.com/#website",
-      name: "Example Company",
-      url: "https://example.com",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://example.com/#organization",
+          name: "Example Company",
+          url: "https://example.com",
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://example.com/#website",
+          name: "Example Company",
+          url: "https://example.com",
+          publisher: {
+            "@id": "https://example.com/#organization",
+          },
+        },
+      ],
     });
   });
 
   it("escapes less-than signs when serialized", () => {
-    const value = {
-      ...createWebsiteJsonLd("https://example.com"),
-      url: "https://example.com/<unsafe>",
-    };
+    const value = createWebsiteJsonLd("https://example.com");
+    value["@graph"][0].url = "https://example.com/<unsafe>";
 
     expect(serializeWebsiteJsonLd(value)).not.toContain("<");
     expect(serializeWebsiteJsonLd(value)).toContain("\\u003cunsafe>");

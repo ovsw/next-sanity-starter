@@ -160,6 +160,37 @@ describe("RootContentView", () => {
     expect(jsonLdNodesByType(container, "BlogPosting")).toHaveLength(0);
   });
 
+  it("emits breadcrumb structured data for posts and pages", () => {
+    const { container, rerender } = render(
+      <RootContentView content={page} perspective="published" stega={false} />,
+    );
+    expect(jsonLdNodesByType(container, "BreadcrumbList")).toHaveLength(1);
+
+    rerender(
+      <RootContentView content={post} perspective="published" stega={false} />,
+    );
+    expect(jsonLdNodesByType(container, "BreadcrumbList")).toHaveLength(1);
+  });
+
+  it("emits VideoObject structured data when the content contains video blocks", () => {
+    const videoPost = {
+      ...post,
+      body: [
+        {
+          _key: "video-1",
+          _type: "videoEmbed",
+          title: "Product walkthrough",
+          url: "https://video.example.com/embed/1",
+        },
+      ],
+    } as unknown as NonNullable<POST_QUERY_RESULT>;
+    const { container } = render(
+      <RootContentView content={videoPost} perspective="published" stega={false} />,
+    );
+
+    expect(jsonLdNodesByType(container, "VideoObject")).toHaveLength(1);
+  });
+
   it("does not emit donor service structured data for pages or posts", () => {
     const { container, rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,

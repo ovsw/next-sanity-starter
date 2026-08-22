@@ -35,9 +35,9 @@ function meta(
 function post(
   overrides: Partial<BlogPostingJsonLdPost> = {},
 ): BlogPostingJsonLdPost {
-  return {
+    return {
     title: "  Service Guide  ",
-    excerpt: "  A practical guide for Arizona veterans.  ",
+    excerpt: "  A practical guide for service teams.  ",
     image: image("https://cdn.sanity.io/images/post.jpg"),
     publishedAt: "2025-04-01T12:00:00.000Z",
     _updatedAt: "2025-04-03T15:30:00.000Z",
@@ -58,7 +58,7 @@ describe("createBlogPostingJsonLd", () => {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: "Service Guide",
-      description: "A practical guide for Arizona veterans.",
+      description: "A practical guide for service teams.",
       image: "https://cdn.sanity.io/images/post.jpg",
       datePublished: "2025-04-01T12:00:00.000Z",
       dateModified: "2025-04-03T15:30:00.000Z",

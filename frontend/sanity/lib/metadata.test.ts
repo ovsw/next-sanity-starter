@@ -48,8 +48,8 @@ const homePage = {
   _type: "homePage",
   title: "Home",
   meta: {
-    title: "Example City Method Lender | Example Company",
-    description: "A trusted Example City method lender.",
+    title: "Example Knowledge Base | Example Company",
+    description: "A practical resource library.",
     noindex: false,
   },
 } as unknown as NonNullable<HOME_PAGE_QUERY_RESULT>;
@@ -174,16 +174,16 @@ describe("generatePageMetadata", () => {
     const metadata = generatePageMetadata({ page: homePage, path: "/" });
 
     expect(metadata.title).toEqual({
-      absolute: "Example City Method Lender | Example Company",
+      absolute: "Example Knowledge Base | Example Company",
     });
     expect(metadata.openGraph.title).toBe(
-      "Example City Method Lender | Example Company",
+      "Example Knowledge Base | Example Company",
     );
     expect(metadata.twitter.title).toBe(
-      "Example City Method Lender | Example Company",
+      "Example Knowledge Base | Example Company",
     );
     expect(metadata.openGraph.images[0].alt).toBe(
-      "Example City Method Lender | Example Company",
+      "Example Knowledge Base | Example Company",
     );
   });
 });

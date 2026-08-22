@@ -1,4 +1,5 @@
 import Blocks from "@/components/blocks";
+import BreadcrumbJsonLd from "@/components/breadcrumb-json-ld";
 import FaqPageJsonLd from "@/components/faq-json-ld";
 import { LatestPostCard, RegularPostCard } from "@/components/blog-card";
 import BlogPagination from "@/components/blog-pagination";
@@ -6,6 +7,7 @@ import {
   calculateBlogPagination,
   getRegularPostQueryParams,
   getBlogResultsLabel,
+  getBlogCanonicalPath,
   isBlogPageOutOfRange,
 } from "@/lib/blog-index";
 import {
@@ -19,6 +21,7 @@ import { createDataAttribute, stegaClean } from "next-sanity";
 import { notFound } from "next/navigation";
 import { dataset, projectId } from "@/sanity/lib/env";
 import Link from "next/link";
+import { siteUrl } from "@/lib/site-url";
 
 export async function BlogIndexRoute({
   currentPage,
@@ -62,6 +65,13 @@ export async function BlogIndexRoute({
 
   return (
     <main>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Blog", path: getBlogCanonicalPath(currentPage) },
+        ]}
+        siteUrl={siteUrl}
+      />
       <FaqPageJsonLd blocks={blogIndex.blocks ?? []} />
       <header>
         <nav aria-label="Breadcrumb">
