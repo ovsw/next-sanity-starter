@@ -1,5 +1,6 @@
 import { defineField } from "sanity";
 import { getSeoTitleWarnings } from "../../../../shared/seo-title";
+import { studioSiteName } from "../../../site-name";
 import { SeoTitleInput } from "../../inputs/seo-title-input";
 
 export default defineField({
@@ -13,7 +14,7 @@ export default defineField({
       type: "string",
       title: "SEO title override",
       description:
-        "Optional. Titles without a pipe get “| The Vercellino Team” automatically. Titles containing a pipe are used as written.",
+        `Optional. Titles without a pipe get “| ${studioSiteName}” automatically. Titles containing a pipe are used as written.`,
       components: { input: SeoTitleInput },
       validation: (rule) =>
         rule
@@ -25,6 +26,7 @@ export default defineField({
             const warnings = getSeoTitleWarnings({
               fallbackTitle,
               overrideTitle: value,
+              siteName: studioSiteName,
             });
 
             return warnings.length ? warnings.join(" ") : true;

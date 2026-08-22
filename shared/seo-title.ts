@@ -1,6 +1,4 @@
 export const SITE_NAME = "Next.js + Sanity Starter";
-export const DEFAULT_TITLE_SUFFIX = SITE_NAME;
-export const TITLE_SUFFIX = ` | ${DEFAULT_TITLE_SUFFIX}`;
 
 const IMPORTANT_TERMS = ["website", "company", "service"] as const;
 
