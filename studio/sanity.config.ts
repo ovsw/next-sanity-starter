@@ -9,7 +9,6 @@ import { resolve } from "./presentation/resolve";
 import { openInPresentationAction } from "./presentation/open-in-presentation";
 import { isPresentationDocumentType } from "./presentation/routes";
 import { structure } from "./structure";
-import { codeInput } from "@sanity/code-input";
 import {
   singletonDocumentActions,
   singletonDocumentTypes,
@@ -76,7 +75,6 @@ export default defineConfig({
     // Vision is a tool that lets you query your content with GROQ in the studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
-    codeInput(),
     media(),
   ],
 });

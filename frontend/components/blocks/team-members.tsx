@@ -31,28 +31,17 @@ function ProfileMeta({
   memberDataAttribute?: TeamMembersProps["memberDataAttribute"];
 }>) {
   const role = stegaClean(member.role)?.trim();
-  const nmlsId = stegaClean(member.nmlsId)?.trim();
 
-  if (!(role || nmlsId)) return null;
+  if (!role) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      {role ? (
-        <span
-          className="rounded-full bg-primary px-3 py-1.5 typo-meta-label text-primary-foreground"
-          data-sanity={memberDataAttribute?.(member._id, "role")}
-        >
-          {member.role}
-        </span>
-      ) : null}
-      {nmlsId ? (
-        <span
-          className="typo-fine-print font-medium text-muted-foreground"
-          data-sanity={memberDataAttribute?.(member._id, "nmlsId")}
-        >
-          NMLS #{member.nmlsId}
-        </span>
-      ) : null}
+      <span
+        className="rounded-full bg-primary px-3 py-1.5 typo-meta-label text-primary-foreground"
+        data-sanity={memberDataAttribute?.(member._id, "role")}
+      >
+        {member.role}
+      </span>
     </div>
   );
 }
@@ -131,7 +120,7 @@ function TeamMemberProfile({
       {hasImage && member.image ? (
         <div
           className={cn(
-            "aspect-[4/5] w-full max-w-[26.25rem] overflow-hidden rounded-card bg-[var(--phx-navy-900)] shadow-ambient-feature",
+            "aspect-[4/5] w-full max-w-[26.25rem] overflow-hidden rounded-card bg-muted shadow-ambient-feature",
             reverse && "md:order-2 md:justify-self-end",
           )}
         >

@@ -7,14 +7,14 @@ export default defineType({
   type: "object",
   icon: UsersRound,
   description:
-    "A PHX team section that displays selected Team Member documents.",
+    "A team section that displays selected Team Member documents.",
   fields: [
     defineField({
       name: "useCreamBackground",
-      title: "Use Cream Background",
+      title: "Use Alternate Background",
       type: "boolean",
       description:
-        "Turn on to use a cream background for this section. Leave off for white.",
+        "Turn on to separate this section from the surrounding page content.",
       initialValue: false,
     }),
     defineField({

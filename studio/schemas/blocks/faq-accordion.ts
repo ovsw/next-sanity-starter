@@ -3,15 +3,22 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "faqAccordion",
-  title: "FAQ Accordion",
+  title: "FAQ Section",
   type: "object",
   icon: MessageCircle,
+  description: "A reusable FAQ section built from selected FAQ documents.",
+  initialValue: {
+    eyebrow: "FAQ",
+    title: "Common questions",
+    subtitle: "Replace this sample with the questions visitors ask most often.",
+  },
   fields: [
     defineField({
       name: "useCreamBackground",
-      title: "Use Cream Background",
+      title: "Use Alternate Background",
       type: "boolean",
-      description: "Turn on to use a cream background for this section. Leave off for white.",
+      description:
+        "Turn on to separate this section from the surrounding page content.",
       initialValue: false,
     }),
     defineField({
@@ -78,8 +85,8 @@ export default defineType({
   preview: {
     select: { title: "title" },
     prepare: ({ title }) => ({
-      title: title || "Untitled FAQ Accordion",
-      subtitle: "FAQ Accordion",
+      title: title || "Untitled FAQ Section",
+      subtitle: "FAQ Section",
     }),
   },
 });

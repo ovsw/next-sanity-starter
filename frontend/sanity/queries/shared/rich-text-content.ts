@@ -35,5 +35,10 @@ export const richTextContentQuery = groq`
       ...,
       cells[]
     }
+  },
+  _type == "callout" => {
+    ...,
+    title,
+    body
   }
 `;

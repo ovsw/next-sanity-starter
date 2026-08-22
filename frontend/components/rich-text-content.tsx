@@ -201,6 +201,18 @@ export const richTextContentComponents: PortableTextProps["components"] = {
         </div>
       );
     },
+    callout: ({ value }) => {
+      const title = stegaClean(value.title)?.trim();
+      const body = stegaClean(value.body)?.trim();
+      if (!(title || body)) return null;
+
+      return (
+        <aside className="my-8 border-l-4 border-border pl-5">
+          {title ? <p className="mb-2 font-semibold text-foreground">{title}</p> : null}
+          {body ? <p className="my-0 text-muted-foreground">{body}</p> : null}
+        </aside>
+      );
+    },
     youtube: ({ value }) => {
       const videoId = getYouTubeVideoId(value.url);
       const fallbackHref = getSafeLinkHref(value.url);

@@ -208,7 +208,7 @@ export default function NavigationIconInput(props: ObjectInputProps) {
               {filteredLoanIcons.length ? (
                 <Stack space={3}>
                   <Text size={1} weight="semibold">
-                    Custom loan icons
+                    Custom icons
                   </Text>
                   <Grid columns={[2, 3, 4, 5]} gap={2}>
                     {filteredLoanIcons.map(({ title, value }) => (

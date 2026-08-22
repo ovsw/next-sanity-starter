@@ -7,15 +7,15 @@ import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
 import { isLoanIconName } from "../../../shared/loan-icons";
 
 const benefitCard = defineArrayMember({
-  name: "phxBenefitCard",
-  title: "Card",
+  name: "featureGridItem",
+  title: "Feature",
   type: "object",
   fields: [
     defineField({
       name: "icon",
       title: "Icon",
       type: "object",
-      description: "Choose a custom loan icon or any canonical Lucide icon.",
+      description: "Choose an icon that helps identify this feature.",
       components: {
         input: NavigationIconInput,
       },
@@ -26,9 +26,9 @@ const benefitCard = defineArrayMember({
         defineField({ name: "svg", title: "SVG markup", type: "string", hidden: true }),
       ],
       validation: (rule) =>
-        rule.required().custom((value) => {
+        rule.custom((value) => {
           const icon = value as { name?: string; svg?: string } | undefined;
-          if (!icon?.name) return "Choose an icon from the icon picker";
+          if (!icon?.name) return true;
           if (!isNavigationIconName(icon.name)) {
             return "Choose an icon from the icon picker";
           }
@@ -41,7 +41,7 @@ const benefitCard = defineArrayMember({
     defineField({
       name: "title",
       type: "string",
-      description: "The card heading, such as \"Lower your interest rate\"",
+      description: "The heading shown for this feature.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -49,7 +49,7 @@ const benefitCard = defineArrayMember({
       title: "Body",
       type: "simpleRichText",
       description:
-        "The explanation for this benefit. Paragraphs with bold and italic only.",
+        "A short explanation. Paragraphs support bold, italic, and links.",
       validation: (rule) => rule.required(),
     }),
   ],
@@ -57,7 +57,7 @@ const benefitCard = defineArrayMember({
     select: { icon: "icon.name", title: "title" },
     prepare: ({ icon, title }) => ({
       title: title || "Untitled Card",
-      subtitle: "Card",
+      subtitle: "Feature",
       media: icon ? createNavigationIconPreview(icon) : undefined,
     }),
   },
@@ -65,18 +65,47 @@ const benefitCard = defineArrayMember({
 
 export default defineType({
   name: "benefitCards",
-  title: "Benefit Cards",
+  title: "Feature Grid",
   type: "object",
   icon: LayoutGrid,
   description:
-    "A grid of numbered cards with icons, for listing reasons or benefits",
+    "A reusable grid for features, services, reasons, or benefits.",
+  initialValue: {
+    eyebrow: "Highlights",
+    title: "Useful features for common marketing pages.",
+    intro:
+      "Replace this sample with a short explanation of what these items help visitors understand.",
+    cards: [
+      {
+        _key: "starter-feature-one",
+        _type: "featureGridItem",
+        title: "Clear content structure",
+        body: [
+          {
+            _key: "starter-feature-one-body",
+            _type: "block",
+            children: [
+              {
+                _key: "starter-feature-one-span",
+                _type: "span",
+                marks: [],
+                text: "Explain one reusable strength, service, or outcome.",
+              },
+            ],
+            markDefs: [],
+            style: "normal",
+          },
+        ],
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "useCreamBackground",
-      title: "Use Cream Background",
+      title: "Use Alternate Background",
       type: "boolean",
       description:
-        "Turn on to use a cream background for this section. Leave off for white.",
+        "Turn on to separate this section from the surrounding page content.",
       initialValue: false,
     }),
     defineField({
@@ -87,7 +116,7 @@ export default defineType({
     defineField({
       name: "title",
       type: "string",
-      description: "The main heading for the benefits section",
+      description: "The main heading for the feature grid.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -98,9 +127,10 @@ export default defineType({
     }),
     defineField({
       name: "cards",
+      title: "Features",
       type: "array",
       description:
-        "Add up to 6 benefit cards. They are numbered automatically in the order listed here.",
+        "Add up to 6 feature items. They are shown in the order listed here.",
       of: [benefitCard],
       validation: (rule) => rule.required().min(1).max(6),
     }),
@@ -110,8 +140,8 @@ export default defineType({
     prepare: ({ title, cards }) => {
       const count = Array.isArray(cards) ? cards.length : 0;
       return {
-        title: title || "Untitled Benefit Cards",
-        subtitle: `Benefit Cards — ${count} ${count === 1 ? "card" : "cards"}`,
+        title: title || "Untitled Feature Grid",
+        subtitle: `Feature Grid - ${count} ${count === 1 ? "feature" : "features"}`,
       };
     },
   },

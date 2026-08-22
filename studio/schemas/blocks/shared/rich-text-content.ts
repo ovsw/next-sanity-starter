@@ -1,9 +1,4 @@
-import {
-  CodeIcon,
-  ImageIcon,
-  Table2Icon,
-  VideoIcon,
-} from "lucide-react";
+import { ImageIcon, MessageSquareQuoteIcon, Table2Icon, VideoIcon } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import RichTextTableInput from "../../inputs/rich-text-table-input";
 
@@ -85,6 +80,29 @@ export default defineType({
       },
     }),
     defineArrayMember({
+      name: "callout",
+      title: "Callout",
+      type: "object",
+      icon: MessageSquareQuoteIcon,
+      fields: [
+        defineField({ name: "title", title: "Title", type: "string" }),
+        defineField({
+          name: "body",
+          title: "Body",
+          type: "text",
+          rows: 3,
+          validation: (rule) => rule.required(),
+        }),
+      ],
+      preview: {
+        select: { title: "title", subtitle: "body" },
+        prepare: ({ subtitle, title }) => ({
+          title: title || "Callout",
+          subtitle,
+        }),
+      },
+    }),
+    defineArrayMember({
       name: "youtube",
       title: "YouTube Video",
       type: "object",
@@ -102,7 +120,6 @@ export default defineType({
       name: "iframeEmbed",
       title: "Iframe Embed",
       type: "object",
-      icon: CodeIcon,
       fields: [
         defineField({
           name: "title",
