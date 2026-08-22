@@ -97,6 +97,7 @@ test("flattens incoming redirects after repeated renames", () => {
           _rev: "rev-a",
           source: "/a",
           destination: "/b",
+          destinationReference: { _ref: "page-id" },
           status: "active",
         },
       ],
@@ -126,6 +127,7 @@ test("repairs out-of-order rename delivery without creating a chain", () => {
         _id: "redirect-b",
         source: "/b",
         destination: "/c",
+        destinationReference: { _ref: "page-id" },
         status: "active",
       },
     ],
@@ -134,6 +136,55 @@ test("repairs out-of-order rename delivery without creating a chain", () => {
   assert.equal(plan.action, "apply");
   assert.equal(plan.source, "/a");
   assert.equal(plan.destination, "/c");
+});
+
+test("does not flatten redirects that cannot prove the same destination document", () => {
+  const event = {
+    beforeSlug: "b",
+    documentId: "page-id",
+    documentType: "page",
+    slug: "c",
+  };
+
+  for (const redirect of [
+    { _id: "path-only", source: "/a", destination: "/b", status: "active" },
+    {
+      _id: "other-document",
+      source: "/a",
+      destination: "/b",
+      destinationReference: { _ref: "other-page" },
+      status: "active",
+    },
+  ]) {
+    assert.match(
+      planAutoRedirect({ event, liveRoutes: [], redirects: [redirect] }).reason,
+      /cannot be verified/,
+    );
+  }
+});
+
+test("does not follow an out-of-order redirect for another document", () => {
+  const plan = planAutoRedirect({
+    event: {
+      beforeSlug: "a",
+      documentId: "page-id",
+      documentType: "page",
+      slug: "b",
+    },
+    liveRoutes: [],
+    redirects: [
+      {
+        _id: "redirect-b",
+        source: "/b",
+        destination: "/c",
+        destinationReference: { _ref: "other-page" },
+        status: "active",
+      },
+    ],
+  });
+
+  assert.equal(plan.action, "skip");
+  assert.match(plan.reason, /targets another document/);
 });
 
 test("is idempotent when Sanity redelivers the same publish event", () => {
@@ -207,7 +258,14 @@ test("blocks inactive-source conflicts, live routes, and redirect cycles", () =>
         slug: "b",
       },
       liveRoutes: [],
-      redirects: [{ source: "/b", destination: "/c", status: "active" }],
+      redirects: [
+        {
+          source: "/b",
+          destination: "/c",
+          destinationReference: { _ref: "page-id" },
+          status: "active",
+        },
+      ],
     }).reason,
     /cycle/,
   );

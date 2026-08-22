@@ -3,9 +3,12 @@ import test from "node:test";
 
 import { uniqueRoutedSlug } from "./routed-slug.ts";
 
-function context(document, collision = null) {
+function context(document, collision = null, inspectFetch = () => {}) {
   const client = {
-    fetch: async () => collision,
+    fetch: async (query, params) => {
+      inspectFetch(query, params);
+      return collision;
+    },
     withConfig: () => client,
   };
   return { document, getClient: () => client };
@@ -29,6 +32,23 @@ test("accepts one clean segment and checks uniqueness within its route type", as
     ),
     /already used by another page/,
   );
+});
+
+test("checks legacy surrounding-slash variants for route collisions", async () => {
+  let observed;
+  await uniqueRoutedSlug(
+    { current: "about" },
+    context(
+      { _id: "drafts.page-id", _type: "page" },
+      null,
+      (query, params) => {
+        observed = { query, params };
+      },
+    ),
+  );
+
+  assert.match(observed.query, /slug\.current in \[\$slug, "\/" \+ \$slug/);
+  assert.equal(observed.params.slug, "about");
 });
 
 test("rejects nested, malformed, and application-owned slugs", async () => {

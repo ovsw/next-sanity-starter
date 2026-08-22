@@ -41,7 +41,7 @@ export async function uniqueRoutedSlug(
     `*[
       _type == $documentType &&
       !sanity::versionOf($publishedId) &&
-      slug.current == $slug
+      slug.current in [$slug, "/" + $slug, $slug + "/", "/" + $slug + "/"]
     ][0]{_id, "slug": slug.current}`,
     {
       documentType: documentType satisfies RoutedDocumentType,

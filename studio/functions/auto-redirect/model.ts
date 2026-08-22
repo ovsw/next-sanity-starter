@@ -77,6 +77,10 @@ function isActive(record: RedirectRecord) {
   return !record.status || record.status === "active";
 }
 
+function targetsDocument(record: RedirectRecord, documentId: string) {
+  return record.destinationReference?._ref?.replace(/^drafts\./, "") === documentId;
+}
+
 export function planAutoRedirect({
   event,
   liveRoutes,
@@ -120,6 +124,12 @@ export function planAutoRedirect({
       normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
   );
   if (destinationRedirect) {
+    if (!targetsDocument(destinationRedirect, destinationDocumentId)) {
+      return {
+        action: "skip",
+        reason: "A redirect at the new route targets another document",
+      };
+    }
     const flattenedDestination = normalizeRedirectPath(
       readRedirectPath(destinationRedirect.destination),
     );
@@ -168,12 +178,23 @@ export function planAutoRedirect({
     return { action: "skip", reason: "The previous route already redirects elsewhere" };
   }
 
-  const incoming = activeRedirects.filter(
+  const incomingAtSource = activeRedirects.filter(
     (redirect) =>
       redirect._id &&
       normalizeRedirectPath(readRedirectPath(redirect.destination)) === source &&
       normalizeRedirectPath(readRedirectPath(redirect.source)) !== source,
   );
+  if (
+    incomingAtSource.some(
+      (redirect) => !targetsDocument(redirect, destinationDocumentId),
+    )
+  ) {
+    return {
+      action: "skip",
+      reason: "An incoming redirect cannot be verified for this document",
+    };
+  }
+  const incoming = incomingAtSource;
 
   const simulated = activeRedirects.map((redirect) =>
     incoming.includes(redirect)

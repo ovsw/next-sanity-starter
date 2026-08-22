@@ -10,10 +10,9 @@ const urlQuery = `
   'url': select(
     _id == "homePage" && _type == "homePage" => $baseUrl + "/",
     _id == "blogIndex" => $baseUrl + "/blog",
-    _type == "post" => $baseUrl + "/blog/" + slug.current,
-    _type == "category" => $baseUrl + "/blog/category/" + slug.current,
-    string::startsWith(slug.current, "/") => $baseUrl + slug.current,
-    $baseUrl + "/" + slug.current
+    _type == "post" => $baseUrl + "/blog/" + array::join(string::split(slug.current, "/")[@ != ""], "/"),
+    _type == "category" => $baseUrl + "/blog/category/" + array::join(string::split(slug.current, "/")[@ != ""], "/"),
+    $baseUrl + "/" + array::join(string::split(slug.current, "/")[@ != ""], "/")
   )
 `;
 

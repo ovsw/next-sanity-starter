@@ -20,6 +20,7 @@ test("internal href resolvers use canonical post and category namespaces", () =>
   assert.doesNotMatch(source, /slug\.current \+ "\/"/);
   assert.match(footerSource, /internal->_type == "post"/);
   assert.match(footerSource, /internal->_type == "category"/);
-  assert.match(footerSource, /"\/blog\/category\/" \+ internal->slug\.current/);
+  assert.match(footerSource, /"\/blog\/category\/" \+ array::join/);
+  assert.match(footerSource, /string::split\(internal->slug\.current, "\/"\)/);
   assert.doesNotMatch(footerSource, /slug\.current \+ "\/"/);
 });

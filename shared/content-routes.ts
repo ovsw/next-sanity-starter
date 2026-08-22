@@ -12,17 +12,17 @@ export function isRouteSlug(value?: string | null) {
 
 export function pagePath(value?: string | null) {
   const slug = cleanSlug(value);
-  return slug ? `/${slug}` : null;
+  return isRouteSlug(slug) ? `/${slug}` : null;
 }
 
 export function postPath(value?: string | null) {
   const slug = cleanSlug(value);
-  return slug ? `/blog/${slug}` : null;
+  return isRouteSlug(slug) ? `/blog/${slug}` : null;
 }
 
 export function categoryPath(value?: string | null) {
   const slug = cleanSlug(value);
-  return slug ? `/blog/category/${slug}` : null;
+  return isRouteSlug(slug) ? `/blog/category/${slug}` : null;
 }
 
 export function routedDocumentPath(

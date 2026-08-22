@@ -69,6 +69,13 @@ describe("createLoanJsonLd", () => {
     },
   );
 
+  it.each([undefined, null, "", "/", "two/segments", "Uppercase", "under_score"])(
+    "returns null for an unusable slug (%j)",
+    (slug) => {
+      expect(createLoan({ slug })).toBeNull();
+    },
+  );
+
   it("strips stega characters from the loan type, description, and slug", () => {
     const stega = "\u200b\u200c\u200d\ufeff";
 

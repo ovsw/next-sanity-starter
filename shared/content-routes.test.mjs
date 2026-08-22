@@ -15,6 +15,14 @@ test("resolves every routed document type without an ending slash", () => {
   assert.equal(categoryPath("/news/"), "/blog/category/news");
 });
 
+test("rejects missing and malformed routed slugs", () => {
+  for (const slug of [undefined, "", "/", "two/segments", "Uppercase", "under_score"]) {
+    assert.equal(pagePath(slug), null, String(slug));
+    assert.equal(postPath(slug), null, String(slug));
+    assert.equal(categoryPath(slug), null, String(slug));
+  }
+});
+
 test("normalizes safe internal paths and rejects unsafe values", () => {
   assert.equal(normalizePublicPath(" /old/path/ "), "/old/path");
   assert.equal(normalizePublicPath("https://example.com"), "");

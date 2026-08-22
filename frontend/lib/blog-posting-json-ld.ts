@@ -44,7 +44,8 @@ export function createBlogPostingJsonLd(
     ?.trim()
     .replace(/^\/+|\/+$/g, "")
     .trim();
-  if (!headline || !post.publishedAt || !slug) return null;
+  const path = postPath(slug);
+  if (!headline || !post.publishedAt || !path) return null;
 
   const description =
     stegaClean(post.excerpt)?.trim() ||
@@ -56,7 +57,7 @@ export function createBlogPostingJsonLd(
       ? post._updatedAt
       : undefined;
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
-  const url = `${normalizedSiteUrl}${postPath(slug)}`;
+  const url = `${normalizedSiteUrl}${path}`;
 
   return {
     "@context": "https://schema.org",

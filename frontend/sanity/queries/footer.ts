@@ -6,10 +6,9 @@ const destinationProjection = `{
     kind == "internal" => select(
       internal->_id == "homePage" || internal->_type == "homePage" => "/",
       internal->_id == "blogIndex" => "/blog",
-      internal->_type == "post" && defined(internal->slug.current) => "/blog/" + internal->slug.current,
-      internal->_type == "category" && defined(internal->slug.current) => "/blog/category/" + internal->slug.current,
-      string::startsWith(internal->slug.current, "/") => internal->slug.current,
-      defined(internal->slug.current) => "/" + internal->slug.current
+      internal->_type == "post" && defined(internal->slug.current) => "/blog/" + array::join(string::split(internal->slug.current, "/")[@ != ""], "/"),
+      internal->_type == "category" && defined(internal->slug.current) => "/blog/category/" + array::join(string::split(internal->slug.current, "/")[@ != ""], "/"),
+      defined(internal->slug.current) => "/" + array::join(string::split(internal->slug.current, "/")[@ != ""], "/")
     ),
     kind == "external" => external
   )

@@ -119,7 +119,7 @@ describe("createBlogPostingJsonLd", () => {
     ).toBeNull();
   });
 
-  it.each(["", "   ", "/", "///", " / / "])(
+  it.each(["", "   ", "/", "///", " / / ", "two/segments", "Uppercase", "under_score"])(
     "returns null for an unusable slug (%j)",
     (current) => {
       expect(
