@@ -1,18 +1,12 @@
-export const SITE_NAME = "PHX Home Loan";
-export const DEFAULT_TITLE_SUFFIX = "The Vercellino Team";
+export const SITE_NAME = "Next.js + Sanity Starter";
+export const DEFAULT_TITLE_SUFFIX = SITE_NAME;
 export const TITLE_SUFFIX = ` | ${DEFAULT_TITLE_SUFFIX}`;
 
 const LEGACY_SITE_NAMES = [
   SITE_NAME,
-  "Phoenix Mortgage Lenders",
-  "Phoenix Mortgage Lender",
-  "Phoenix Mortgage",
-  "Mortgage Lenders",
-  "Mortgage Lender",
-  "Phoenix Home Loan",
 ] as const;
 
-const IMPORTANT_TERMS = ["mortgage", "loan", "lender"] as const;
+const IMPORTANT_TERMS = ["website", "company", "service"] as const;
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

@@ -3,7 +3,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { presentationTool } from "sanity/presentation";
 import { media } from "sanity-plugin-media";
-import { requireStudioDataset } from "./environment";
+import { requireStudioEnvironmentValue } from "./environment";
 import { schemaTypes } from "./schema-types";
 import { resolve } from "./presentation/resolve";
 import { openInPresentationAction } from "./presentation/open-in-presentation";
@@ -18,15 +18,27 @@ import {
 // Define the actions that should be available for singleton documents
 const nonCreatableTypes = singletonDocumentTypes;
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-project-id";
-const dataset = requireStudioDataset(process.env.SANITY_STUDIO_DATASET);
+const projectId = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_PROJECT_ID",
+  process.env.SANITY_STUDIO_PROJECT_ID,
+);
+const dataset = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_DATASET",
+  process.env.SANITY_STUDIO_DATASET,
+);
+const title = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_TITLE",
+  process.env.SANITY_STUDIO_TITLE,
+);
 const apiVersion = process.env.SANITY_STUDIO_API_VERSION || "2026-03-23";
 
-const SANITY_STUDIO_PREVIEW_URL =
-  process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
+const SANITY_STUDIO_PREVIEW_URL = requireStudioEnvironmentValue(
+  "SANITY_STUDIO_PREVIEW_URL",
+  process.env.SANITY_STUDIO_PREVIEW_URL,
+);
 
 export default defineConfig({
-  title: "PHX Home Loan",
+  title,
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schema' folder

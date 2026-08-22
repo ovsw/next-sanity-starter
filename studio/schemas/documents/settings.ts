@@ -1,6 +1,5 @@
 import { defineField, defineType } from "sanity";
 import { Settings } from "lucide-react";
-import { SITE_NAME } from "../../../shared/seo-title";
 
 export default defineType({
   name: "settings",
@@ -46,7 +45,7 @@ export default defineType({
       title: "Secondary logo",
       type: "object",
       description:
-        "Parent-brand or affiliate attribution shown beside the main logo — currently 'A division of Luminate Bank'. Kept separate from the main logo so the two can be sized independently. Sits to the right of the main logo, and below it on the narrowest phones.",
+        "Optional parent-brand or partner mark shown beside the main logo.",
       fields: [
         defineField({
           name: "dark",
@@ -83,13 +82,8 @@ export default defineType({
     defineField({
       name: "siteName",
       type: "string",
-      description: `The public site name. Keep this set to “${SITE_NAME}” so metadata and visible branding agree.`,
-      validation: (Rule) =>
-        Rule.required()
-          .custom((value) =>
-            value === SITE_NAME ? true : `Site name must be “${SITE_NAME}”`,
-          )
-          .error(),
+      description: "The public site name used in visible branding.",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "blogPostSidebar",

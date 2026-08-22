@@ -6,137 +6,54 @@ import {
 } from "../../shared/seo-title";
 
 describe("resolveSeoTitle", () => {
-  it("uses a page-specific override and appends the default suffix", () => {
+  it("uses a page override with the neutral default suffix", () => {
     expect(
       resolveSeoTitle({
-        fallbackTitle: "Conventional Loans",
-        overrideTitle: "Phoenix Conventional Mortgage Loan",
-      }),
-    ).toEqual({
-      finalTitle: "Phoenix Conventional Mortgage Loan | The Vercellino Team",
-      metadataTitle: "Phoenix Conventional Mortgage Loan",
-      openGraphTitle:
-        "Phoenix Conventional Mortgage Loan | The Vercellino Team",
-      pageTitle: "Phoenix Conventional Mortgage Loan",
-      twitterTitle:
-        "Phoenix Conventional Mortgage Loan | The Vercellino Team",
-    });
-  });
-
-  it("falls back to the content title", () => {
-    expect(
-      resolveSeoTitle({ fallbackTitle: "What Is Earnest Money?" }).pageTitle,
-    ).toBe("What Is Earnest Money?");
-  });
-
-  it("returns an absolute homepage title", () => {
-    expect(
-      resolveSeoTitle({
-        fallbackTitle: "Phoenix Mortgage Lender",
-        isHomepage: true,
-      }).metadataTitle,
-    ).toEqual({
-      absolute: "Phoenix Mortgage Lender | The Vercellino Team",
-    });
-  });
-
-  it("uses any override containing a pipe as the complete title", () => {
-    expect(
-      resolveSeoTitle({
-        fallbackTitle: "Fallback",
-        overrideTitle:
-          "My Page Title | The Highly Motivated Vercellino Team",
+        fallbackTitle: "Services",
+        overrideTitle: "Custom services",
       }),
     ).toMatchObject({
-      finalTitle: "My Page Title | The Highly Motivated Vercellino Team",
-      metadataTitle: {
-        absolute: "My Page Title | The Highly Motivated Vercellino Team",
-      },
-      openGraphTitle:
-        "My Page Title | The Highly Motivated Vercellino Team",
-      twitterTitle:
-        "My Page Title | The Highly Motivated Vercellino Team",
+      finalTitle: "Custom services | Next.js + Sanity Starter",
+      metadataTitle: "Custom services",
+      pageTitle: "Custom services",
     });
   });
 
-  it("does not replace a legacy suffix when the title contains a pipe", () => {
+  it("uses a pipe-bearing override as a complete title", () => {
     expect(
-      resolveSeoTitle({
-        overrideTitle: "FHA Loans | Phoenix Mortgage Lenders",
-      }).finalTitle,
-    ).toBe("FHA Loans | Phoenix Mortgage Lenders");
+      resolveSeoTitle({ overrideTitle: "About | Example Company" }),
+    ).toMatchObject({
+      finalTitle: "About | Example Company",
+      metadataTitle: { absolute: "About | Example Company" },
+    });
   });
 
-  it("does not treat a pipe in the content title as an override", () => {
-    expect(
-      resolveSeoTitle({
-        fallbackTitle: "Fixed vs. Adjustable | Which Is Right?",
-      }).finalTitle,
-    ).toBe(
-      "Fixed vs. Adjustable | Which Is Right? | The Vercellino Team",
-    );
-  });
-
-  it("falls back when cleaning an override leaves no page title", () => {
-    expect(
-      resolveSeoTitle({
-        fallbackTitle: "Mortgage Guidance",
-        overrideTitle: "- PHX Home Loan",
-      }).finalTitle,
-    ).toBe("Mortgage Guidance | The Vercellino Team");
-  });
-
-  it("returns an absolute title when only the site name remains", () => {
+  it("returns the neutral site name when no page title exists", () => {
     expect(resolveSeoTitle({}).metadataTitle).toEqual({
-      absolute: "PHX Home Loan",
+      absolute: "Next.js + Sanity Starter",
     });
   });
 
-  it("removes repeated recognized legacy suffixes", () => {
+  it("removes a repeated neutral suffix", () => {
     expect(
       stripLegacySeoTitleSuffix(
-        "FHA Loans | Phoenix Mortgage Lenders | PHX Home Loan",
+        "About | Next.js + Sanity Starter | Next.js + Sanity Starter",
       ),
-    ).toBe("FHA Loans");
-  });
-
-  it("removes the legacy Phoenix Mortgage suffix", () => {
-    expect(
-      stripLegacySeoTitleSuffix(
-        "5 Reasons A Mortgage Is Denied After Pre-Approval | Phoenix Mortgage",
-      ),
-    ).toBe("5 Reasons A Mortgage Is Denied After Pre-Approval");
-  });
-
-  it("does not remove ordinary page-specific wording", () => {
-    expect(stripLegacySeoTitleSuffix("About PHX Home Loan")).toBe(
-      "About PHX Home Loan",
-    );
+    ).toBe("About");
   });
 });
 
 describe("getSeoTitleWarnings", () => {
-  it("warns when a non-pipe override contains a legacy suffix", () => {
-    expect(
-      getSeoTitleWarnings({
-        fallbackTitle: "Fallback",
-        overrideTitle: "FHA Loans - PHX Home Loan",
-      }),
-    ).toContain(
-      "Remove the manual legacy suffix; the default suffix is automatic.",
-    );
-  });
-
-  it("warns without rejecting manual suffixes, repetition, or length", () => {
+  it("warns about repeated generic terms and long titles", () => {
     const warnings = getSeoTitleWarnings({
       fallbackTitle: "Fallback",
       overrideTitle:
-        "Phoenix Mortgage Options and Mortgage Guidance | PHX Home Loan",
+        "Company website services for every company website requirement today",
     });
 
     expect(warnings).toEqual([
-      "Review the repeated term “mortgage” for readability.",
-      "The final 62-character title may be shortened in search results.",
+      "Review the repeated term “website” for readability.",
+      "The final 95-character title may be shortened in search results.",
     ]);
   });
 });

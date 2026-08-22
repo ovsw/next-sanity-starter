@@ -8,19 +8,19 @@ import {
 
 describe("WebsiteJsonLd", () => {
   it("identifies the site with the public brand name", () => {
-    expect(createWebsiteJsonLd("https://phxhomeloan.com/")).toEqual({
+    expect(createWebsiteJsonLd("https://example.com/")).toEqual({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": "https://phxhomeloan.com/#website",
-      name: "PHX Home Loan",
-      url: "https://phxhomeloan.com",
+      "@id": "https://example.com/#website",
+      name: "Next.js + Sanity Starter",
+      url: "https://example.com",
     });
   });
 
   it("escapes less-than signs when serialized", () => {
     const value = {
-      ...createWebsiteJsonLd("https://phxhomeloan.com"),
-      url: "https://phxhomeloan.com/<unsafe>",
+      ...createWebsiteJsonLd("https://example.com"),
+      url: "https://example.com/<unsafe>",
     };
 
     expect(serializeWebsiteJsonLd(value)).not.toContain("<");
@@ -29,13 +29,13 @@ describe("WebsiteJsonLd", () => {
 
   it("renders one JSON-LD script", () => {
     const { container } = render(
-      <WebsiteJsonLd siteUrl="https://phxhomeloan.com" />,
+      <WebsiteJsonLd siteUrl="https://example.com" />,
     );
     const script = container.querySelector('script[type="application/ld+json"]');
 
     expect(script).not.toBeNull();
     expect(JSON.parse(script?.textContent || "{}")).toEqual(
-      createWebsiteJsonLd("https://phxhomeloan.com"),
+      createWebsiteJsonLd("https://example.com"),
     );
   });
 });
