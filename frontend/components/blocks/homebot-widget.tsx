@@ -58,7 +58,7 @@ export default function HomebotWidget({
           {failed ? (
             <p className="text-center typo-body text-muted-foreground">
               The home-value tool is unavailable right now.{" "}
-              <Link className="font-semibold text-primary underline" href="/contact/">
+              <Link className="font-semibold text-primary underline" href="/contact">
                 Schedule a consultation.
               </Link>
             </p>

@@ -2,6 +2,7 @@ import { defineField, defineType } from "sanity";
 import { BookA } from "lucide-react";
 import meta from "../blocks/shared/meta";
 import { uniqueCategorySlug } from "../validation/unique-category-slug";
+import { categoryPath } from "../../../shared/content-routes.ts";
 
 export default defineType({
   name: "category",
@@ -43,7 +44,7 @@ export default defineType({
     },
     prepare: ({ slug, title }) => ({
       title: title || "Untitled Category",
-      subtitle: slug ? `/${slug}/` : "No slug",
+      subtitle: categoryPath(slug) ?? "No slug",
     }),
   },
 });

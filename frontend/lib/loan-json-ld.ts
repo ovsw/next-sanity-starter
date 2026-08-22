@@ -1,5 +1,5 @@
 import { stegaClean } from "next-sanity";
-import { contentPath } from "@/lib/routes";
+import { pagePath } from "@/lib/routes";
 
 export type CreateLoanJsonLdOptions = {
   loanType?: string | null;
@@ -38,6 +38,8 @@ export function createLoanJsonLd({
     ?.trim()
     .replace(/^\/+|\/+$/g, "")
     .trim();
+  const path = pagePath(normalizedSlug);
+  if (!path) return null;
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
 
   return {
@@ -46,7 +48,7 @@ export function createLoanJsonLd({
     name: normalizedLoanType,
     loanType: normalizedLoanType,
     ...(description ? { description } : {}),
-    url: `${normalizedSiteUrl}${contentPath(normalizedSlug)}`,
+    url: `${normalizedSiteUrl}${path}`,
     provider: {
       "@id": `${normalizedSiteUrl}/#jimmy`,
     },

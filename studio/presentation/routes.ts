@@ -1,3 +1,10 @@
+import {
+  categoryPath,
+  pagePath,
+  postPath,
+  routedDocumentPath,
+} from "../../shared/content-routes.ts";
+
 const PRESENTATION_DOCUMENT_TYPES = new Set([
   "page",
   "post",
@@ -24,26 +31,24 @@ export function isPresentationDocumentType(documentType: string) {
 }
 
 export function resolveContentPath(value?: string | null) {
-  const slug = value?.replace(/^\/+|\/+$/g, "");
-  if (!slug) return "/";
-  return `/${slug}/`;
+  return pagePath(value) ?? "/";
 }
 
 export function resolveCategoryPath(value?: string | null) {
-  const slug = value?.trim().replace(/^\/+|\/+$/g, "");
-  if (!slug) return null;
-  return `/blog/category/${slug}/`;
+  return categoryPath(value);
 }
 
 export function getPresentationPath(
   documentType: string,
   slug?: string | null,
 ) {
-  if (documentType === "blogIndex") return "/blog/";
+  if (documentType === "blogIndex") return "/blog";
   if (documentType === "homePage") return "/";
   if (!isPresentationDocumentType(documentType) || !slug?.trim()) return null;
-  if (documentType === "category") return resolveCategoryPath(slug);
-  return resolveContentPath(slug);
+  if (documentType === "page") return pagePath(slug);
+  if (documentType === "post") return postPath(slug);
+  if (documentType === "category") return routedDocumentPath("category", slug);
+  return null;
 }
 
 export function getDocumentSlug(

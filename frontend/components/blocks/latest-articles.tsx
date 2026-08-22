@@ -4,7 +4,7 @@ import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import { contentPath } from "@/lib/routes";
+import { categoryPath, postPath } from "@/lib/routes";
 
 type LatestArticlesProps = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -16,12 +16,12 @@ type ArticleImage = LatestArticlesProps["fallbackImage"];
 
 function getArticleHref(slug?: string | null) {
   const cleanSlug = stegaClean(slug);
-  return cleanSlug ? contentPath(cleanSlug) : "#";
+  return cleanSlug ? (postPath(cleanSlug) ?? "#") : "#";
 }
 
 function getCategoryHref(slug?: string | null) {
   const cleanSlug = stegaClean(slug);
-  return cleanSlug ? `/blog/category/${cleanSlug}/` : undefined;
+  return cleanSlug ? (categoryPath(cleanSlug) ?? undefined) : undefined;
 }
 
 function formatPublishedDate(publishedAt?: string | null) {

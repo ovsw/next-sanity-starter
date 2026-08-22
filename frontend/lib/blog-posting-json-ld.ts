@@ -1,5 +1,5 @@
 import { stegaClean } from "next-sanity";
-import { contentPath } from "@/lib/routes";
+import { postPath } from "@/lib/routes";
 import type { POST_QUERY_RESULT } from "@/sanity.types";
 
 export type BlogPostingJsonLdPost = Pick<
@@ -44,7 +44,8 @@ export function createBlogPostingJsonLd(
     ?.trim()
     .replace(/^\/+|\/+$/g, "")
     .trim();
-  if (!headline || !post.publishedAt || !slug) return null;
+  const path = postPath(slug);
+  if (!headline || !post.publishedAt || !path) return null;
 
   const description =
     stegaClean(post.excerpt)?.trim() ||
@@ -56,7 +57,7 @@ export function createBlogPostingJsonLd(
       ? post._updatedAt
       : undefined;
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
-  const url = `${normalizedSiteUrl}${contentPath(slug)}`;
+  const url = `${normalizedSiteUrl}${path}`;
 
   return {
     "@context": "https://schema.org",

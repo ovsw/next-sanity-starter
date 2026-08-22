@@ -7,6 +7,7 @@ import type { POST_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { categoryPath } from "@/lib/routes";
 
 type PostHeroProps = {
   post: NonNullable<POST_QUERY_RESULT>;
@@ -29,6 +30,7 @@ function getInitials(value: string | null | undefined) {
 export default function PostHero({ post, readTime, stega }: PostHeroProps) {
   const { author, category, excerpt, image, publishedAt, title } = post;
   const categorySlug = stegaClean(category?.slug?.current)?.replace(/^\/+|\/+$/g, "");
+  const categoryHref = categoryPath(categorySlug);
   const authorName = stegaClean(author?.name)?.trim();
   const postDataAttribute = documentDataAttribute({ id: post._id, stega, type: "post" });
   const authorDataAttribute = author
@@ -41,11 +43,11 @@ export default function PostHero({ post, readTime, stega }: PostHeroProps) {
   return (
     <>
       <header className="mx-auto max-w-4xl text-center">
-        {category?.title && categorySlug ? (
+        {category?.title && categoryHref ? (
           <Link
             className="inline-flex rounded-full bg-primary/10 px-3 py-1.5 typo-meta-label text-primary transition-colors motion-fast hover:bg-primary/15 focus-underline"
             data-sanity={categoryDataAttribute?.("title")}
-            href={`/blog/category/${categorySlug}/`}
+            href={categoryHref}
           >
             {category.title}
           </Link>

@@ -50,5 +50,5 @@ export async function submitContactForm(
     return { error: "Your message could not be sent. Please try again." };
   }
 
-  redirect("/contact/thanks/");
+  redirect("/contact/thanks");
 }

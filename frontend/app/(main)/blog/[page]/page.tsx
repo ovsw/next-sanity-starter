@@ -1,16 +1,30 @@
 import { BlogIndexRoute } from "../_components/blog-index-route";
-import { calculateBlogPagination, parseBlogPageSegment } from "@/lib/blog-index";
+import { BlogPostRoute } from "../_components/blog-post-route";
+import {
+  calculateBlogPagination,
+  parseBlogPageSegment,
+} from "@/lib/blog-index";
+import { isApplicationPath, isRouteSlug, postPath } from "@/lib/routes";
+import { POSTS_SLUGS_QUERY } from "@/sanity/lib/fetch";
 import {
   getDynamicFetchOptions,
   sanityFetchMetadata,
   sanityFetchStaticParams,
 } from "@/sanity/lib/live";
-import { generateBlogIndexMetadata } from "@/sanity/lib/metadata";
+import {
+  generateBlogIndexMetadata,
+  generatePageMetadata,
+} from "@/sanity/lib/metadata";
 import {
   BLOG_INDEX_QUERY,
   ELIGIBLE_BLOG_POSTS_COUNT_QUERY,
 } from "@/sanity/queries/blog-index";
-import type { BLOG_INDEX_QUERY_RESULT } from "@/sanity.types";
+import { POST_QUERY } from "@/sanity/queries/post";
+import type {
+  BLOG_INDEX_QUERY_RESULT,
+  POSTS_SLUGS_QUERY_RESULT,
+  POST_QUERY_RESULT,
+} from "@/sanity.types";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -18,40 +32,90 @@ type Props = { params: Promise<{ page: string }> };
 
 export const instant = false;
 
-export async function generateStaticParams() {
-  const { data } = await sanityFetchStaticParams({
-    query: ELIGIBLE_BLOG_POSTS_COUNT_QUERY,
-  });
-  const regularPostCount = Math.max(Number(data) - 1, 0);
-  const { totalPages } = calculateBlogPagination(regularPostCount, 1);
+function readPostSlug(segment: string) {
+  const path = postPath(segment);
+  return isRouteSlug(segment) && path && !isApplicationPath(path)
+    ? segment
+    : null;
+}
 
-  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => ({
-    page: String(index + 2),
-  }));
+export async function generateStaticParams() {
+  const [{ data: count }, { data: posts }] = await Promise.all([
+    sanityFetchStaticParams({ query: ELIGIBLE_BLOG_POSTS_COUNT_QUERY }),
+    sanityFetchStaticParams({ query: POSTS_SLUGS_QUERY }) as Promise<{
+      data: POSTS_SLUGS_QUERY_RESULT;
+    }>,
+  ]);
+  const regularPostCount = Math.max(Number(count) - 1, 0);
+  const { totalPages } = calculateBlogPagination(regularPostCount, 1);
+  const params = Array.from(
+    { length: Math.max(totalPages - 1, 0) },
+    (_, index) => ({ page: String(index + 2) }),
+  );
+
+  for (const post of posts) {
+    const slug = post.slug?.current?.replace(/^\/+|\/+$/g, "");
+    if (slug && readPostSlug(slug)) params.push({ page: slug });
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }: Props) {
   const { page: segment } = await params;
   const page = parseBlogPageSegment(segment);
-  if (!page) notFound();
-  const { data: blogIndex } = (await sanityFetchMetadata({
-    query: BLOG_INDEX_QUERY,
-    perspective: "published",
-  })) as { data: BLOG_INDEX_QUERY_RESULT };
-  return generateBlogIndexMetadata({ blogIndex, page });
-}
-
-export default async function PaginatedBlogPage({ params }: Props) {
-  const [{ page: segment }, { isEnabled }] = await Promise.all([params, draftMode()]);
-  const page = parseBlogPageSegment(segment);
-  if (!page) notFound();
-  if (isEnabled) {
-    return <DynamicPaginatedBlogPage page={page} />;
+  if (page) {
+    const { data: blogIndex } = (await sanityFetchMetadata({
+      query: BLOG_INDEX_QUERY,
+      perspective: "published",
+    })) as { data: BLOG_INDEX_QUERY_RESULT };
+    return generateBlogIndexMetadata({ blogIndex, page });
   }
-  return <BlogIndexRoute currentPage={page} perspective="published" stega={false} />;
+  if (/^\d+$/.test(segment)) notFound();
+
+  const slug = readPostSlug(segment);
+  if (!slug) notFound();
+  const { data: post } = (await sanityFetchMetadata({
+    query: POST_QUERY,
+    params: { slug },
+    perspective: "published",
+  })) as { data: POST_QUERY_RESULT };
+  if (!post) return {};
+  const path = postPath(slug);
+  if (!path) return {};
+  return generatePageMetadata({ page: post, path });
 }
 
-async function DynamicPaginatedBlogPage({ page }: { page: number }) {
+export default async function BlogSegmentPage({ params }: Props) {
+  const [{ page: segment }, { isEnabled }] = await Promise.all([
+    params,
+    draftMode(),
+  ]);
+  const page = parseBlogPageSegment(segment);
+  if (page) {
+    return isEnabled ? (
+      <DynamicBlogIndexPage page={page} />
+    ) : (
+      <BlogIndexRoute currentPage={page} perspective="published" stega={false} />
+    );
+  }
+  if (/^\d+$/.test(segment)) notFound();
+
+  const slug = readPostSlug(segment);
+  if (!slug) notFound();
+  return isEnabled ? (
+    <DynamicBlogPostPage slug={slug} />
+  ) : (
+    <BlogPostRoute slug={slug} perspective="published" stega={false} />
+  );
+}
+
+async function DynamicBlogIndexPage({ page }: { page: number }) {
   const options = await getDynamicFetchOptions();
   return <BlogIndexRoute currentPage={page} {...options} />;
+}
+
+async function DynamicBlogPostPage({ slug }: { slug: string }) {
+  const options = await getDynamicFetchOptions();
+  return <BlogPostRoute slug={slug} {...options} />;
 }

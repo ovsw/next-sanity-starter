@@ -4,7 +4,11 @@ import {
   PresentationPluginOptions,
 } from "sanity/presentation";
 import { ROOT_SLUG_FILTER } from "../../shared/root-slug-filter";
-import { resolveCategoryPath, resolveContentPath } from "./routes";
+import {
+  getPresentationPath,
+  resolveCategoryPath,
+  resolveContentPath,
+} from "./routes";
 
 export { resolveContentPath } from "./routes";
 
@@ -33,9 +37,9 @@ export const resolve: PresentationPluginOptions["resolve"] = {
         locations: [
           {
             title: doc?.title || "Untitled",
-            href: resolveContentPath(doc?.slug),
+            href: getPresentationPath("post", doc?.slug) ?? "/blog",
           },
-          { title: "Blog", href: "/blog/" },
+          { title: "Blog", href: "/blog" },
         ],
       }),
     }),
@@ -56,7 +60,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     blogIndex: defineLocations({
       select: { title: "title" },
       resolve: (doc) => ({
-        locations: [{ title: doc?.title || "Blog Index", href: "/blog/" }],
+        locations: [{ title: doc?.title || "Blog Index", href: "/blog" }],
       }),
     }),
     homePage: defineLocations({
@@ -68,7 +72,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
   },
   mainDocuments: defineDocuments([
     {
-      route: "/blog/",
+      route: "/blog",
       filter: `_id == "blogIndex"`,
     },
     {
@@ -76,12 +80,16 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       filter: `_id == 'homePage' && _type == 'homePage'`,
     },
     {
-      route: "/blog/category/:slug/",
+      route: "/blog/category/:slug",
       filter: `_type == 'category' && slug.current in [$slug, "/" + $slug]`,
     },
     {
-      route: "/:slug/",
-      filter: `_type in ['page', 'post'] && ${ROOT_SLUG_FILTER}`,
+      route: "/blog/:slug",
+      filter: `_type == 'post' && ${ROOT_SLUG_FILTER}`,
+    },
+    {
+      route: "/:slug",
+      filter: `_type == 'page' && ${ROOT_SLUG_FILTER}`,
     },
   ]),
 };

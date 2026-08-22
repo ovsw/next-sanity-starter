@@ -31,7 +31,7 @@ describe("createLoanJsonLd", () => {
       name: "VA Loan",
       loanType: "VA Loan",
       description: "Arizona VA loan guidance.",
-      url: "https://phxhomeloan.com/phoenix-va-loan/",
+      url: "https://phxhomeloan.com/phoenix-va-loan",
       provider: {
         "@id": "https://phxhomeloan.com/#jimmy",
       },
@@ -69,6 +69,13 @@ describe("createLoanJsonLd", () => {
     },
   );
 
+  it.each([undefined, null, "", "/", "two/segments", "Uppercase", "under_score"])(
+    "returns null for an unusable slug (%j)",
+    (slug) => {
+      expect(createLoan({ slug })).toBeNull();
+    },
+  );
+
   it("strips stega characters from the loan type, description, and slug", () => {
     const stega = "\u200b\u200c\u200d\ufeff";
 
@@ -82,7 +89,7 @@ describe("createLoanJsonLd", () => {
       name: "FHA Loan",
       loanType: "FHA Loan",
       description: "Flexible financing.",
-      url: "https://phxhomeloan.com/phoenix-fha-loan/",
+      url: "https://phxhomeloan.com/phoenix-fha-loan",
     });
   });
 

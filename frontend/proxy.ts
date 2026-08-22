@@ -3,7 +3,6 @@ import {
   isBlogPageOutOfRange,
   parseBlogPageSegment,
 } from "@/lib/blog-index";
-import { isGoneRoute } from "@/lib/gone-routes";
 import { client } from "@/sanity/lib/client";
 import {
   BLOG_CATEGORY_POST_COUNTS_QUERY,
@@ -95,30 +94,6 @@ function notFoundResponse() {
   });
 }
 
-function goneResponse() {
-  return new NextResponse("Gone", {
-    headers: {
-      "cache-control": "public, max-age=0, must-revalidate",
-      "content-type": "text/plain; charset=utf-8",
-      "x-robots-tag": "noindex",
-    },
-    status: 410,
-  });
-}
-
-function trailingSlashResponse(request: NextRequest) {
-  const url = new URL(request.url);
-  url.pathname = `${request.nextUrl.pathname}/`;
-  return new NextResponse(null, {
-    headers: { location: url.toString() },
-    status: 308,
-  });
-}
-
-function shouldRedirectToTrailingSlash(pathname: string) {
-  return pathname !== "/" && !pathname.endsWith("/") && !pathname.includes(".");
-}
-
 function hasValidatedDraftMode(request: NextRequest) {
   const cookieValue = request.cookies.get("__prerender_bypass")?.value;
   const previewModeId = process.env.__NEXT_PREVIEW_MODE_ID;
@@ -132,10 +107,6 @@ function hasValidatedDraftMode(request: NextRequest) {
 }
 
 export async function proxy(request: NextRequest) {
-  if (isGoneRoute(request.nextUrl.pathname)) return goneResponse();
-  if (shouldRedirectToTrailingSlash(request.nextUrl.pathname)) {
-    return trailingSlashResponse(request);
-  }
   if (!request.nextUrl.pathname.startsWith("/blog/")) {
     return NextResponse.next();
   }
@@ -163,7 +134,11 @@ export async function proxy(request: NextRequest) {
   if (segments.length !== 2) return notFoundResponse();
 
   const page = parseBlogPageSegment(segments[1]);
-  if (!page) return notFoundResponse();
+  if (!page) {
+    return /^\d+$/.test(segments[1])
+      ? notFoundResponse()
+      : NextResponse.next();
+  }
 
   if (hasValidatedDraftMode(request)) return NextResponse.next();
 

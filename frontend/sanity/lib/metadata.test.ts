@@ -84,7 +84,7 @@ const category = {
 
 describe("generatePageMetadata", () => {
   it("uses one signed generated card for post Open Graph and Twitter metadata", () => {
-    const metadata = generatePageMetadata({ page: post, path: "/mortgage-rates/" });
+    const metadata = generatePageMetadata({ page: post, path: "/blog/mortgage-rates" });
     const image = metadata.openGraph.images[0];
     const url = new URL(image.url);
 
@@ -121,7 +121,7 @@ describe("generatePageMetadata", () => {
   });
 
   it("uses a signed generated card for ordinary page Open Graph and Twitter metadata", () => {
-    const metadata = generatePageMetadata({ page, path: "/about/" });
+    const metadata = generatePageMetadata({ page, path: "/about" });
     const image = metadata.openGraph.images[0];
     const url = new URL(image.url);
 
