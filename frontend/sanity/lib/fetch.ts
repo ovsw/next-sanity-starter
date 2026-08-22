@@ -7,6 +7,7 @@ import { BLOG_POST_SETTINGS_QUERY } from "@/sanity/queries/blog-post-settings";
 import { FOOTER_QUERY } from "@/sanity/queries/footer";
 import { HOME_PAGE_QUERY } from "@/sanity/queries/home-page";
 import {
+  PUBLISHED_POST_QUERY,
   POST_QUERY,
   POSTS_QUERY,
   POSTS_SLUGS_QUERY,
@@ -163,7 +164,12 @@ export function fetchSanityPostBySlug({
   perspective,
   stega,
 }: { slug: string } & DynamicFetchOptions): Promise<POST_QUERY_RESULT> {
-  return fetchCached({ query: POST_QUERY, params: { slug }, perspective, stega });
+  return fetchCached({
+    query: perspective === "published" ? PUBLISHED_POST_QUERY : POST_QUERY,
+    params: { slug },
+    perspective,
+    stega,
+  });
 }
 
 export function fetchSanityNavigation({

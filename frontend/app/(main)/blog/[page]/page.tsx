@@ -19,7 +19,7 @@ import {
   BLOG_INDEX_QUERY,
   ELIGIBLE_BLOG_POSTS_COUNT_QUERY,
 } from "@/sanity/queries/blog-index";
-import { POST_QUERY } from "@/sanity/queries/post";
+import { PUBLISHED_POST_QUERY } from "@/sanity/queries/post";
 import type {
   BLOG_INDEX_QUERY_RESULT,
   POSTS_SLUGS_QUERY_RESULT,
@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: Props) {
   const slug = readPostSlug(segment);
   if (!slug) notFound();
   const { data: post } = (await sanityFetchMetadata({
-    query: POST_QUERY,
+    query: PUBLISHED_POST_QUERY,
     params: { slug },
     perspective: "published",
   })) as { data: POST_QUERY_RESULT };

@@ -25,7 +25,7 @@ vi.mock("@/sanity/queries/blog-index", () => ({
   BLOG_INDEX_QUERY: "blog index",
   ELIGIBLE_BLOG_POSTS_COUNT_QUERY: "post count",
 }));
-vi.mock("@/sanity/queries/post", () => ({ POST_QUERY: "post" }));
+vi.mock("@/sanity/queries/post", () => ({ PUBLISHED_POST_QUERY: "published post" }));
 vi.mock("next/headers", () => ({ draftMode: vi.fn() }));
 vi.mock("next/navigation", () => ({ notFound }));
 
@@ -48,7 +48,7 @@ describe("blog segment metadata", () => {
       generateMetadata({ params: Promise.resolve({ page: "first-post" }) }),
     ).resolves.toEqual({ title: "First post" });
     expect(sanityFetchMetadata).toHaveBeenCalledWith({
-      query: "post",
+      query: "published post",
       params: { slug: "first-post" },
       perspective: "published",
     });
