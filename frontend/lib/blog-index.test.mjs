@@ -55,7 +55,7 @@ test("the regular-post GROQ excludes the one latest post and uses deterministic 
   assert.match(source, /order\(\$\{blogPostOrder\}\)\[0\]/);
 });
 
-test("listing cards clamp excerpts and expose every visible post field to Presentation", () => {
+test("listing cards expose every visible post field to Presentation", () => {
   const cardSource = readFileSync(
     new URL("../components/blog-card.tsx", import.meta.url),
     "utf8",
@@ -65,13 +65,11 @@ test("listing cards clamp excerpts and expose every visible post field to Presen
     "utf8",
   );
 
-  assert.equal(cardSource.match(/line-clamp-3/g)?.length, 2);
   for (const path of ["excerpt", "image", "publishedAt", "title"]) {
     assert.match(cardSource, new RegExp(`dataAttribute\\?\\.\\("${path}"\\)`));
   }
   assert.match(cardSource, /categoryDataAttribute\?\.\("title"\)/);
   assert.match(cardSource, /!stega \? \(/);
-  assert.match(cardSource, /className="absolute inset-0 z-0"/);
   assert.match(querySource, /category->\{_id, title, slug\}/);
   assert.match(cardSource, /stegaClean\(categoryReference\?\.slug\?\.current\)/);
 

@@ -5,7 +5,6 @@ import { urlFor } from "@/sanity/lib/image";
 import { SETTINGS_QUERY_RESULT } from "@/sanity.types";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { siteName } from "@/lib/site-name";
 
 export default function Logo({
   settings,
@@ -32,19 +31,19 @@ export default function Logo({
   const fallbackLogo =
     settings?.logo?.[themeToUse === "dark" ? "light" : "dark"];
   const logoToUse = selectedLogo || fallbackLogo;
-  const label = siteName;
+  const label = settings?.siteName?.trim();
+
+  if (!label) return null;
 
   return logoToUse ? (
     <Image
       src={urlFor(logoToUse).url()}
       alt={label}
       width={
-        (settings.logo?.width as number) ??
         logoToUse?.asset?.metadata?.dimensions?.width ??
         100
       }
       height={
-        (settings.logo?.height as number) ??
         logoToUse?.asset?.metadata?.dimensions?.height ??
         40
       }

@@ -23,34 +23,14 @@ const linkProjection = `{
 export const FOOTER_QUERY = defineQuery(`
   *[_type == "footer" && _id == "footer"][0]{
     _id,
-    brand{
-      phone${linkProjection},
-      addressLines
-    },
+    intro,
     columns[]{
       _key,
       heading,
       links[]${linkProjection}
     },
-    contact{
-      heading,
-      fullName,
-      nmlsId,
-      phone${linkProjection},
-      email${linkProjection},
-      website${linkProjection}
-    },
-    compliance{
-      headline,
-      disclaimer,
-      nmlsConsumerAccess${linkProjection},
-      equalHousingLabel,
-      copyrightStartYear,
-      copyrightOwner,
-      organizationNmlsId,
-      organizationPhone${linkProjection},
-      credit,
-      legalLinks[]${linkProjection}
-    }
+    "legalLinks": coalesce(legalLinks, compliance.legalLinks)[]${linkProjection},
+    "copyrightStartYear": coalesce(copyrightStartYear, compliance.copyrightStartYear),
+    "copyrightOwner": coalesce(copyrightOwner, compliance.copyrightOwner)
   }
 `);

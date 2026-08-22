@@ -1,113 +1,86 @@
 import { describe, expect, it } from "vitest";
-import { createFooterModel, type RawFooter } from "./model";
+import {
+  createFooterModel,
+  type RawFooter,
+  type RawFooterSettings,
+} from "./model";
+import { siteName } from "@/lib/site-name";
 
-const rawLink = (key: string, label: string, href: string, openInNewTab = false) => ({
-  _key: key,
-  label,
-  destination: { href, openInNewTab },
-});
+const rawLink = (
+  key: string,
+  label: string,
+  href: string,
+  openInNewTab = false,
+) => ({ _key: key, label, destination: { href, openInNewTab } });
 
 const rawFooter: RawFooter = {
   _id: "footer",
-  brand: {
-    phone: rawLink("brand-phone", "602-908-5849", "tel:+16029085849"),
-    addressLines: ["3602 E Campbell Ave,", "Phoenix AZ 85018"],
-  },
+  intro: "Clear thinking for complicated work.",
   columns: [
     {
-      _key: "resources",
-      heading: "Useful Resources",
+      _key: "company",
+      heading: "Company",
       links: [
-        rawLink("valid", "VA Loan", "phoenix-va-loan"),
-        rawLink("invalid", "Broken", "javascript:alert(1)"),
-      ],
-    },
-    {
-      _key: "follow",
-      heading: "Follow",
-      links: [
-        rawLink("youtube", "YouTube", "https://youtube.com/example", true),
-        rawLink("map", "Google Maps", "https://maps.example.com", true),
+        rawLink("about", "About", "about"),
+        rawLink("unsafe", "Unsafe", "javascript:alert(1)"),
       ],
     },
   ],
+  legalLinks: [rawLink("privacy", "Privacy", "/privacy")],
+  copyrightStartYear: 2024,
+  copyrightOwner: "Northline Studio",
+};
+
+const settings: RawFooterSettings = {
+  siteName: "Northline",
   contact: {
-    heading: "Contact Jimmy",
-    fullName: "Jimmy Vercellino",
-    nmlsId: "184169",
-    phone: rawLink("phone", "480-800-8387", "tel:+14808008387"),
-    email: rawLink("email", "jimmy@example.com", "mailto:jimmy@example.com"),
-    website: rawLink("website", "phxhomeloan.com", "/"),
+    email: "hello@example.com",
+    phone: "+1 555 0100",
+    addressLines: ["10 Main Street", "Example City"],
   },
-  compliance: {
-    headline: "Important",
-    disclaimer: "Approved disclaimer.",
-    nmlsConsumerAccess: rawLink("nmls", "NMLS Consumer Access", "https://nmls.example.com", true),
-    equalHousingLabel: "Equal Housing Lender",
-    copyrightStartYear: 2019,
-    copyrightOwner: "Luminate Bank, Member FDIC",
-    organizationNmlsId: "477166",
-    organizationPhone: rawLink("org-phone", "1-877-505-1281", "tel:+18775051281"),
-    credit: "Website by OVS Websites.",
-    legalLinks: [rawLink("privacy", "Privacy Policy", "/privacy")],
-  },
+  socialLinks: [
+    {
+      _key: "linkedin",
+      label: "LinkedIn",
+      url: "https://linkedin.com/company/example",
+    },
+  ],
 };
 
 describe("createFooterModel", () => {
-  it("normalizes ordered columns, omits invalid destinations, and retains map links as ordinary links", () => {
-    const model = createFooterModel(rawFooter, {}, 2026);
+  it("builds a neutral footer from authored settings and safe links", () => {
+    const model = createFooterModel(rawFooter, settings, 2026);
 
-    expect(model?.columns).toEqual([
+    expect(model?.brand.label).toBe("Northline");
+    expect(model?.columns[0]?.links).toEqual([
       {
-        key: "resources",
-        heading: "Useful Resources",
-        links: [
-      { href: "/phoenix-va-loan", key: "valid", label: "VA Loan", openInNewTab: false },
-        ],
-      },
-      {
-        key: "follow",
-        heading: "Follow",
-        links: [
-          { href: "https://youtube.com/example", key: "youtube", label: "YouTube", openInNewTab: true },
-          { href: "https://maps.example.com", key: "map", label: "Google Maps", openInNewTab: true },
-        ],
+        href: "/about",
+        key: "about",
+        label: "About",
+        openInNewTab: false,
       },
     ]);
-    expect(model?.contact.email.href).toBe("mailto:jimmy@example.com");
-    expect(model?.brand.label).toBe("Example Company");
-    expect(model?.compliance.copyrightYears).toBe("2019-2026");
+    expect(model?.contact.email?.href).toBe("mailto:hello@example.com");
+    expect(model?.contact.phone?.href).toBe("tel:+15550100");
+    expect(model?.socialLinks[0]?.openInNewTab).toBe(true);
+    expect(model?.copyrightYears).toBe("2024-2026");
   });
 
-  it("keeps valid renamed and reordered columns while discarding empty columns", () => {
-    const model = createFooterModel(
-      {
-        ...rawFooter,
-        columns: [
-          { _key: "new", heading: "Start Here", links: [rawLink("start", "Get Started", "/start")] },
-          { _key: "empty", heading: "Empty", links: [] },
-          { _key: "renamed", heading: "Community", links: [rawLink("news", "News", "/news")] },
-        ],
-      },
-      {},
-      2026,
-    );
-
-    expect(model?.columns.map(({ key, heading }) => ({ key, heading }))).toEqual([
-      { key: "new", heading: "Start Here" },
-      { key: "renamed", heading: "Community" },
-    ]);
+  it("supports settings documents from before siteName", () => {
+    expect(
+      createFooterModel(rawFooter, { ...settings, siteName: null }, 2026)
+        ?.brand.label,
+    ).toBe(siteName);
   });
 
-  it("returns the explicit unavailable outcome for the wrong singleton or missing required data", () => {
-    expect(createFooterModel({ ...rawFooter, _id: "another-footer" }, {}, 2026)).toBeNull();
+  it("returns unavailable when settings or required footer data is missing", () => {
+    expect(createFooterModel(rawFooter, null, 2026)).toBeNull();
     expect(
       createFooterModel(
-        { ...rawFooter, compliance: { ...rawFooter!.compliance, disclaimer: null } },
-        {},
+        { ...rawFooter, copyrightOwner: null },
+        settings,
         2026,
       ),
     ).toBeNull();
-    expect(createFooterModel({ ...rawFooter, columns: [] }, {}, 2026)).toBeNull();
   });
 });

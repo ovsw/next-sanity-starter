@@ -4,7 +4,6 @@ import NavigationIconInput, {
   createNavigationIconPreview,
 } from "../inputs/navigation-icon-input";
 import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
-import { isLoanIconName } from "../../../shared/loan-icons";
 
 const destination = defineType({
   name: "navigationDestination",
@@ -84,13 +83,13 @@ const childLink = defineType({
     defineField({
       name: "description",
       type: "string",
-      validation: (rule) => rule.required(),
+      description: "Optional context shown in a grouped navigation menu.",
     }),
     defineField({
       name: "icon",
       title: "Icon",
       type: "object",
-      description: "Choose a custom loan icon or any canonical Lucide icon.",
+      description: "Optional. Choose an icon for a grouped navigation link.",
       components: {
         input: NavigationIconInput,
       },
@@ -101,13 +100,13 @@ const childLink = defineType({
         defineField({ name: "svg", title: "SVG markup", type: "string", hidden: true }),
       ],
       validation: (rule) =>
-        rule.required().custom((value) => {
+        rule.custom((value) => {
           const icon = value as { name?: string; svg?: string } | undefined;
-          if (!icon?.name) return "Choose an icon from the navigation icon picker";
+          if (!icon?.name) return true;
           if (!isNavigationIconName(icon.name)) {
             return "Choose an icon from the navigation icon picker";
           }
-          if (!isLoanIconName(icon.name) && !icon.svg) {
+          if (!icon.svg) {
             return "Re-pick this icon so its artwork is stored with the document";
           }
           return true;
@@ -204,8 +203,9 @@ const navigation = defineType({
       name: "actions",
       title: "Calls to action",
       type: "array",
+      description: "Up to two prominent links shown in the site header.",
       of: [defineArrayMember({ type: "navigationAction" })],
-      validation: (rule) => rule.unique(),
+      validation: (rule) => rule.unique().max(2),
     }),
   ],
   preview: { prepare: () => ({ title: "Site Navigation" }) },

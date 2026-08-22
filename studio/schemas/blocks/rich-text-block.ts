@@ -1,12 +1,32 @@
 import { TextIcon } from "lucide-react";
 import { defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "richTextBlock",
   title: "Rich Text Block",
   type: "object",
   icon: TextIcon,
+  description: "Long-form editorial content with an optional introduction.",
+  initialValue: {
+    eyebrow: "What we do",
+    title: "Built to make the next decision easier.",
+    richText: [
+      {
+        _key: "starter-rich-text",
+        _type: "block",
+        children: [
+          {
+            _key: "starter-rich-text-span",
+            _type: "span",
+            marks: [],
+            text: "Replace this sample with the useful details visitors need to understand your work and take the next step.",
+          },
+        ],
+        markDefs: [],
+        style: "normal",
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "eyebrow",
@@ -23,13 +43,12 @@ export default defineType({
       title: "Content",
       type: "richTextContent",
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "title" },
     prepare: ({ title }) => ({
-      title: title || "Rich Text",
-      subtitle: "Rich Text Block",
+      title: title || "Untitled Rich Text",
+      subtitle: "Rich Text",
     }),
   },
 });

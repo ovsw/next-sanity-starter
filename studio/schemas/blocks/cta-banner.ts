@@ -1,20 +1,36 @@
 import { Megaphone } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "ctaBanner",
-  title: "CTA Banner",
+  title: "Call to Action",
   type: "object",
   icon: Megaphone,
   description:
-    "A slim dark call-to-action band with a heading, one supporting line, and up to two buttons",
+    "A clear closing invitation with a heading, supporting line, and up to two actions.",
+  initialValue: {
+    title: "Have a complicated idea?",
+    description: "Tell us what you are working through.",
+    buttons: [
+      {
+        _key: "starter-cta-action",
+        _type: "button",
+        text: "Start a conversation",
+        url: {
+          _type: "customUrl",
+          type: "internal",
+          internal: { _type: "reference", _ref: "homePage" },
+          openInNewTab: false,
+        },
+        variant: "default",
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "title",
       type: "string",
-      description:
-        "The question or statement that prompts visitors to act, such as \"Wondering if now is the right time to lock a rate?\"",
+      description: "The question or statement that prompts visitors to act.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -30,13 +46,12 @@ export default defineType({
       of: [defineArrayMember({ type: "button" })],
       validation: (rule) => rule.required().min(1).max(2),
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "title" },
     prepare: ({ title }) => ({
-      title: title || "Untitled CTA Banner",
-      subtitle: "CTA Banner",
+      title: title || "Untitled Call to Action",
+      subtitle: "Call to Action",
     }),
   },
 });

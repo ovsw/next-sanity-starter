@@ -28,6 +28,7 @@ import CtaBanner from "@/components/blocks/cta-banner";
 import BenefitCards from "@/components/blocks/benefit-cards";
 import ComparisonTable from "@/components/blocks/comparison-table";
 import LoanRequirements from "@/components/blocks/loan-requirements";
+import Hero from "@/components/blocks/hero";
 import { dataset, projectId } from "@/sanity/lib/env";
 
 type Block =
@@ -62,6 +63,7 @@ const serverFieldEditingBlockTypes = new Set<Block["_type"]>([
   "benefitCards",
   "comparisonTable",
   "loanRequirements",
+  "hero",
 ]);
 
 const componentMap: Partial<{
@@ -94,16 +96,15 @@ const componentMap: Partial<{
   benefitCards: BenefitCards,
   comparisonTable: ComparisonTable,
   loanRequirements: LoanRequirements,
+  hero: Hero,
 };
 
 export default function Blocks({
-  anchorIds,
   blocks,
   documentId,
   documentType = "page",
   stega,
 }: {
-  anchorIds?: Record<string, string>;
   blocks: Block[];
   documentId: string;
   documentType?: "blogIndex" | "homePage" | "page";
@@ -174,18 +175,9 @@ export default function Blocks({
               ? { dataAttribute }
               : {};
 
-        const anchorId = anchorIds?.[block._key];
-        // Reserve both bars because an upward anchor jump reveals the site
-        // header after the browser calculates the target offset.
-        const anchorClassName = anchorId
-          ? "scroll-mt-[calc(var(--header-height)+3.5rem)]"
-          : undefined;
-
         return (
           <div
-            className={anchorClassName}
             data-sanity={dataSanity}
-            id={anchorId}
             key={block._key}
           >
             <Component {...block} {...editingProps} />

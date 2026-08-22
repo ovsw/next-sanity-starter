@@ -1,6 +1,5 @@
-import type { SanityImageSource } from "@sanity/image-url";
-import { siteName } from "@/lib/site-name";
 import { urlFor } from "@/sanity/lib/image";
+import { siteName } from "@/lib/site-name";
 
 export type FooterLinkModel = {
   key: string;
@@ -18,33 +17,23 @@ export type FooterColumnModel = {
 export type FooterModel = {
   brand: {
     label: string;
-    image: { src: string; width: number; height: number } | null;
-    secondaryImage: { src: string; width: number; height: number } | null;
-    phone: FooterLinkModel;
-    addressLines: string[];
-    organizationNmlsId: string;
+    image: {
+      src: string;
+      width: number;
+      height: number;
+    } | null;
   };
+  intro: string | null;
   columns: FooterColumnModel[];
   contact: {
-    heading: string;
-    fullName: string;
-    nmlsId: string;
-    phone: FooterLinkModel;
-    email: FooterLinkModel;
-    website: FooterLinkModel;
+    email: FooterLinkModel | null;
+    phone: FooterLinkModel | null;
+    addressLines: string[];
   };
-  compliance: {
-    headline: string;
-    disclaimer: string;
-    nmlsConsumerAccess: FooterLinkModel;
-    equalHousingLabel: string;
-    copyrightYears: string;
-    copyrightOwner: string;
-    organizationNmlsId: string;
-    organizationPhone: FooterLinkModel;
-    credit: string | null;
-    legalLinks: FooterLinkModel[];
-  };
+  socialLinks: FooterLinkModel[];
+  legalLinks: FooterLinkModel[];
+  copyrightYears: string;
+  copyrightOwner: string;
 };
 
 type RawDestination = { href?: string | null; openInNewTab?: boolean | null };
@@ -56,55 +45,34 @@ type RawLink = {
 
 export type RawFooter = {
   _id?: string | null;
-  brand?: {
-    phone?: RawLink | null;
-    addressLines?: Array<string | null> | null;
-  } | null;
+  intro?: string | null;
   columns?: Array<{
     _key?: string | null;
     heading?: string | null;
     links?: RawLink[] | null;
   } | null> | null;
-  contact?: {
-    heading?: string | null;
-    fullName?: string | null;
-    nmlsId?: string | null;
-    phone?: RawLink | null;
-    email?: RawLink | null;
-    website?: RawLink | null;
-  } | null;
-  compliance?: {
-    headline?: string | null;
-    disclaimer?: string | null;
-    nmlsConsumerAccess?: RawLink | null;
-    equalHousingLabel?: string | null;
-    copyrightStartYear?: number | null;
-    copyrightOwner?: string | null;
-    organizationNmlsId?: string | null;
-    organizationPhone?: RawLink | null;
-    credit?: string | null;
-    legalLinks?: RawLink[] | null;
-  } | null;
+  legalLinks?: RawLink[] | null;
+  copyrightStartYear?: number | null;
+  copyrightOwner?: string | null;
 } | null;
 
 export type RawFooterSettings = {
-  logo?: {
-    light?: SanityImageSource | null;
-    dark?: SanityImageSource | null;
-    width?: number | null;
-    height?: number | null;
+  siteName?: string | null;
+  logo?: { light?: unknown; dark?: unknown } | null;
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+    addressLines?: Array<string | null> | null;
   } | null;
-  secondaryLogo?: {
-    light?: SanityImageSource | null;
-    dark?: SanityImageSource | null;
-    width?: number | null;
-    height?: number | null;
-  } | null;
+  socialLinks?: Array<{
+    _key?: string | null;
+    label?: string | null;
+    url?: string | null;
+  } | null> | null;
 } | null;
 
 function text(value: string | null | undefined): string | null {
-  const clean = value?.trim();
-  return clean || null;
+  return value?.trim() || null;
 }
 
 function normalizeHref(value: string | null | undefined): string | null {
@@ -115,46 +83,66 @@ function normalizeHref(value: string | null | undefined): string | null {
   return `/${href.replace(/^\/+/, "")}`;
 }
 
-function link(raw: RawLink | null | undefined, fallbackKey?: string): FooterLinkModel | null {
+function link(
+  raw: RawLink | null | undefined,
+  fallbackKey?: string,
+): FooterLinkModel | null {
   const key = text(raw?._key) ?? fallbackKey ?? null;
   const label = text(raw?.label);
   const href = normalizeHref(raw?.destination?.href);
-  if (!key || !label || !href) return null;
-  return { key, label, href, openInNewTab: Boolean(raw?.destination?.openInNewTab) };
+  return key && label && href
+    ? {
+        key,
+        label,
+        href,
+        openInNewTab: Boolean(raw?.destination?.openInNewTab),
+      }
+    : null;
 }
 
 function links(raw: RawLink[] | null | undefined): FooterLinkModel[] {
   return (raw ?? []).flatMap((item) => {
-    const normalized = link(item);
-    return normalized ? [normalized] : [];
+    const value = link(item);
+    return value ? [value] : [];
   });
 }
 
-function columns(raw: NonNullable<RawFooter>["columns"]): FooterColumnModel[] {
-  return (raw ?? []).flatMap((column) => {
-    const key = text(column?._key);
-    const heading = text(column?.heading);
-    const columnLinks = links(column?.links);
-    return key && heading && columnLinks.length > 0
-      ? [{ key, heading, links: columnLinks }]
-      : [];
-  });
-}
+type RawImage = {
+  asset?: {
+    metadata?: { dimensions?: { width?: number | null; height?: number | null } | null } | null;
+  } | null;
+};
 
-function image(
-  logo: NonNullable<RawFooterSettings>["logo"],
-): FooterModel["brand"]["image"] {
-  const source = logo?.light ?? logo?.dark;
+function logo(settings: RawFooterSettings): FooterModel["brand"]["image"] {
+  const source = settings?.logo?.light ?? settings?.logo?.dark;
   if (!source) return null;
+  const dimensions = (source as RawImage).asset?.metadata?.dimensions;
   try {
     return {
-      src: urlFor(source).url(),
-      width: logo?.width ?? 300,
-      height: logo?.height ?? 125,
+      src: urlFor(source as Parameters<typeof urlFor>[0]).url(),
+      width: dimensions?.width ?? 216,
+      height: dimensions?.height ?? 48,
     };
   } catch {
     return null;
   }
+}
+
+function contactLink(
+  kind: "email" | "phone",
+  value: string | null | undefined,
+): FooterLinkModel | null {
+  const label = text(value);
+  if (!label) return null;
+  const phone = kind === "phone" ? label.replace(/[^+\d]/g, "") : null;
+  if (kind === "phone" && !/\d/.test(phone ?? "")) return null;
+  const href = kind === "email" ? `mailto:${label}` : `tel:${phone}`;
+  return {
+    key: `contact-${kind}`,
+    label,
+    href,
+    openInNewTab: false,
+  };
 }
 
 export function createFooterModel(
@@ -162,90 +150,55 @@ export function createFooterModel(
   settings: RawFooterSettings,
   currentYear: number,
 ): FooterModel | null {
-  if (raw?._id !== "footer") return null;
-
-  const label = siteName;
-  const brandPhone = link(raw.brand?.phone, "brand-phone");
-  const addressLines = (raw.brand?.addressLines ?? []).flatMap((line) => {
-    const value = text(line);
-    return value ? [value] : [];
-  });
-  const footerColumns = columns(raw.columns);
-  const contactHeading = text(raw.contact?.heading);
-  const contactName = text(raw.contact?.fullName);
-  const contactNmlsId = text(raw.contact?.nmlsId);
-  const contactPhone = link(raw.contact?.phone, "contact-phone");
-  const contactEmail = link(raw.contact?.email, "contact-email");
-  const contactWebsite = link(raw.contact?.website, "contact-website");
-  const headline = text(raw.compliance?.headline);
-  const disclaimer = text(raw.compliance?.disclaimer);
-  const nmlsConsumerAccess = link(
-    raw.compliance?.nmlsConsumerAccess,
-    "nmls-consumer-access",
-  );
-  const equalHousingLabel = text(raw.compliance?.equalHousingLabel);
-  const copyrightOwner = text(raw.compliance?.copyrightOwner);
-  const organizationNmlsId = text(raw.compliance?.organizationNmlsId);
-  const organizationPhone = link(raw.compliance?.organizationPhone, "organization-phone");
-  const legalLinks = links(raw.compliance?.legalLinks);
-  const startYear = raw.compliance?.copyrightStartYear;
-
+  if (!settings) return null;
+  const label = settings.siteName?.trim() || siteName;
+  const owner = text(raw?.copyrightOwner);
+  const startYear = raw?.copyrightStartYear;
   if (
+    raw?._id !== "footer" ||
     !label ||
-    !brandPhone ||
-    addressLines.length === 0 ||
-    footerColumns.length === 0 ||
-    !contactHeading ||
-    !contactName ||
-    !contactNmlsId ||
-    !contactPhone ||
-    !contactEmail ||
-    !contactWebsite ||
-    !headline ||
-    !disclaimer ||
-    !nmlsConsumerAccess ||
-    !equalHousingLabel ||
-    !copyrightOwner ||
-    !organizationNmlsId ||
-    !organizationPhone ||
-    legalLinks.length === 0 ||
+    !owner ||
     !Number.isInteger(startYear) ||
     !Number.isInteger(currentYear)
   ) {
     return null;
   }
 
-  const copyrightYears = startYear! < currentYear ? `${startYear}-${currentYear}` : `${currentYear}`;
+  const columns = (raw.columns ?? []).flatMap((column) => {
+    const key = text(column?._key);
+    const heading = text(column?.heading);
+    const columnLinks = links(column?.links);
+    return key && heading && columnLinks.length
+      ? [{ key, heading, links: columnLinks }]
+      : [];
+  });
+  const socialLinks = (settings.socialLinks ?? []).flatMap((item) => {
+    const key = text(item?._key);
+    const socialLabel = text(item?.label);
+    const href = normalizeHref(item?.url);
+    return key && socialLabel && href
+      ? [{ key, label: socialLabel, href, openInNewTab: true }]
+      : [];
+  });
+  const addressLines = (settings.contact?.addressLines ?? []).flatMap((line) => {
+    const value = text(line);
+    return value ? [value] : [];
+  });
+  const copyrightYears =
+    startYear! < currentYear ? `${startYear}-${currentYear}` : `${currentYear}`;
 
   return {
-    brand: {
-      label,
-      image: image(settings?.logo),
-      secondaryImage: image(settings?.secondaryLogo),
-      phone: brandPhone,
-      addressLines,
-      organizationNmlsId,
-    },
-    columns: footerColumns,
+    brand: { label, image: logo(settings) },
+    intro: text(raw.intro),
+    columns,
     contact: {
-      heading: contactHeading,
-      fullName: contactName,
-      nmlsId: contactNmlsId,
-      phone: contactPhone,
-      email: contactEmail,
-      website: contactWebsite,
+      email: contactLink("email", settings.contact?.email),
+      phone: contactLink("phone", settings.contact?.phone),
+      addressLines,
     },
-    compliance: {
-      headline,
-      disclaimer,
-      nmlsConsumerAccess,
-      equalHousingLabel,
-      copyrightYears,
-      copyrightOwner,
-      organizationNmlsId,
-      organizationPhone,
-      credit: text(raw.compliance?.credit),
-      legalLinks,
-    },
+    socialLinks,
+    legalLinks: links(raw.legalLinks),
+    copyrightYears,
+    copyrightOwner: owner,
   };
 }

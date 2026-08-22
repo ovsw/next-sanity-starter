@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { getSafeLinkHref } from "@/lib/safe-href";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
@@ -25,14 +24,10 @@ export default function CtaBanner({
   const titleId = `cta-banner-${stegaClean(_key)}-title`;
 
   return (
-    <section
-      aria-labelledby={titleId}
-      className="bg-[var(--phx-navy-800)] section-pad-sm"
-    >
-      <div className="container-narrow flex flex-wrap items-center justify-between gap-y-7 gap-x-12">
-        <div className="max-w-xl">
+    <section aria-labelledby={titleId}>
+      <div>
+        <div>
           <h2
-            className="text-balance typo-feature-heading text-white"
             data-sanity={dataAttribute?.("title")}
             id={titleId}
           >
@@ -40,7 +35,6 @@ export default function CtaBanner({
           </h2>
           {stegaClean(description)?.trim() ? (
             <p
-              className="mt-2.5 text-pretty typo-body text-white/65"
               data-sanity={dataAttribute?.("description")}
             >
               {description}
@@ -49,33 +43,20 @@ export default function CtaBanner({
         </div>
         {buttons?.length ? (
           <div
-            className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap"
             data-sanity={dataAttribute?.("buttons")}
           >
-            {buttons.slice(0, 2).map((button, index) => {
+            {buttons.slice(0, 2).map((button) => {
               const href = getSafeLinkHref(button.href);
               if (!href) return null;
-              const secondary =
-                index > 0 ||
-                ["outline", "secondary"].includes(
-                  stegaClean(button.variant) || "",
-                );
               return (
-                <Button
-                  asChild
-                  className="w-full sm:w-auto"
+                <Link
+                  href={href}
                   key={button._key}
-                  onDark={secondary}
-                  variant={secondary ? "outline" : "copper"}
+                  rel={button.openInNewTab ? "noopener noreferrer" : undefined}
+                  target={button.openInNewTab ? "_blank" : undefined}
                 >
-                  <Link
-                    href={href}
-                    rel={button.openInNewTab ? "noopener noreferrer" : undefined}
-                    target={button.openInNewTab ? "_blank" : undefined}
-                  >
-                    {button.text}
-                  </Link>
-                </Button>
+                  {button.text}
+                </Link>
               );
             })}
           </div>

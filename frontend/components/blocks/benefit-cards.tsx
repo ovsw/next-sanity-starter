@@ -94,11 +94,8 @@ export default function BenefitCards({
                     className="flex size-[46px] items-center justify-center rounded-full bg-secondary text-primary"
                     data-sanity={dataAttribute?.(`${cardPath}.icon`)}
                   >
-                    {iconName ? (
-                      <NavigationIcon
-                        className="size-5"
-                        icon={{ name: iconName, svg: iconSvg }}
-                      />
+                    {iconName && iconSvg ? (
+                      <NavigationIcon icon={{ name: iconName, svg: iconSvg }} />
                     ) : null}
                   </div>
                   <span

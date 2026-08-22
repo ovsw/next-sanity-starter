@@ -1,6 +1,5 @@
 import { HomeIcon } from "lucide-react";
 import { defineField, defineType } from "sanity";
-import { sectionNavField } from "./shared/section-nav.ts";
 
 export default defineType({
   name: "homebotWidget",
@@ -14,7 +13,6 @@ export default defineType({
       type: "string",
       description: "Optional heading shown above the home-value widget",
     }),
-    sectionNavField(),
   ],
   preview: {
     select: { title: "heading" },

@@ -34,7 +34,8 @@ const destination = defineType({
       hidden: ({ parent }) => parent?.kind !== "internal",
       validation: (rule) =>
         rule.custom((value, context) =>
-          (context.parent as { kind?: string } | undefined)?.kind === "internal" && !value
+          (context.parent as { kind?: string } | undefined)?.kind ===
+            "internal" && !value
             ? "Select an internal destination"
             : true,
         ),
@@ -46,7 +47,10 @@ const destination = defineType({
       hidden: ({ parent }) => parent?.kind !== "external",
       validation: (rule) =>
         rule.custom((value, context) => {
-          if ((context.parent as { kind?: string } | undefined)?.kind !== "external") {
+          if (
+            (context.parent as { kind?: string } | undefined)?.kind !==
+            "external"
+          ) {
             return true;
           }
           if (!value) return "Enter a destination";
@@ -108,14 +112,6 @@ const footerColumn = defineType({
   },
 });
 
-const requiredLink = (name: string, title: string) =>
-  defineField({
-    name,
-    title,
-    type: "footerLink",
-    validation: (rule) => rule.required(),
-  });
-
 const footer = defineType({
   name: "footer",
   title: "Site Footer",
@@ -123,102 +119,36 @@ const footer = defineType({
   icon: PanelBottom,
   fields: [
     defineField({
-      name: "brand",
-      title: "Brand and office",
-      type: "object",
-      fields: [
-        requiredLink("phone", "Primary phone"),
-        defineField({
-          name: "addressLines",
-          title: "Office address",
-          type: "array",
-          of: [defineArrayMember({ type: "string" })],
-          validation: (rule) => rule.required().min(1),
-        }),
-      ],
-      validation: (rule) => rule.required(),
+      name: "intro",
+      title: "Introduction",
+      type: "text",
+      rows: 3,
+      description: "A short closing statement shown beside the site identity.",
     }),
     defineField({
       name: "columns",
       title: "Navigation columns",
-      description: "Ordered columns shown in the footer navigation.",
       type: "array",
       of: [defineArrayMember({ type: "footerColumn" })],
-      validation: (rule) => rule.required().min(1),
+      validation: (rule) => rule.max(4),
     }),
     defineField({
-      name: "contact",
-      title: "Jimmy contact information",
-      type: "object",
-      fields: [
-        defineField({
-          name: "heading",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "fullName",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "nmlsId",
-          title: "Individual NMLS ID",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        requiredLink("phone", "Phone"),
-        requiredLink("email", "Email"),
-        requiredLink("website", "Website"),
-      ],
-      validation: (rule) => rule.required(),
+      name: "legalLinks",
+      title: "Legal links",
+      type: "array",
+      of: [defineArrayMember({ type: "footerLink" })],
+      validation: (rule) => rule.unique(),
     }),
     defineField({
-      name: "compliance",
-      type: "object",
-      fields: [
-        defineField({
-          name: "headline",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "disclaimer",
-          type: "text",
-          rows: 5,
-          validation: (rule) => rule.required(),
-        }),
-        requiredLink("nmlsConsumerAccess", "NMLS Consumer Access"),
-        defineField({
-          name: "equalHousingLabel",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "copyrightStartYear",
-          type: "number",
-          validation: (rule) => rule.required().integer().min(1900),
-        }),
-        defineField({
-          name: "copyrightOwner",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "organizationNmlsId",
-          title: "Organization NMLS ID",
-          type: "string",
-          validation: (rule) => rule.required(),
-        }),
-        requiredLink("organizationPhone", "Organization phone"),
-        defineField({ name: "credit", type: "string" }),
-        defineField({
-          name: "legalLinks",
-          type: "array",
-          of: [defineArrayMember({ type: "footerLink" })],
-          validation: (rule) => rule.required().min(1).unique(),
-        }),
-      ],
+      name: "copyrightStartYear",
+      title: "Copyright start year",
+      type: "number",
+      validation: (rule) => rule.required().integer().min(1900),
+    }),
+    defineField({
+      name: "copyrightOwner",
+      title: "Copyright owner",
+      type: "string",
       validation: (rule) => rule.required(),
     }),
   ],

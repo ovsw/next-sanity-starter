@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Reusable Next.js website and Sanity Studio starter",
   "private": true,
+  "type": "module",
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev": "pnpm --parallel -r run dev",

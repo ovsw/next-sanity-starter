@@ -28,16 +28,12 @@ export default function RichTextBlock({
   if (!(displayEyebrow || displayTitle || richText?.length)) return null;
 
   return (
-    <section
-      aria-labelledby={headingId}
-      className="my-6 md:my-16"
-    >
-      <div className="container">
+    <section aria-labelledby={headingId}>
+      <div>
         {displayEyebrow || displayTitle ? (
-          <header className="mx-auto max-w-4xl text-center">
+          <header>
             {displayEyebrow ? (
               <p
-                className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-primary"
                 data-sanity={dataAttribute?.("eyebrow")}
               >
                 {eyebrow}
@@ -45,7 +41,6 @@ export default function RichTextBlock({
             ) : null}
             {displayTitle ? (
               <h2
-                className="text-balance text-3xl font-semibold leading-tight text-foreground md:text-5xl"
                 data-sanity={dataAttribute?.("title")}
                 id={headingId}
               >
@@ -56,7 +51,6 @@ export default function RichTextBlock({
         ) : null}
         {richText?.length ? (
           <RichTextContent
-            className="mx-auto mt-8 max-w-4xl"
             dataSanity={dataAttribute?.("richText")}
             value={richText as PortableTextProps["value"]}
           />

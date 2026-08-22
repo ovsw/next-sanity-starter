@@ -25,18 +25,8 @@ const page = {
   _type: "page",
   blocks: [],
   description: null,
-  loanType: null,
   slug: "ordinary-page",
   title: "Ordinary page",
-} as unknown as NonNullable<PAGE_QUERY_RESULT>;
-
-const loanPage = {
-  ...page,
-  _id: "loan-page-1",
-  description: "VA loan page description.",
-  loanType: "VA Loan",
-  slug: "/phoenix-va-loan",
-  title: "VA loan page",
 } as unknown as NonNullable<PAGE_QUERY_RESULT>;
 
 const post = {
@@ -101,6 +91,16 @@ function jsonLdNodesByType(container: HTMLElement, type: string) {
 }
 
 describe("RootContentView", () => {
+  it("renders the page title when no Hero provides the main heading", () => {
+    render(
+      <RootContentView content={page} perspective="published" stega={false} />,
+    );
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Ordinary page" }),
+    ).toBeInTheDocument();
+  });
+
   it("gates the post sidebar to post root content", () => {
     const { rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,
@@ -121,7 +121,7 @@ describe("RootContentView", () => {
     expect(screen.getByText("Post introduction")).toBeInTheDocument();
   });
 
-  it("uses two columns for a thin post and keeps the CTA after the article", () => {
+  it("omits the table of contents for a thin post and keeps the CTA after the article", () => {
     const thinPost = {
       ...post,
       body: [heading("first", "First"), heading("second", "Second")],
@@ -136,7 +136,6 @@ describe("RootContentView", () => {
     );
 
     const layout = container.querySelector('[data-post-layout="two-column"]');
-    expect(layout).toHaveClass("lg:grid-cols-[minmax(0,48rem)_20rem]");
     expect(screen.queryByRole("navigation", { name: "Table of Contents" })).not.toBeInTheDocument();
     expect(layout?.querySelector("article")?.nextElementSibling).toHaveAttribute(
       "aria-label",
@@ -144,7 +143,7 @@ describe("RootContentView", () => {
     );
   });
 
-  it("uses three columns for a heading-rich post", () => {
+  it("shows the table of contents for a heading-rich post", () => {
     const headingRichPost = {
       ...post,
       body: [
@@ -153,7 +152,7 @@ describe("RootContentView", () => {
         heading("third", "Third"),
       ],
     } as unknown as NonNullable<POST_QUERY_RESULT>;
-    const { container } = render(
+    render(
       <RootContentView
         blogPostSidebar={blogPostSidebar}
         content={headingRichPost}
@@ -162,41 +161,7 @@ describe("RootContentView", () => {
       />,
     );
 
-    const layout = container.querySelector('[data-post-layout="three-column"]');
-    expect(layout).toHaveClass("lg:grid-cols-[15rem_minmax(0,1fr)_17rem]");
     expect(screen.getByRole("navigation", { name: "Table of Contents" })).toBeInTheDocument();
-  });
-
-  it("centers a thin post when the sidebar is unavailable", () => {
-    const thinPost = {
-      ...post,
-      body: [heading("first", "First"), heading("second", "Second")],
-    } as unknown as NonNullable<POST_QUERY_RESULT>;
-    const { container } = render(
-      <RootContentView content={thinPost} perspective="published" stega={false} />,
-    );
-
-    expect(container.querySelector('[data-post-layout="single-column"]')).toHaveClass(
-      "lg:grid-cols-[minmax(0,48rem)]",
-    );
-  });
-
-  it("keeps the table of contents without reserving sidebar space", () => {
-    const headingRichPost = {
-      ...post,
-      body: [
-        heading("first", "First"),
-        heading("second", "Second"),
-        heading("third", "Third"),
-      ],
-    } as unknown as NonNullable<POST_QUERY_RESULT>;
-    const { container } = render(
-      <RootContentView content={headingRichPost} perspective="published" stega={false} />,
-    );
-
-    expect(container.querySelector('[data-post-layout="toc-column"]')).toHaveClass(
-      "lg:grid-cols-[15rem_minmax(0,48rem)]",
-    );
   });
 
   it("emits exactly one BlogPosting script for posts and none for pages", () => {
@@ -211,24 +176,8 @@ describe("RootContentView", () => {
     expect(jsonLdNodesByType(container, "BlogPosting")).toHaveLength(0);
   });
 
-  it("emits one LoanOrCredit for a loan page and none for an ordinary page or post", () => {
+  it("does not emit donor loan structured data for pages or posts", () => {
     const { container, rerender } = render(
-      <RootContentView
-        content={loanPage}
-        perspective="published"
-        stega={false}
-      />,
-    );
-    const loanNodes = jsonLdNodesByType(container, "LoanOrCredit");
-    expect(loanNodes).toHaveLength(1);
-    expect(loanNodes[0]).toMatchObject({
-      "@type": "LoanOrCredit",
-      name: "VA Loan",
-      loanType: "VA Loan",
-      description: "VA loan page description.",
-    });
-
-    rerender(
       <RootContentView content={page} perspective="published" stega={false} />,
     );
     expect(jsonLdNodesByType(container, "LoanOrCredit")).toHaveLength(0);

@@ -9,6 +9,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## Dev Server rules
 Before starting a development server, inspect the required port. If the exact server you need is already running there, reuse it.
 
+## Sanity browser checks
+
+Always use the ChatGPT in-app browser for local or remote Sanity checks. Never use the Next.js loop browser to open or inspect Sanity Studio or any Sanity URL.
+
 
 ## Shell discipline and reporting observations
 

@@ -23,14 +23,12 @@ import { storyFeatureQuery } from "./story-feature";
 import { teamMembersQuery } from "./team-members";
 import { videoFeatureQuery } from "./video-feature";
 import { youtubeChannelFeatureQuery } from "./youtube-channel-feature";
+import { heroQuery } from "./hero";
 
 export const pageBuilderQuery = `
   blocks[]{
     _key,
     _type,
-    sectionNav{
-      navLabel
-    },
     ${homeHeroQuery},
     ${loanFeatureCardsQuery},
     ${videoFeatureQuery},
@@ -55,6 +53,7 @@ export const pageBuilderQuery = `
     ${ctaBannerQuery},
     ${benefitCardsQuery},
     ${comparisonTableQuery},
-    ${loanRequirementsQuery}
+    ${loanRequirementsQuery},
+    ${heroQuery}
   }
 `;
