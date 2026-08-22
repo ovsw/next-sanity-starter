@@ -50,9 +50,24 @@ test("the regular-post GROQ excludes the one latest post and uses deterministic 
     new URL("../sanity/queries/blog-index.ts", import.meta.url),
     "utf8",
   );
+  const listingSource = readFileSync(
+    new URL("../sanity/queries/blog-post-listing.ts", import.meta.url),
+    "utf8",
+  );
   assert.match(source, /_id != \$latestPostId/);
-  assert.match(source, /publishedAt desc, _createdAt desc, _id asc/);
+  assert.match(listingSource, /publishedAt desc, _createdAt desc, _id asc/);
   assert.match(source, /order\(\$\{blogPostOrder\}\)\[0\]/);
+});
+
+test("latest-posts sections use the same published-post rule as blog archives", () => {
+  const source = readFileSync(
+    new URL("../sanity/queries/latest-articles.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /publishedPostFilter/);
+  assert.doesNotMatch(source, /coalesce\(publishedAt, _createdAt\)/);
+  assert.match(source, /publishedAt,/);
 });
 
 test("listing cards expose every visible post field to Presentation", () => {

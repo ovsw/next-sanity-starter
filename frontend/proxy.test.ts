@@ -2,10 +2,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 import { config } from "@/proxy";
-import {
-  BLOG_CATEGORY_POST_COUNTS_QUERY,
-  publishedPostFilter,
-} from "@/sanity/queries/blog-index";
+import { BLOG_CATEGORY_POST_COUNTS_QUERY } from "@/sanity/queries/blog-index";
+import { publishedPostFilter } from "@/sanity/queries/blog-post-listing";
 
 const { fetchMock } = vi.hoisted(() => ({ fetchMock: vi.fn() }));
 

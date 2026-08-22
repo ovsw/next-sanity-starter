@@ -1,6 +1,6 @@
 import { groq } from "next-sanity";
 import { type BLOG_INDEX_QUERY_RESULT } from "@/sanity.types";
-import { blogPostOrder, publishedPostFilter } from "./blog-index";
+import { blogPostOrder, publishedPostFilter } from "./blog-post-listing";
 import { imageQuery } from "./shared/image";
 import { metaQuery } from "./shared/meta";
 

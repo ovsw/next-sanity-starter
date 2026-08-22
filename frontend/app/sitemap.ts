@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { isIndexableCategory } from "@/lib/blog-index";
 import { getDynamicFetchOptions, sanityFetchMetadata } from "@/sanity/lib/live";
-import { publishedPostFilter } from "@/sanity/queries/blog-index";
+import { publishedPostFilter } from "@/sanity/queries/blog-post-listing";
 
 const VIEWABLE_TYPES = ["homePage", "page", "post", "blogIndex", "category"] as const;
 
