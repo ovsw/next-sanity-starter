@@ -47,3 +47,6 @@ studio/backups/
 !.env*.example
 !.env.template
 !.env*.template
+
+# local Codex MCP credentials
+.codex/config.toml
