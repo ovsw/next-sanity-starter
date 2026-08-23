@@ -13,12 +13,14 @@
     "dev:studio": "pnpm --dir studio dev",
     "build": "pnpm --dir frontend build && pnpm --dir studio build",
     "typegen": "pnpm --dir studio typegen",
+    "verify:typegen": "pnpm typegen && git diff --exit-code -- studio/schema.json frontend/sanity.types.ts",
     "typecheck": "pnpm --dir frontend typecheck && pnpm --dir studio typecheck",
     "lint": "pnpm --dir frontend lint",
     "test": "pnpm --dir frontend test && node --test 'frontend/**/*.test.mjs' 'studio/**/*.test.mjs' && pnpm test:setup",
     "test:setup": "node --test scripts/setup.test.mjs",
     "test:e2e": "pnpm --dir frontend test:e2e",
-    "test:smoke": "pnpm --dir frontend test:smoke"
+    "test:smoke": "pnpm --dir frontend test:smoke",
+    "verify": "pnpm verify:typegen && pnpm typecheck && pnpm lint && pnpm test && pnpm build && PLAYWRIGHT_REUSE_BUILD=1 pnpm test:smoke"
   },
   "engines": {
     "node": "24.x",

@@ -16,7 +16,8 @@ export default defineConfig({
       ? "pnpm start"
       : "pnpm build && pnpm start",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer:
+      !process.env.CI && !process.env.PLAYWRIGHT_REUSE_BUILD,
     timeout: 180_000,
   },
 });

@@ -23,12 +23,12 @@ Install dependencies and run the guided setup:
 
 ```bash
 pnpm install
-pnpm setup
+pnpm run setup
 ```
 
 Setup asks for the site name, public URL, Sanity project ID, dataset, Sanity API read token, Sanity auth token, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
 
-If local env files already exist, setup stops instead of replacing them. Use `pnpm setup --force` only when you intend to replace both files.
+If local env files already exist, setup stops instead of replacing them. Use `pnpm run setup --force` only when you intend to replace both files.
 
 The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed `.env.local.example` files list the supported names.
 
@@ -71,12 +71,15 @@ pnpm dev:frontend
 pnpm dev:studio
 pnpm seed
 pnpm unseed
+pnpm verify
 pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm typegen
 ```
+
+Run `pnpm verify` before opening a pull request. It checks generated Sanity types, TypeScript, lint, focused tests, both production builds, and the browser acceptance journey.
 
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
 
@@ -94,6 +97,8 @@ pnpm --dir studio deploy
 
 These commands target the accounts you configure. The Starter does not provision hosting or credentials.
 
+See `docs/deployment.md` for the production gate and complete deployment checklist.
+
 ## Repository layout
 
 - `frontend/`: Next.js Website
@@ -101,7 +106,9 @@ These commands target the accounts you configure. The Starter does not provision
 - `shared/`: code shared by both workspaces
 - `docs/agents/`: repository workflow guidance
 
-Read `docs/agents/page-builder.md` before changing Page Builder sections.
+Read `docs/content-model.md` for the model map and `docs/agents/page-builder.md` before changing Page Builder sections.
+
+Before publishing a Starter revision, complete `docs/fresh-clone-proof.md` against a disposable Sanity dataset.
 
 ## License
 

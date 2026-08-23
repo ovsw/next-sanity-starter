@@ -60,8 +60,5 @@ For visual changes, treat the existing design system as the default:
 - Repository verification passes:
 
   ```bash
-  pnpm typegen
-  pnpm typecheck
-  pnpm lint
-  pnpm --dir frontend build
+  pnpm verify
   ```

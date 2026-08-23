@@ -28,6 +28,12 @@ jobs:
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
       OG_IMAGE_SECRET: ci-only-og-image-secret
+      SANITY_STUDIO_TITLE: ${{ vars.NEXT_PUBLIC_SITE_NAME }}
+      SANITY_STUDIO_PREVIEW_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      SANITY_STUDIO_API_VERSION: ${{ vars.NEXT_PUBLIC_SANITY_API_VERSION }}
+      SANITY_STUDIO_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      SANITY_STUDIO_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+      SANITY_STUDIO_HOSTNAME: ci-starter
 
     steps:
       - name: Check out repository
@@ -45,22 +51,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Run unit tests
-        run: pnpm test
-
-      - name: Build production frontend
-        run: pnpm --dir frontend build
-
-      - name: Install smoke-test browser
+      - name: Install verification browser
         run: pnpm --dir frontend exec playwright install --with-deps chrome
 
-      - name: Run browser smoke tests
-        env:
-          PLAYWRIGHT_REUSE_BUILD: "1"
-        run: pnpm test:smoke
+      - name: Verify repository
+        run: pnpm verify
