@@ -1,4 +1,4 @@
-export const SITE_NAME = "Next.js + Sanity Starter";
+const LEGACY_SITE_NAMES = ["Next.js + Sanity Starter"] as const;
 
 const IMPORTANT_TERMS = ["website", "company", "service"] as const;
 
@@ -13,11 +13,11 @@ export function normalizeSeoTitle(value: string | null | undefined) {
 /** Removes only recognized, trailing legacy brand phrases during migration. */
 export function stripLegacySeoTitleSuffix(
   value: string | null | undefined,
-  siteName = SITE_NAME,
+  siteName: string,
 ) {
   let title = normalizeSeoTitle(value);
   let previousTitle = "";
-  const recognizedSiteNames = new Set([siteName, SITE_NAME]);
+  const recognizedSiteNames = new Set([siteName, ...LEGACY_SITE_NAMES]);
 
   while (title && title !== previousTitle) {
     previousTitle = title;
@@ -41,12 +41,12 @@ export function resolveSeoTitle({
   fallbackTitle,
   isHomepage = false,
   overrideTitle,
-  siteName = SITE_NAME,
+  siteName,
 }: {
   fallbackTitle?: string | null;
   isHomepage?: boolean;
   overrideTitle?: string | null;
-  siteName?: string;
+  siteName: string;
 }) {
   const normalizedOverride = normalizeSeoTitle(overrideTitle);
   const hasManualSuffix = normalizedOverride.includes("|");
@@ -78,11 +78,11 @@ export function resolveSeoTitle({
 export function getSeoTitleWarnings({
   fallbackTitle,
   overrideTitle,
-  siteName = SITE_NAME,
+  siteName,
 }: {
   fallbackTitle?: string | null;
   overrideTitle?: string | null;
-  siteName?: string;
+  siteName: string;
 }) {
   const normalizedOverride = normalizeSeoTitle(overrideTitle);
   const { finalTitle, pageTitle } = resolveSeoTitle({

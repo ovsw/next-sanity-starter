@@ -5,15 +5,18 @@ import {
   stripLegacySeoTitleSuffix,
 } from "../../shared/seo-title";
 
+const siteName = "Example Company";
+
 describe("resolveSeoTitle", () => {
-  it("uses a page override with the neutral default suffix", () => {
+  it("uses a page override with the configured suffix", () => {
     expect(
       resolveSeoTitle({
         fallbackTitle: "Services",
         overrideTitle: "Custom services",
+        siteName,
       }),
     ).toMatchObject({
-      finalTitle: "Custom services | Next.js + Sanity Starter",
+      finalTitle: "Custom services | Example Company",
       metadataTitle: "Custom services",
       pageTitle: "Custom services",
     });
@@ -21,23 +24,24 @@ describe("resolveSeoTitle", () => {
 
   it("uses a pipe-bearing override as a complete title", () => {
     expect(
-      resolveSeoTitle({ overrideTitle: "About | Example Company" }),
+      resolveSeoTitle({ overrideTitle: "About | Example Company", siteName }),
     ).toMatchObject({
       finalTitle: "About | Example Company",
       metadataTitle: { absolute: "About | Example Company" },
     });
   });
 
-  it("returns the neutral site name when no page title exists", () => {
-    expect(resolveSeoTitle({}).metadataTitle).toEqual({
-      absolute: "Next.js + Sanity Starter",
+  it("returns the configured site name when no page title exists", () => {
+    expect(resolveSeoTitle({ siteName }).metadataTitle).toEqual({
+      absolute: "Example Company",
     });
   });
 
-  it("removes a repeated neutral suffix", () => {
+  it("removes configured and legacy starter suffixes", () => {
     expect(
       stripLegacySeoTitleSuffix(
-        "About | Next.js + Sanity Starter | Next.js + Sanity Starter",
+        "About | Next.js + Sanity Starter | Example Company",
+        siteName,
       ),
     ).toBe("About");
   });
@@ -49,11 +53,12 @@ describe("getSeoTitleWarnings", () => {
       fallbackTitle: "Fallback",
       overrideTitle:
         "Company website services for every company website requirement today",
+      siteName,
     });
 
     expect(warnings).toEqual([
       "Review the repeated term “website” for readability.",
-      "The final 95-character title may be shortened in search results.",
+      "The final 86-character title may be shortened in search results.",
     ]);
   });
 });
