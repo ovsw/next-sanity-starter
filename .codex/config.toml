@@ -1,6 +1,0 @@
-[mcp_servers.sanity]
-command = "sh"
-args = [
-  "-c",
-  'SANITY_AUTH_TOKEN="$(sed -n "s/^SANITY_AUTH_TOKEN=//p" ./studio/.env.local 2>/dev/null | tail -n 1)"; SANITY_AUTH_TOKEN="${SANITY_AUTH_TOKEN%\"}"; SANITY_AUTH_TOKEN="${SANITY_AUTH_TOKEN#\"}"; : "${SANITY_AUTH_TOKEN:?Add SANITY_AUTH_TOKEN to studio/.env.local}"; exec npx -y mcp-remote@0.1.38 https://mcp.sanity.io --transport http-only --header "Authorization: Bearer ${SANITY_AUTH_TOKEN}"',
-]

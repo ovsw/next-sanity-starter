@@ -45,22 +45,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Run unit tests
-        run: pnpm test
-
-      - name: Build production frontend
-        run: pnpm --dir frontend build
-
-      - name: Install smoke-test browser
+      - name: Install verification browser
         run: pnpm --dir frontend exec playwright install --with-deps chrome
 
-      - name: Run browser smoke tests
-        env:
-          PLAYWRIGHT_REUSE_BUILD: "1"
-        run: pnpm test:smoke
+      - name: Verify repository
+        run: pnpm verify
