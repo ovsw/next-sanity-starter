@@ -43,6 +43,37 @@ pnpm dev
 
 Before using Presentation, add the Website and Studio origins to your own Sanity project's CORS settings.
 
+### Parallel worktrees
+
+In a new Git worktree, copy configuration from an explicitly selected worktree
+of this same repository, then start an isolated server pair:
+
+```bash
+pnpm setup:worktree --source /absolute/path/to/configured-checkout
+pnpm dev:worktree
+```
+
+Setup keeps existing environment files. It copies only the Website and Studio
+`.env.local` files and installs locked dependencies. If no worktree has those
+files, run `pnpm setup` first.
+
+The launcher reserves paired ports in `3000–3009` and `3333–3342`, prints both
+URLs, and sets matching Website and Presentation origins. A saved assignment
+is reused; a busy saved port stops the launch. To select a pair explicitly:
+
+```bash
+pnpm dev:worktree --frontend-port 3001 --studio-port 3334
+```
+
+Run `pnpm setup:sanity-cors` to print the allowed local origins. Add them with
+credentials enabled in your project's Sanity CORS settings. This command does
+not change hosted settings.
+
+On Linux, `pnpm dev:stop` lists this repository's development servers. Use
+`pnpm dev:stop --here` to stop the current worktree's servers, `--port 3001`
+to select a server, or `--all` to stop servers across this repository's
+registered worktrees. The shutdown tool requires Linux `/proc`.
+
 ## Optional sample content
 
 After setup, you can seed a new empty dataset with neutral example content:
@@ -63,6 +94,14 @@ pnpm unseed
 
 Unseed removes only marked Starter sample documents and their Starter sample asset. It refuses partial or unmarked targets instead of emptying a dataset generally.
 
+The section library includes testimonials, stacked feature rows with optional
+links, and a timeline. These sections use existing shared content types and
+neutral styles. Add a section with `pnpm page-builder:new <name>`; see
+`docs/agents/page-builder.md` for generation, previews, and registration.
+
+Pages accept nested slugs such as `about/our-team`. Blog routes stay reserved.
+SEO sharing uses an editor-selected image when present, then a generated card.
+
 ## Workspace commands
 
 ```bash
@@ -82,6 +121,10 @@ pnpm typegen
 Run `pnpm verify` before opening a pull request. It checks generated Sanity types, TypeScript, lint, focused tests, both production builds, and the browser acceptance journey.
 
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
+
+The workspace patches `sanity-plugin-media@5.0.11` to restore its wide-screen
+tags panel and tag icon. When upgrading that plugin, check both fixes before
+removing or replacing the patch.
 
 ## Deploy your copy
 

@@ -74,7 +74,11 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
       console.info(`Auto redirect skipped: ${plan.reason}`);
       return;
     }
-    if (!plan.create && plan.retarget.length === 0) {
+    if (
+      !plan.create &&
+      plan.retarget.length === 0 &&
+      plan.retire.length === 0
+    ) {
       console.info(`Auto redirect already exists: ${plan.source}`);
       return;
     }
@@ -91,6 +95,14 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
       _ref: plan.destinationDocumentId,
     };
     const transaction = client.transaction();
+    for (const redirect of plan.retire) {
+      transaction.patch(redirect._id, (patch) => {
+        const guardedPatch = redirect._rev
+          ? patch.ifRevisionId(redirect._rev)
+          : patch;
+        return guardedPatch.set({ status: "inactive" });
+      });
+    }
     for (const redirect of plan.retarget) {
       transaction.patch(redirect._id, (patch) => {
         const guardedPatch = redirect._rev
@@ -115,6 +127,8 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
     }
 
     await transaction.commit();
-    console.info(`Auto redirect applied: ${plan.source} -> ${plan.destination}`);
+    console.info(
+      `Auto redirect applied: ${plan.source} -> ${plan.destination}`,
+    );
   },
 );

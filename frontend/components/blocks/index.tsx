@@ -9,6 +9,10 @@ import RichTextBlock from "@/components/blocks/rich-text-block";
 import CtaBanner from "@/components/blocks/cta-banner";
 import BenefitCards from "@/components/blocks/benefit-cards";
 import Hero from "@/components/blocks/hero";
+import Testimonials from "@/components/blocks/testimonials";
+import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
+import StackedTimeline from "@/components/blocks/stacked-timeline";
+// page-builder-generator:component-imports
 import { dataset, projectId } from "@/sanity/lib/env";
 
 type Block =
@@ -18,6 +22,10 @@ type Block =
 type BlockEditingProps = {
   dataAttribute?: (path: string) => string | undefined;
   memberDataAttribute?: (
+    documentId: string,
+    path: string,
+  ) => string | undefined;
+  testimonialDataAttribute?: (
     documentId: string,
     path: string,
   ) => string | undefined;
@@ -31,6 +39,10 @@ const serverFieldEditingBlockTypes = new Set<Block["_type"]>([
   "ctaBanner",
   "benefitCards",
   "hero",
+  "testimonials",
+  "stackedFeatureRows",
+  "stackedTimeline",
+  // page-builder-generator:editing-types
 ]);
 
 const componentMap: Partial<{
@@ -46,6 +58,10 @@ const componentMap: Partial<{
   ctaBanner: CtaBanner,
   benefitCards: BenefitCards,
   hero: Hero,
+  testimonials: Testimonials,
+  stackedFeatureRows: StackedFeatureRows,
+  stackedTimeline: StackedTimeline,
+  // page-builder-generator:component-map
 };
 
 export default function Blocks({
@@ -64,14 +80,14 @@ export default function Blocks({
     <>
       {blocks?.map((block) => {
         const Component = componentMap[block._type] as
-          | React.ComponentType<Block & BlockEditingProps>
-          | undefined;
+          React.ComponentType<Block & BlockEditingProps> | undefined;
         if (!Component) return null;
 
         const blockPath = `blocks[_key=="${block._key}"]`;
         const dataSanity = stega
           ? createDataAttribute({
-              baseUrl: process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
+              baseUrl:
+                process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
               dataset,
               id: documentId,
               path: blockPath,
@@ -82,7 +98,8 @@ export default function Blocks({
         const dataAttribute = stega
           ? (path: string) =>
               createDataAttribute({
-                baseUrl: process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
+                baseUrl:
+                  process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
                 dataset,
                 id: documentId,
                 path: `${blockPath}.${path}`,
@@ -91,32 +108,34 @@ export default function Blocks({
               }).toString()
           : undefined;
         const editingProps: BlockEditingProps =
-          block._type === "teamMembers"
-              ? {
-                  dataAttribute,
-                  memberDataAttribute: stega
-                    ? (memberId: string, path: string) =>
-                        createDataAttribute({
-                          baseUrl:
-                            process.env.NEXT_PUBLIC_STUDIO_URL ||
-                            "http://localhost:3333",
-                          dataset,
-                          id: memberId,
-                          path,
-                          projectId,
-                          type: "teamMember",
-                        }).toString()
-                    : undefined,
-                }
-              : serverFieldEditingBlockTypes.has(block._type)
+          block._type === "teamMembers" || block._type === "testimonials"
+            ? {
+                dataAttribute,
+                [block._type === "teamMembers"
+                  ? "memberDataAttribute"
+                  : "testimonialDataAttribute"]: stega
+                  ? (memberId: string, path: string) =>
+                      createDataAttribute({
+                        baseUrl:
+                          process.env.NEXT_PUBLIC_STUDIO_URL ||
+                          "http://localhost:3333",
+                        dataset,
+                        id: memberId,
+                        path,
+                        projectId,
+                        type:
+                          block._type === "teamMembers"
+                            ? "teamMember"
+                            : "testimonial",
+                      }).toString()
+                  : undefined,
+              }
+            : serverFieldEditingBlockTypes.has(block._type)
               ? { dataAttribute }
               : {};
 
         return (
-          <div
-            data-sanity={dataSanity}
-            key={block._key}
-          >
+          <div data-sanity={dataSanity} key={block._key}>
             <Component {...block} {...editingProps} />
           </div>
         );

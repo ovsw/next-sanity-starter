@@ -1,6 +1,7 @@
 export {
   categoryPath,
   isApplicationPath,
+  isReservedPagePath,
   isRouteSlug,
   normalizePublicPath,
   pagePath,

@@ -170,6 +170,32 @@ describe("generatePageMetadata", () => {
     );
   });
 
+  it("prefers an editor-selected sharing image for Open Graph and Twitter", () => {
+    const pageWithImage = {
+      ...page,
+      meta: {
+        ...page.meta,
+        image: {
+          asset: {
+            url: "https://cdn.sanity.io/images/project/production/social.jpg",
+            metadata: { dimensions: { width: 1600, height: 900 } },
+          },
+        },
+      },
+    } as unknown as NonNullable<PAGE_QUERY_RESULT>;
+
+    const metadata = generatePageMetadata({ page: pageWithImage, path: "/about" });
+    const image = {
+      url: "https://cdn.sanity.io/images/project/production/social.jpg",
+      width: 1600,
+      height: 900,
+      alt: "About | About Example Company",
+    };
+
+    expect(metadata.openGraph.images).toEqual([image]);
+    expect(metadata.twitter.images).toEqual([image]);
+  });
+
   it("uses one absolute, branded homepage title", () => {
     const metadata = generatePageMetadata({ page: homePage, path: "/" });
 

@@ -219,6 +219,450 @@
     }
   },
   {
+    "type": "type",
+    "name": "stackedFeatureRow.icon",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "name": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "svg": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "stackedFeatureRow.link",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "text": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "customUrl"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "stackedTimelineItem.image",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "asset": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageAsset.reference"
+          },
+          "optional": true
+        },
+        "media": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "stackedTimelineItem.image.media"
+          },
+          "optional": true
+        },
+        "hotspot": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageHotspot"
+          },
+          "optional": true
+        },
+        "crop": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "sanity.imageCrop"
+          },
+          "optional": true
+        },
+        "alt": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "image"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "stackedTimeline",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "stackedTimeline"
+          }
+        },
+        "useAlternateBackground": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "eyebrow": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "title": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "intro": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "buttons": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rest": {
+                "type": "inline",
+                "name": "button"
+              }
+            }
+          },
+          "optional": true
+        },
+        "items": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "title": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "meta": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "text": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "image": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "inline",
+                    "name": "stackedTimelineItem.image"
+                  },
+                  "optional": true
+                },
+                "_type": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string",
+                    "value": "stackedTimelineItem"
+                  }
+                }
+              },
+              "rest": {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "stackedFeatureRows",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "stackedFeatureRows"
+          }
+        },
+        "useAlternateBackground": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "eyebrow": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "title": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "rows": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "icon": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "inline",
+                    "name": "stackedFeatureRow.icon"
+                  },
+                  "optional": true
+                },
+                "title": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "items": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "array",
+                    "of": {
+                      "type": "object",
+                      "attributes": {
+                        "body": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "inline",
+                            "name": "simpleRichText"
+                          },
+                          "optional": true
+                        },
+                        "_type": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string",
+                            "value": "stackedFeatureRowItem"
+                          }
+                        }
+                      },
+                      "rest": {
+                        "type": "object",
+                        "attributes": {
+                          "_key": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "optional": true
+                },
+                "link": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "inline",
+                    "name": "stackedFeatureRow.link"
+                  },
+                  "optional": true
+                },
+                "_type": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string",
+                    "value": "stackedFeatureRow"
+                  }
+                }
+              },
+              "rest": {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "testimonial.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "testimonial"
+    }
+  },
+  {
+    "name": "testimonials",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "testimonials"
+          }
+        },
+        "useAlternateBackground": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "eyebrow": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "title": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "testimonials": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rest": {
+                "type": "inline",
+                "name": "testimonial.reference"
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "benefitCards",
     "type": "type",
     "value": {
@@ -2003,6 +2447,10 @@
                     },
                     {
                       "type": "string",
+                      "value": "blockquote"
+                    },
+                    {
+                      "type": "string",
                       "value": "h2"
                     },
                     {
@@ -2514,6 +2962,66 @@
     }
   },
   {
+    "type": "type",
+    "name": "category.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "category"
+    }
+  },
+  {
+    "type": "type",
+    "name": "blogIndex.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "blogIndex"
+    }
+  },
+  {
     "name": "customUrl",
     "type": "type",
     "value": {
@@ -2549,6 +3057,14 @@
               {
                 "type": "inline",
                 "name": "post.reference"
+              },
+              {
+                "type": "inline",
+                "name": "category.reference"
+              },
+              {
+                "type": "inline",
+                "name": "blogIndex.reference"
               }
             ]
           },
@@ -2724,6 +3240,14 @@
               {
                 "type": "inline",
                 "name": "post.reference"
+              },
+              {
+                "type": "inline",
+                "name": "category.reference"
+              },
+              {
+                "type": "inline",
+                "name": "blogIndex.reference"
               }
             ]
           },
@@ -2835,66 +3359,6 @@
           "optional": true
         }
       }
-    }
-  },
-  {
-    "type": "type",
-    "name": "category.reference",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_ref": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          }
-        },
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "reference"
-          }
-        },
-        "_weak": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        }
-      },
-      "dereferencesTo": "category"
-    }
-  },
-  {
-    "type": "type",
-    "name": "blogIndex.reference",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_ref": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          }
-        },
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "reference"
-          }
-        },
-        "_weak": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        }
-      },
-      "dereferencesTo": "blogIndex"
     }
   },
   {
@@ -4235,6 +4699,51 @@
                   "type": "inline",
                   "name": "ctaBanner"
                 }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "testimonials"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedFeatureRows"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedTimeline"
+                }
               }
             ]
           }
@@ -4425,6 +4934,51 @@
                 "rest": {
                   "type": "inline",
                   "name": "ctaBanner"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "testimonials"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedFeatureRows"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedTimeline"
                 }
               }
             ]
@@ -5364,6 +5918,51 @@
                 "rest": {
                   "type": "inline",
                   "name": "ctaBanner"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "testimonials"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedFeatureRows"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "stackedTimeline"
                 }
               }
             ]

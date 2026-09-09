@@ -142,7 +142,12 @@ export async function proxy(request: NextRequest) {
 
   if (hasValidatedDraftMode(request)) return NextResponse.next();
 
-  const postCount = await getBlogPostCount();
+  let postCount: number;
+  try {
+    postCount = await getBlogPostCount();
+  } catch {
+    return NextResponse.next();
+  }
   const regularPostCount = Math.max(postCount - 1, 0);
   const { totalPages } = calculateBlogPagination(regularPostCount, page);
   return isBlogPageOutOfRange(page, totalPages)

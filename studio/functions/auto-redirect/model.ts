@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { isApplicationPath } from "../../../shared/content-routes.ts";
+import { isApplicationPath, isReservedPagePath } from "../../../shared/content-routes.ts";
 import { getPresentationPath } from "../../presentation/routes.ts";
 import {
   normalizeRedirectPath,
@@ -47,6 +47,7 @@ type AutoRedirectPlan =
       create: boolean;
       destination: string;
       destinationDocumentId: string;
+      retire: { _id: string; _rev?: string }[];
       retarget: { _id: string; _rev?: string }[];
       source: string;
     };
@@ -56,9 +57,7 @@ export function shouldWriteAutoRedirect(local?: boolean) {
   return local !== true;
 }
 
-export function resolveFetchedRedirectDestination(
-  redirect: FetchedRedirect,
-) {
+export function resolveFetchedRedirectDestination(redirect: FetchedRedirect) {
   if (redirect.destinationReference?._ref) {
     if (!redirect.destinationDocument) return undefined;
 
@@ -78,7 +77,9 @@ function isActive(record: RedirectRecord) {
 }
 
 function targetsDocument(record: RedirectRecord, documentId: string) {
-  return record.destinationReference?._ref?.replace(/^drafts\./, "") === documentId;
+  return (
+    record.destinationReference?._ref?.replace(/^drafts\./, "") === documentId
+  );
 }
 
 export function planAutoRedirect({
@@ -111,14 +112,18 @@ export function planAutoRedirect({
   if (source === destination) {
     return { action: "skip", reason: "The normalized route did not change" };
   }
-  if (isApplicationPath(source)) {
+  const isReservedRoute = event.documentType === "page"
+    ? isReservedPagePath
+    : isApplicationPath;
+  if (isReservedRoute(source)) {
     return { action: "skip", reason: "The previous route is reserved" };
   }
-  if (isApplicationPath(destination)) {
+  if (isReservedRoute(destination)) {
     return { action: "skip", reason: "The new route is reserved" };
   }
 
   const activeRedirects = redirects.filter(isActive);
+  const retire: FetchedRedirect[] = [];
   const destinationRedirect = activeRedirects.find(
     (redirect) =>
       normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
@@ -133,10 +138,16 @@ export function planAutoRedirect({
     const flattenedDestination = normalizeRedirectPath(
       readRedirectPath(destinationRedirect.destination),
     );
-    if (!flattenedDestination || flattenedDestination === source) {
-      return { action: "skip", reason: "The rename would create a redirect cycle" };
+    if (flattenedDestination === destination) {
+      retire.push(destinationRedirect);
+    } else if (!flattenedDestination || flattenedDestination === source) {
+      return {
+        action: "skip",
+        reason: "The rename would create a redirect cycle",
+      };
+    } else {
+      destination = flattenedDestination;
     }
-    destination = flattenedDestination;
   }
 
   const liveCollision = liveRoutes.find((route) => {
@@ -175,13 +186,17 @@ export function planAutoRedirect({
     normalizeRedirectPath(readRedirectPath(directRedirect.destination)) !==
       destination
   ) {
-    return { action: "skip", reason: "The previous route already redirects elsewhere" };
+    return {
+      action: "skip",
+      reason: "The previous route already redirects elsewhere",
+    };
   }
 
   const incomingAtSource = activeRedirects.filter(
     (redirect) =>
       redirect._id &&
-      normalizeRedirectPath(readRedirectPath(redirect.destination)) === source &&
+      normalizeRedirectPath(readRedirectPath(redirect.destination)) ===
+        source &&
       normalizeRedirectPath(readRedirectPath(redirect.source)) !== source,
   );
   if (
@@ -196,11 +211,13 @@ export function planAutoRedirect({
   }
   const incoming = incomingAtSource;
 
-  const simulated = activeRedirects.map((redirect) =>
-    incoming.includes(redirect)
-      ? { ...redirect, destination: toStoredRedirectPath(destination) }
-      : redirect,
-  );
+  const simulated = activeRedirects
+    .filter((redirect) => !retire.includes(redirect))
+    .map((redirect) =>
+      incoming.includes(redirect)
+        ? { ...redirect, destination: toStoredRedirectPath(destination) }
+        : redirect,
+    );
   if (!directRedirect) {
     simulated.push({
       source: toStoredRedirectPath(source),
@@ -218,6 +235,10 @@ export function planAutoRedirect({
     create: !directRedirect,
     destination: toStoredRedirectPath(destination),
     destinationDocumentId,
+    retire: retire.map((redirect) => ({
+      _id: redirect._id as string,
+      _rev: redirect._rev,
+    })),
     retarget: incoming.map((redirect) => ({
       _id: redirect._id as string,
       _rev: redirect._rev,

@@ -1,73 +1,12 @@
 import { LinkIcon, Menu, PanelsTopLeft, Sparkles } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineDestinationType } from "../blocks/shared/destination";
 import NavigationIconInput, {
   createNavigationIconPreview,
 } from "../inputs/navigation-icon-input";
 import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
 
-const destination = defineType({
-  name: "navigationDestination",
-  title: "Destination",
-  type: "object",
-  fields: [
-    defineField({
-      name: "kind",
-      title: "Destination type",
-      type: "string",
-      initialValue: "internal",
-      options: {
-        layout: "radio",
-        list: [
-          { title: "Internal", value: "internal" },
-          { title: "External", value: "external" },
-        ],
-      },
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "internal",
-      title: "Internal destination",
-      type: "reference",
-      to: [
-        { type: "homePage" },
-        { type: "page" },
-        { type: "post" },
-        { type: "category" },
-        { type: "blogIndex" },
-      ],
-      hidden: ({ parent }) => parent?.kind !== "internal",
-      validation: (rule) =>
-        rule.custom((value, context) =>
-          (context.parent as { kind?: string } | undefined)?.kind === "internal" && !value
-            ? "Select an internal destination"
-            : true,
-        ),
-    }),
-    defineField({
-      name: "external",
-      title: "External URL or root-relative path",
-      type: "string",
-      hidden: ({ parent }) => parent?.kind !== "external",
-      validation: (rule) =>
-        rule.custom((value, context) => {
-          if ((context.parent as { kind?: string } | undefined)?.kind !== "external") {
-            return true;
-          }
-          if (!value) return "Enter a destination";
-          return /^(https?:\/\/|mailto:|tel:|\/)/.test(value)
-            ? true
-            : "Use an absolute URL, mailto:, tel:, or a root-relative path";
-        }),
-    }),
-    defineField({
-      name: "openInNewTab",
-      title: "Open in a new tab",
-      type: "boolean",
-      initialValue: false,
-    }),
-  ],
-  validation: (rule) => rule.required(),
-});
+const destination = defineDestinationType("navigationDestination");
 
 const childLink = defineType({
   name: "navigationChildLink",

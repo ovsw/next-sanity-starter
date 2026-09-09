@@ -1,0 +1,24 @@
+diff --git a/dist/index.js b/dist/index.js
+index 6539933a4224bcca8fe22c23c9ec2d4c2bb120e5..191ba6c1b8966973bdbd0deca685f12afba800af 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1908,7 +1908,6 @@ const Container$2 = /* @__PURE__ */ styled(Box).withConfig({
+ 		text: "Clear"
+ 	})] });
+ }, TagIcon = () => /* @__PURE__ */ jsxs("svg", {
+-	"data-sanity-icon": "media__tag",
+ 	fill: "currentColor",
+ 	height: "1em",
+ 	stroke: "currentColor",
+@@ -3676,7 +3675,10 @@ const DialogAssetEdit = (props) => {
+ 		})
+ 	});
+ }, useBreakpointIndex = () => {
+-	let mediaQueryLists = studioTheme?.container?.map((width) => window.matchMedia(`(max-width: ${width}px)`)), getBreakpointIndex = () => mediaQueryLists.findIndex((mql) => mql.matches), [value, setValue] = useState(getBreakpointIndex());
++	let mediaQueryLists = studioTheme?.container?.map((width) => window.matchMedia(`(max-width: ${width}px)`)), getBreakpointIndex = () => {
++		let index = mediaQueryLists.findIndex((mql) => mql.matches);
++		return index === -1 ? mediaQueryLists.length : index;
++	}, [value, setValue] = useState(getBreakpointIndex());
+ 	return useEffect(() => {
+ 		let handleBreakpoint = () => {
+ 			setValue(getBreakpointIndex);

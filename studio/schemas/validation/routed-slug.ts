@@ -2,7 +2,9 @@ import type { ValidationContext } from "sanity";
 
 import {
   isApplicationPath,
+  isReservedPagePath,
   isRouteSlug,
+  pagePath,
   routedDocumentPath,
   type RoutedDocumentType,
 } from "../../../shared/content-routes.ts";
@@ -19,12 +21,20 @@ export async function uniqueRoutedSlug(
   if (!current || !documentId) return true;
   if (documentType !== "page" && documentType !== "post") return true;
 
-  if (!isRouteSlug(current)) {
-    return "Use lowercase letters, numbers, and single hyphens only";
+  const route = routedDocumentPath(documentType, current);
+  const hasValidSlug = documentType === "page"
+    ? pagePath(current) === `/${current}`
+    : isRouteSlug(current);
+  if (!hasValidSlug) {
+    return documentType === "page"
+      ? "Use slash-separated lowercase words, numbers, and single hyphens, with no leading or trailing slash"
+      : "Use lowercase letters, numbers, and single hyphens only";
   }
 
-  const route = routedDocumentPath(documentType, current);
-  if (isApplicationPath(route)) {
+  const isReservedRoute = documentType === "page"
+    ? isReservedPagePath(route)
+    : isApplicationPath(route);
+  if (isReservedRoute) {
     return `This slug is reserved by the Website route ${route}`;
   }
 
