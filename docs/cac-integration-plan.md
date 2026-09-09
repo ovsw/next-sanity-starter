@@ -52,12 +52,15 @@ errors, show inline-object validation, canonicalize the dev-stop worktree path,
 and update the browser-policy status. Added an SVG regression test. Skipped four
 SCREAMING_SNAKE_CASE renames (no functional value and inconsistent with local
 style) and one CSS keyword-case change (CSS keywords are case-insensitive).
-No second review will run. PR creation and merge are pending final checks.
+No second review will run. Post-fix checks passed: 302 tests, both type checks,
+lint, TypeGen, and whitespace checks. The PR's release gate verifies the full
+build and browser journey before merge. PR and final merge status:
+https://github.com/ovsw/next-sanity-starter/pull/36
 
 All four groups are implemented. README and Page Builder guidance cover the new
 tools and sections. Neutral examples are included in the existing seed workflow;
-the current non-empty dataset was preserved. No commits, publishes, or hosted
-settings changes were made.
+the current non-empty dataset was preserved. Changes are committed on the PR
+branch. No CMS publishes or hosted settings changes were made.
 
 Temporary browser fixture files were removed after verification. Development
 route types were refreshed, and the final typecheck passed. The Website and
