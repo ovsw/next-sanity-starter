@@ -44,6 +44,10 @@ import teamMembers from "./schemas/blocks/team-members";
 import richTextBlock from "./schemas/blocks/rich-text-block";
 import ctaBanner from "./schemas/blocks/cta-banner";
 import benefitCards from "./schemas/blocks/benefit-cards";
+import testimonials from "./schemas/blocks/testimonials";
+import stackedFeatureRows from "./schemas/blocks/stacked-feature-rows";
+import stackedTimeline from "./schemas/blocks/stacked-timeline";
+// page-builder-generator:block-imports
 
 export const schemaTypes = [
   // documents
@@ -88,4 +92,8 @@ export const schemaTypes = [
   richTextBlock,
   ctaBanner,
   benefitCards,
+  testimonials,
+  stackedFeatureRows,
+  stackedTimeline,
+  // page-builder-generator:block-types
 ];

@@ -10,9 +10,14 @@ export function isRouteSlug(value?: string | null) {
   return Boolean(value && ROUTE_SLUG_PATTERN.test(value));
 }
 
+export function isPageSlug(value?: string | null) {
+  const slug = cleanSlug(value);
+  return Boolean(slug && slug.split("/").every(isRouteSlug));
+}
+
 export function pagePath(value?: string | null) {
   const slug = cleanSlug(value);
-  return isRouteSlug(slug) ? `/${slug}` : null;
+  return isPageSlug(slug) ? `/${slug}` : null;
 }
 
 export function postPath(value?: string | null) {
@@ -71,4 +76,13 @@ export function isApplicationPath(value?: string | null) {
   if (path === "/_next" || path.startsWith("/_next/")) return true;
   if (/^\/blog\/\d+$/.test(path)) return true;
   return /^\/blog\/category\/[^/]+\/\d+$/.test(path);
+}
+
+/** Paths that an editor-created page cannot own. */
+export function isReservedPagePath(value?: string | null) {
+  const path = normalizePublicPath(value);
+  return Boolean(
+    path &&
+    (isApplicationPath(path) || path === "/blog" || path.startsWith("/blog/")),
+  );
 }

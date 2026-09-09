@@ -45,6 +45,7 @@ test("creates a canonical permanent redirect for a page rename", () => {
       create: true,
       destination: "/new-page",
       destinationDocumentId: "page-id",
+      retire: [],
       retarget: [],
       source: "/old-page",
     },
@@ -107,7 +108,52 @@ test("flattens incoming redirects after repeated renames", () => {
       create: true,
       destination: "/c",
       destinationDocumentId: "page-id",
+      retire: [],
       retarget: [{ _id: "redirect-a", _rev: "rev-a" }],
+      source: "/b",
+    },
+  );
+});
+
+test("rejects page renames into or out of the blog namespace", () => {
+  for (const [beforeSlug, slug] of [["about", "blog/post"], ["blog/post", "about"]]) {
+    const plan = planAutoRedirect({
+      event: { beforeSlug, slug, documentId: "page-id", documentType: "page" },
+      liveRoutes: [], redirects: [],
+    });
+    assert.equal(plan.action, "skip");
+    assert.match(plan.reason, /reserved/);
+  }
+});
+
+test("retires the active redirect when a document reclaims an old slug", () => {
+  assert.deepEqual(
+    planAutoRedirect({
+      event: {
+        beforeSlug: "b",
+        documentId: "page-id",
+        documentType: "page",
+        slug: "a",
+      },
+      liveRoutes: [],
+      redirects: [
+        {
+          _id: "redirect-a",
+          _rev: "rev-a",
+          source: "/a",
+          destination: "/a",
+          destinationReference: { _ref: "page-id" },
+          status: "active",
+        },
+      ],
+    }),
+    {
+      action: "apply",
+      create: true,
+      destination: "/a",
+      destinationDocumentId: "page-id",
+      retire: [{ _id: "redirect-a", _rev: "rev-a" }],
+      retarget: [],
       source: "/b",
     },
   );

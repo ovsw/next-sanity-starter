@@ -40,6 +40,21 @@ function fallbackSharingImage() {
   );
 }
 
+function configuredSharingImage(
+  page: HOME_PAGE_QUERY_RESULT | PAGE_QUERY_RESULT | POST_QUERY_RESULT,
+  title: string,
+) {
+  const image = page?.meta?.image;
+  if (!image?.asset?.url) return null;
+
+  return {
+    url: image.asset.url,
+    width: image.asset.metadata?.dimensions?.width || 1200,
+    height: image.asset.metadata?.dimensions?.height || 630,
+    alt: title,
+  };
+}
+
 function resolveArchiveTitles({
   contentTitle,
   fallbackTitle,
@@ -124,11 +139,13 @@ export function generatePageMetadata({
       : null;
   // The generated card uses the visible content title. Its alt text uses the
   // final social title, including any complete suffix supplied by the editor.
-  const image = postImage && postTitle
-    ? sharingImage(postImage, postTitle)
-    : pageImage && pageTitle
-      ? sharingImage(pageImage, pageTitle, seoTitle.finalTitle)
-      : fallbackSharingImage();
+  const image =
+    configuredSharingImage(page, seoTitle.finalTitle) ||
+    (postImage && postTitle
+      ? sharingImage(postImage, postTitle)
+      : pageImage && pageTitle
+        ? sharingImage(pageImage, pageTitle, seoTitle.finalTitle)
+        : fallbackSharingImage());
 
   return {
     title: seoTitle.metadataTitle,

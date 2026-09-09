@@ -109,7 +109,7 @@ describe("blog post count cache", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  test("clears a failed request so the next request can retry", async () => {
+  test("fails open and clears a rejected post count refresh", async () => {
     fetchMock
       .mockRejectedValueOnce(new Error("Sanity unavailable"))
       .mockResolvedValueOnce(30);
@@ -117,7 +117,7 @@ describe("blog post count cache", () => {
     const request = () =>
       freshProxy(new NextRequest("https://www.example.com/blog/2/"));
 
-    await expect(request()).rejects.toThrow("Sanity unavailable");
+    await expect(request()).resolves.toMatchObject({ status: 200 });
     await expect(request()).resolves.toMatchObject({ status: 200 });
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });

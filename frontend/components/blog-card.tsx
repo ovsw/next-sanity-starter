@@ -23,8 +23,8 @@ function BlogImage({
         blurDataURL={post.image.asset.metadata?.lqip || undefined}
         height={post.image.asset.metadata?.dimensions?.height ?? 900}
         placeholder={post.image.asset.metadata?.lqip ? "blur" : undefined}
-        sizes="100vw"
-        src={urlFor(post.image).url()}
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        src={urlFor(post.image).width(1200).fit("max").url()}
         width={post.image.asset.metadata?.dimensions?.width ?? 1600}
       />
     </figure>

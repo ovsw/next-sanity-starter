@@ -11,7 +11,7 @@ Before starting a development server, inspect the required port. If the exact se
 
 ## Sanity browser checks
 
-Always use the ChatGPT in-app browser for local or remote Sanity checks. Never use the Next.js loop browser to open or inspect Sanity Studio or any Sanity URL.
+Use the user-provided Chromium browser for local and remote Sanity checks, including Studio and Presentation. The ChatGPT in-app browser is unreliable; do not use it for these checks.
 
 
 ## Shell discipline and reporting observations

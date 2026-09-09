@@ -50,3 +50,8 @@ studio/backups/
 
 # local Codex MCP credentials
 .codex/config.toml
+
+# Per-worktree development port assignment
+/.worktree-ports.json
+/.worktree-ports.json.*.tmp
+/.page-builder-generator.lock/

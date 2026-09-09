@@ -31,7 +31,7 @@ export function isPresentationDocumentType(documentType: string) {
 }
 
 export function resolveContentPath(value?: string | null) {
-  return pagePath(value) ?? "/";
+  return pagePath(value);
 }
 
 export function resolveCategoryPath(value?: string | null) {

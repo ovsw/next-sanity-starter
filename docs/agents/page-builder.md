@@ -14,18 +14,37 @@ A top-level section passes through this flow:
 4. Sanity TypeGen turns the schema and query into TypeScript types.
 5. The frontend block dispatcher selects its React renderer.
 
-The section's Sanity `_type` is the shared identifier across every step. Keep it exact and use the existing hyphenated naming convention.
+The section's Sanity `_type` is the shared identifier across every step. Use
+camelCase for the type and kebab-case for filenames, as in `stackedFeatureRows`
+and `stacked-feature-rows.ts`.
 
 ## Add a top-level section
 
-Start with the closest existing section and preserve the mirrored folder structure in Studio, queries, and renderers.
+Generate the schema, query, renderer, and registrations together:
+
+```bash
+pnpm page-builder:new serviceHighlights --title "Service highlights" --dry-run
+pnpm page-builder:new serviceHighlights --title "Service highlights"
+```
+
+Use `--scope content` (the default) for shared content sections, `--scope
+general` for regular pages only, or `--scope home` for the homepage only.
+`--preview /path/to/image.jpg` adds a Studio grid preview. Without a preview,
+Studio uses the schema's default representation. The generator refuses existing
+files and serializes generator runs with `.page-builder-generator.lock`.
+Remove that empty lock directory only after confirming its process has stopped.
+
+Replace the generated fields with the real content model, then run TypeGen.
+Keep the `page-builder-generator:*` markers at their registration points.
+
+For a manual addition, preserve the mirrored folder structure:
 
 1. Define the Studio schema in `studio/schemas/blocks/`.
 2. Register the schema and any supporting object schemas in `studio/schema-types.ts`.
-3. Add the top-level type to the Page schema's `blocks.of` list in `studio/schemas/documents/page.ts`.
-4. Add the type to one insert-menu group in the same file.
-5. Add its preview image at `studio/static/images/preview/<type>.jpg`. The Page schema resolves this path by `_type`.
-6. Create its GROQ projection in `frontend/sanity/queries/` and interpolate it into `frontend/sanity/queries/page.ts`.
+3. Add the type to the correct scope in `studio/schemas/blocks/page-builder.ts`. Insert-menu groups derive from those lists.
+4. If a preview is available, add `studio/static/images/preview/<type>.jpg` and register its type in the preview set in that file.
+5. Create its GROQ projection in `frontend/sanity/queries/`.
+6. Register the projection in `frontend/sanity/queries/page-builder.ts`.
 7. Create its React renderer in `frontend/components/blocks/` and register it in the `componentMap` in `frontend/components/blocks/index.tsx`.
 8. Run TypeGen. Do not edit `studio/schema.json` or `frontend/sanity.types.ts` by hand.
 

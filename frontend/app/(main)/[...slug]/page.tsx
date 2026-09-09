@@ -1,5 +1,5 @@
 import { RootContentView } from "@/components/root-content";
-import { isApplicationPath, isRouteSlug, pagePath } from "@/lib/routes";
+import { isReservedPagePath, isRouteSlug, pagePath } from "@/lib/routes";
 import {
   fetchSanityPageBySlug,
   PAGES_SLUGS_QUERY,
@@ -22,9 +22,10 @@ import { notFound } from "next/navigation";
 export const instant = false;
 
 function readPageSlug(segments: string[]) {
-  if (segments.length !== 1 || !isRouteSlug(segments[0])) return null;
-  const path = pagePath(segments[0]);
-  return path && !isApplicationPath(path) ? segments[0] : null;
+  if (!segments.length || !segments.every(isRouteSlug)) return null;
+  const slug = segments.join("/");
+  const path = pagePath(slug);
+  return path && !isReservedPagePath(path) ? slug : null;
 }
 
 export async function generateStaticParams() {
@@ -34,7 +35,8 @@ export async function generateStaticParams() {
 
   return pages.flatMap((page) => {
     const slug = page.slug?.current?.replace(/^\/+|\/+$/g, "");
-    return slug && readPageSlug([slug]) ? [{ slug: [slug] }] : [];
+    const segments = slug?.split("/") ?? [];
+    return slug && readPageSlug(segments) ? [{ slug: segments }] : [];
   });
 }
 

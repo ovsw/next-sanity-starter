@@ -5,6 +5,12 @@ import test from "node:test";
 const source = readFileSync(new URL("./shared/internal-href.ts", import.meta.url), "utf8");
 const footerSource = readFileSync(new URL("./footer.ts", import.meta.url), "utf8");
 
+test("every shared href variant resolves the blog index without a slug", () => {
+  for (const prefix of ["customLink.internal", "url.internal", "internal", "link.internal", "@.internalLink"]) {
+    assert.ok(source.includes(`${prefix}->_id == "blogIndex" || ${prefix}->_type == "blogIndex" => "/blog"`));
+  }
+});
+
 test("internal href resolvers use canonical post and category namespaces", () => {
   for (const resolver of [
     "customLink.internal",
@@ -14,9 +20,9 @@ test("internal href resolvers use canonical post and category namespaces", () =>
   ]) {
     assert.match(source, new RegExp(`${resolver.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}.*category`));
   }
-  assert.equal((source.match(/_type == "post"/g) || []).length, 4);
-  assert.equal((source.match(/"\/blog\/" \+/g) || []).length, 4);
-  assert.equal((source.match(/\/blog\/category\//g) || []).length, 4);
+  assert.equal((source.match(/_type == "post"/g) || []).length, 5);
+  assert.equal((source.match(/"\/blog\/" \+/g) || []).length, 5);
+  assert.equal((source.match(/\/blog\/category\//g) || []).length, 5);
   assert.doesNotMatch(source, /slug\.current \+ "\/"/);
   assert.match(footerSource, /internal->_type == "post"/);
   assert.match(footerSource, /internal->_type == "category"/);

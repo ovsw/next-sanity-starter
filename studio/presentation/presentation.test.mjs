@@ -7,6 +7,7 @@ import {
   resolveCategoryPath,
   resolveContentPath,
 } from "./routes.ts";
+import { resolve } from "./resolve.ts";
 
 test("does not treat an ordinary index slug as homepage identity", () => {
   assert.equal(resolveContentPath("index"), "/index");
@@ -18,6 +19,10 @@ test("normalizes leading and trailing slashes", () => {
 
 test("resolves a normal page slug to a canonical path", () => {
   assert.equal(getPresentationPath("page", "about"), "/about");
+  assert.equal(
+    getPresentationPath("page", "staff/available-positions"),
+    "/staff/available-positions",
+  );
 });
 
 test("resolves a normal post slug to a canonical path", () => {
@@ -58,4 +63,8 @@ test("unsupported document types do not expose the action", () => {
   assert.equal(isPresentationDocumentType("category"), true);
   assert.equal(isPresentationDocumentType("blogIndex"), true);
   assert.equal(isPresentationDocumentType("author"), false);
+});
+
+test("matches nested page paths when Presentation follows the preview", () => {
+  assert.equal(resolve.mainDocuments.at(-1).route, "/:slug(.+)");
 });

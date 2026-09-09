@@ -26,6 +26,9 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
     "faqAccordion",
     "teamMembers",
     "ctaBanner",
+    "testimonials",
+    "stackedFeatureRows",
+    "stackedTimeline",
   ]);
   assert.equal(blocksField.of.some(({ hidden }) => hidden), false);
   assert.equal(new Set(pageBuilderBlockTypes).size, pageBuilderBlockTypes.length);

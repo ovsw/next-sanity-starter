@@ -1,16 +1,16 @@
 import {
   defineLocations,
   defineDocuments,
-  PresentationPluginOptions,
 } from "sanity/presentation";
-import { ROOT_SLUG_FILTER } from "../../shared/root-slug-filter";
+import type { PresentationPluginOptions } from "sanity/presentation";
+import { ROOT_SLUG_FILTER } from "../../shared/root-slug-filter.ts";
 import {
   getPresentationPath,
   resolveCategoryPath,
   resolveContentPath,
-} from "./routes";
+} from "./routes.ts";
 
-export { resolveContentPath } from "./routes";
+export { resolveContentPath } from "./routes.ts";
 
 export const resolve: PresentationPluginOptions["resolve"] = {
   locations: {
@@ -19,14 +19,14 @@ export const resolve: PresentationPluginOptions["resolve"] = {
         title: "title",
         slug: "slug.current",
       },
-      resolve: (doc) => ({
-        locations: [
-          {
-            title: doc?.title || "Untitled",
-            href: resolveContentPath(doc?.slug),
-          },
-        ],
-      }),
+      resolve: (doc) => {
+        const href = resolveContentPath(doc?.slug);
+        return {
+          locations: href
+            ? [{ title: doc?.title || "Untitled", href }]
+            : [],
+        };
+      },
     }),
     post: defineLocations({
       select: {
@@ -88,7 +88,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       filter: `_type == 'post' && ${ROOT_SLUG_FILTER}`,
     },
     {
-      route: "/:slug",
+      route: "/:slug(.+)",
       filter: `_type == 'page' && ${ROOT_SLUG_FILTER}`,
     },
   ]),
