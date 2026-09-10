@@ -19,18 +19,17 @@ function HeadingLinks({
   headings: PostHeading[];
 }) {
   return (
-    /* The shared left rule is the index's spine; the active item brightens its
-       own segment of it, so the marker travels down the list as you read. */
-    <ul className="space-y-1 border-l border-border">
+    // Shadcnblocks navbar1 list treatment inside the faq1 disclosure.
+    <ul className="space-y-4 text-sm">
       {headings.map((heading) => (
         <li key={heading.id}>
           <a
             aria-current={activeId === heading.id ? "location" : undefined}
             className={cn(
-              "-ml-px block border-l py-1 pl-4 text-sm leading-5 underline-offset-4 transition-colors motion-fast hover:border-border-strong hover:text-foreground focus-underline",
+              "block leading-5 underline-offset-4 hover:text-foreground hover:underline",
               activeId === heading.id
-                ? "border-primary font-semibold text-primary"
-                : "border-transparent text-muted-foreground",
+                ? "font-semibold text-foreground"
+                : "text-muted-foreground",
             )}
             href={`#${heading.id}`}
           >

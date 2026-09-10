@@ -1,3 +1,4 @@
+import { PageHeading } from "@/components/shadcnblocks/page-heading";
 import { createDataAttribute, stegaClean } from "next-sanity";
 import Blocks from "@/components/blocks";
 import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
@@ -33,12 +34,12 @@ function PageContent({
 }) {
   const blocks = page.blocks ?? [];
   const needsTitleHeader =
-    blocks[0]?._type !== "hero" &&
-    stegaClean(page.title)?.trim();
+    blocks[0]?._type !== "hero" && stegaClean(page.title)?.trim();
   const rootDataAttribute = stega
     ? (path: "description" | "title") =>
         createDataAttribute({
-          baseUrl: process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
+          baseUrl:
+            process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
           dataset,
           id: page._id,
           path,
@@ -59,14 +60,14 @@ function PageContent({
       <FaqPageJsonLd blocks={blocks} />
       <VideoJsonLd content={blocks} />
       {needsTitleHeader ? (
-        <header>
-          <h1 data-sanity={rootDataAttribute?.("title")}>{page.title}</h1>
-          {stegaClean(page.description)?.trim() ? (
-            <p data-sanity={rootDataAttribute?.("description")}>
-              {page.description}
-            </p>
-          ) : null}
-        </header>
+        <PageHeading
+          title={page.title}
+          description={
+            stegaClean(page.description)?.trim() ? page.description : undefined
+          }
+          titleAttribute={rootDataAttribute?.("title")}
+          descriptionAttribute={rootDataAttribute?.("description")}
+        />
       ) : null}
       <Blocks
         blocks={blocks}
@@ -89,15 +90,7 @@ function PostContent({
 }) {
   const body = post.body ?? [];
   const bodyModel = createPostBodyModel(body);
-  const hasPostSidebar = Boolean(blogPostSidebar?.actions?.length);
-  const hasTableOfContents = bodyModel.showTableOfContents;
-  const layoutName = hasTableOfContents
-    ? hasPostSidebar
-      ? "three-column"
-      : "toc-column"
-    : hasPostSidebar
-      ? "two-column"
-      : "single-column";
+  const layoutName = "single-column";
   const readTime = getPostReadTime(body);
   const postSlug = post.slug?.current?.replace(/^\/+|\/+$/g, "") || "";
   const postCanonicalPath = postPath(postSlug) || "/blog";
@@ -120,7 +113,7 @@ function PostContent({
     : undefined;
 
   return (
-    <section>
+    <section className="py-32">
       <BreadcrumbJsonLd
         items={[
           { name: "Home", path: "/" },
@@ -132,24 +125,26 @@ function PostContent({
       <BlogPostingJsonLd post={post} siteUrl={siteUrl} />
       <VideoJsonLd content={body} />
       <PostHero post={post} readTime={readTime} stega={stega} />
-      <div data-post-layout={layoutName}>
-        {bodyModel.showTableOfContents ? (
-          <PostTableOfContentsRail headings={bodyModel.headings} />
-        ) : null}
-        <article>
-          {body.length ? (
-            <RichTextContent
-              dataSanity={bodyDataAttribute}
-              getHeadingId={bodyModel.getHeadingId}
-              value={body}
-            />
-          ) : null}
-        </article>
-        <PostSidebar
-          dataAttribute={blogPostSettingsDataAttribute}
-          sidebar={blogPostSidebar}
-        />
+      <div className="container" data-post-layout={layoutName}>
+        <div className="mx-auto max-w-3xl">
+          {bodyModel.showTableOfContents && (
+            <PostTableOfContentsRail headings={bodyModel.headings} />
+          )}
+          <article>
+            {body.length ? (
+              <RichTextContent
+                dataSanity={bodyDataAttribute}
+                getHeadingId={bodyModel.getHeadingId}
+                value={body}
+              />
+            ) : null}
+          </article>
+        </div>
       </div>
+      <PostSidebar
+        dataAttribute={blogPostSettingsDataAttribute}
+        sidebar={blogPostSidebar}
+      />
     </section>
   );
 }
@@ -166,7 +161,11 @@ export function RootContentView({
   stega: boolean;
 }) {
   return content._type === "post" ? (
-    <PostContent blogPostSidebar={blogPostSidebar} post={content} stega={stega} />
+    <PostContent
+      blogPostSidebar={blogPostSidebar}
+      post={content}
+      stega={stega}
+    />
   ) : (
     <PageContent page={content} perspective={perspective} stega={stega} />
   );

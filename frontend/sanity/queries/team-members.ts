@@ -5,8 +5,6 @@ import { imageQuery } from "./shared/image";
 // @sanity-typegen-ignore
 export const teamMembersQuery = groq`
   _type == "teamMembers" => {
-    useCreamBackground,
-    eyebrow,
     title,
     richText[]{
       ${bodyQuery}

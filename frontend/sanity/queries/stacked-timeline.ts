@@ -5,8 +5,6 @@ import { urlInternalHref } from "./shared/internal-href";
 // @sanity-typegen-ignore
 export const stackedTimelineQuery = groq`
   _type == "stackedTimeline" => {
-    useAlternateBackground,
-    eyebrow,
     title,
     intro,
     "buttons": array::compact(buttons[]{

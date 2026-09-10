@@ -89,7 +89,9 @@ describe("RootContentView", () => {
     const { rerender } = render(
       <RootContentView content={page} perspective="published" stega={false} />,
     );
-    expect(screen.queryByRole("complementary", { name: "Post actions" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("complementary", { name: "Post actions" }),
+    ).not.toBeInTheDocument();
 
     rerender(
       <RootContentView
@@ -119,12 +121,18 @@ describe("RootContentView", () => {
       />,
     );
 
-    const layout = container.querySelector('[data-post-layout="two-column"]');
-    expect(screen.queryByRole("navigation", { name: "Table of Contents" })).not.toBeInTheDocument();
-    expect(layout?.querySelector("article")?.nextElementSibling).toHaveAttribute(
-      "aria-label",
-      "Post actions",
+    const layout = container.querySelector(
+      '[data-post-layout="single-column"]',
     );
+    expect(
+      screen.queryByRole("navigation", { name: "Table of Contents" }),
+    ).not.toBeInTheDocument();
+    const article = layout?.querySelector("article");
+    const actions = screen.getByRole("complementary", { name: "Post actions" });
+    expect(
+      (article?.compareDocumentPosition(actions) ?? 0) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   it("shows the table of contents for a heading-rich post", () => {
@@ -145,7 +153,9 @@ describe("RootContentView", () => {
       />,
     );
 
-    expect(screen.getByRole("navigation", { name: "Table of Contents" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "Table of Contents" }),
+    ).toBeInTheDocument();
   });
 
   it("emits exactly one BlogPosting script for posts and none for pages", () => {
@@ -185,7 +195,11 @@ describe("RootContentView", () => {
       ],
     } as unknown as NonNullable<POST_QUERY_RESULT>;
     const { container } = render(
-      <RootContentView content={videoPost} perspective="published" stega={false} />,
+      <RootContentView
+        content={videoPost}
+        perspective="published"
+        stega={false}
+      />,
     );
 
     expect(jsonLdNodesByType(container, "VideoObject")).toHaveLength(1);

@@ -12,9 +12,7 @@ import TeamMembers from "./team-members";
 const paragraph = (key: string, text: string) => ({
   _key: key,
   _type: "block",
-  children: [
-    { _key: `${key}-span`, _type: "span", marks: [], text },
-  ],
+  children: [{ _key: `${key}-span`, _type: "span", marks: [], text }],
   markDefs: [],
   style: "normal",
 });
@@ -39,9 +37,7 @@ describe("core Page Builder sections", () => {
       image: null,
       title: "Clear thinking for complicated work.",
     } as unknown as ComponentProps<typeof Hero>;
-    render(
-      <Hero {...hero} />,
-    );
+    render(<Hero {...hero} />);
 
     expect(
       screen.getByRole("heading", {
@@ -62,9 +58,7 @@ describe("core Page Builder sections", () => {
       richText: [paragraph("story-body", "Details visitors can use.")],
       title: "Built to make the next decision easier.",
     } as unknown as ComponentProps<typeof RichTextBlock>;
-    const { rerender } = render(
-      <RichTextBlock {...richText} />,
-    );
+    const { rerender } = render(<RichTextBlock {...richText} />);
     expect(
       screen.getByRole("heading", {
         name: "Built to make the next decision easier.",
@@ -127,7 +121,7 @@ describe("core Page Builder sections", () => {
         items: ["Reusable", "Neutral"],
         title: "Details",
       },
-      richText: [paragraph("story-copy", "Story context visitors can use.")],
+      description: "Story context visitors can use.",
       title: "Image and text",
     } as unknown as ComponentProps<typeof StoryFeature>;
     rerender(<StoryFeature {...imageAndText} />);
@@ -135,7 +129,10 @@ describe("core Page Builder sections", () => {
     expect(
       screen.getByRole("heading", { name: "Image and text" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Reusable")).toBeInTheDocument();
+    expect(screen.queryByText("Reusable")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Story context visitors can use."),
+    ).toBeInTheDocument();
 
     const faqSection = {
       _key: "faq",
@@ -183,10 +180,9 @@ describe("core Page Builder sections", () => {
     rerender(<TeamMembers {...team} />);
 
     expect(screen.getByRole("heading", { name: "Team" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Avery Stone" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Email Avery" })).toHaveAttribute(
-      "href",
-      "mailto:hello@example.com",
-    );
+    expect(
+      screen.getByRole("heading", { name: "Avery Stone" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Founder")).toBeInTheDocument();
   });
 });

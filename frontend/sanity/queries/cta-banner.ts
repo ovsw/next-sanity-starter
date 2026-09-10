@@ -1,9 +1,11 @@
+import { imageQuery } from "./shared/image";
 import { groq } from "next-sanity";
 import { urlInternalHref } from "./shared/internal-href";
 
 // @sanity-typegen-ignore
 export const ctaBannerQuery = groq`
   _type == "ctaBanner" => {
+    image { ${imageQuery} },
     title,
     description,
     "buttons": array::compact(buttons[]{

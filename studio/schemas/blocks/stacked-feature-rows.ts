@@ -44,6 +44,13 @@ const row = defineArrayMember({
   type: "object",
   fields: [
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt text", type: "string" })],
+    }),
+    defineField({
       name: "icon",
       title: "Icon",
       type: "object",
@@ -123,23 +130,12 @@ const row = defineArrayMember({
 
 export default defineType({
   name: "stackedFeatureRows",
-  title: "Stacked Feature Rows",
+  title: "Feature Cards",
   type: "object",
   icon: Rows3,
   description:
-    "An introduction followed by full-width rows with supporting points and links.",
+    "A grid of feature cards with images, supporting points, and optional links.",
   fields: [
-    defineField({
-      name: "useAlternateBackground",
-      title: "Use Alternate Background",
-      type: "boolean",
-      initialValue: false,
-    }),
-    defineField({
-      name: "eyebrow",
-      type: "string",
-      description: "Optional short label shown beside the heading.",
-    }),
     defineField({
       name: "title",
       title: "Heading",
@@ -160,7 +156,7 @@ export default defineType({
     prepare: ({ title, rows }) => {
       const count = Array.isArray(rows) ? rows.length : 0;
       return {
-        title: title || "Stacked Feature Rows",
+        title: title || "Feature Cards",
         subtitle: `${count} ${count === 1 ? "row" : "rows"}`,
       };
     },

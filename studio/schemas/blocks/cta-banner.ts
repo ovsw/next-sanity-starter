@@ -28,6 +28,13 @@ export default defineType({
   },
   fields: [
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt text", type: "string" })],
+    }),
+    defineField({
       name: "title",
       type: "string",
       description: "The question or statement that prompts visitors to act.",

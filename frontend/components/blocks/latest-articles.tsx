@@ -1,3 +1,4 @@
+import { PostCard } from "@/components/shadcnblocks/post-card";
 import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
@@ -45,56 +46,47 @@ function ArticleCard({
   fallbackImage,
 }: Readonly<{ article: Article; fallbackImage?: ArticleImage }>) {
   const image = article.image?.asset?._id ? article.image : fallbackImage;
-  const category = (article as Article & {
-    category?: { slug?: { current?: string | null } | null; title?: string | null } | null;
-  }).category;
+  const category = article.category;
   const categoryLabel = stegaClean(category?.title);
   const categoryHref = getCategoryHref(category?.slug?.current);
   const publishedDate = formatPublishedDate(article.publishedAt);
   const title = article.title || "Untitled article";
 
   return (
-    <article>
-      <div>
-        {image?.asset?._id ? (
+    <PostCard
+      title={title}
+      href={getArticleHref(article.slug)}
+      description={article.description}
+      image={
+        image?.asset?._id ? (
           <Image
             alt={image.alt || stegaClean(title)}
-            blurDataURL={image.asset.metadata?.lqip || undefined}
-            height={750}
-            placeholder={image.asset.metadata?.lqip ? "blur" : undefined}
-            sizes="100vw"
-            src={urlFor(image).width(1200).height(750).url()}
             width={1200}
+            height={800}
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            src={urlFor(image).width(1200).height(800).url()}
           />
-        ) : null}
-        {categoryLabel && categoryHref ? (
-          <Link href={categoryHref}>
-            {categoryLabel}
-          </Link>
-        ) : null}
-      </div>
-      <div>
-        {publishedDate ? (
-          <time
-            dateTime={stegaClean(article.publishedAt) || undefined}
-          >
+        ) : null
+      }
+      category={
+        categoryLabel && categoryHref ? (
+          <Link href={categoryHref}>{categoryLabel}</Link>
+        ) : null
+      }
+      date={
+        publishedDate ? (
+          <time dateTime={stegaClean(article.publishedAt) || undefined}>
             {publishedDate}
           </time>
-        ) : null}
-        <h3>
-          <Link href={getArticleHref(article.slug)}>{title}</Link>
-        </h3>
-        {article.description ? (
-          <p>
-            {article.description}
-          </p>
-        ) : null}
-      </div>
-    </article>
+        ) : null
+      }
+    />
   );
 }
 
-function SectionLink({ button }: Readonly<{ button?: NonNullable<LatestArticlesProps["buttons"]>[number] }>) {
+function SectionLink({
+  button,
+}: Readonly<{ button?: NonNullable<LatestArticlesProps["buttons"]>[number] }>) {
   const href = stegaClean(button?.href);
   if (!href || !button?.text) return null;
 
@@ -120,16 +112,22 @@ export default function LatestArticles({
   if (!articles?.length) return null;
 
   return (
-    <section id="latest-posts">
-      <header>
+    <section className="container py-32" id="latest-posts">
+      <header className="mb-12 space-y-4">
         {eyebrow ? <p>{eyebrow}</p> : null}
-        {title ? <h2>{title}</h2> : null}
+        {title ? (
+          <h2 className="mb-6 text-4xl font-medium md:text-5xl">{title}</h2>
+        ) : null}
         {description ? <p>{description}</p> : null}
         <SectionLink button={buttons?.[0]} />
       </header>
-      <div>
+      <div className="grid gap-4 md:grid-cols-2 lg:gap-6 2xl:grid-cols-3">
         {articles.slice(0, 6).map((article) => (
-          <ArticleCard article={article} fallbackImage={fallbackImage} key={article._id} />
+          <ArticleCard
+            article={article}
+            fallbackImage={fallbackImage}
+            key={article._id}
+          />
         ))}
       </div>
     </section>

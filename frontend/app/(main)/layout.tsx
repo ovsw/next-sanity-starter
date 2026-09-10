@@ -14,7 +14,10 @@ export default async function MainLayout({
 
   return (
     <>
-      <a href="#main-content">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:bg-white focus:p-4"
+      >
         Skip to content
       </a>
       {isDraftMode ? (
@@ -22,7 +25,9 @@ export default async function MainLayout({
       ) : (
         <CachedHeader perspective="published" stega={false} />
       )}
-      <main id="main-content" tabIndex={-1}>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <SanityLive includeDrafts={isDraftMode} />
       {isDraftMode && (
         <>

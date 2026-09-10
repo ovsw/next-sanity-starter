@@ -1,3 +1,4 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { siteUrl } from "@/lib/site-url";
 import { siteName } from "@/lib/site-name";

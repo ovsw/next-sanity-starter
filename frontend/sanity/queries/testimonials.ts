@@ -5,8 +5,6 @@ import { simpleRichTextQuery } from "./shared/simple-rich-text";
 // @sanity-typegen-ignore
 export const testimonialsQuery = groq`
   _type == "testimonials" => {
-    useAlternateBackground,
-    eyebrow,
     title,
     testimonials[]{
       _key,

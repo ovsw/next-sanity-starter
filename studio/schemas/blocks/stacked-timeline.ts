@@ -18,7 +18,7 @@ const item = defineArrayMember({
       title: "Small label",
       type: "string",
       description:
-        "Optional. Shown as written beside the number, e.g. 10:00 am or 1975.",
+        "Optional. Shown above the card heading, e.g. 10:00 am or 1975.",
     }),
     defineField({
       name: "text",
@@ -68,19 +68,8 @@ export default defineType({
   type: "object",
   icon: ListOrdered,
   description:
-    "An introduction with up to two actions beside numbered cards, in order. Everything stacks on phones.",
+    "An introduction with up to two actions beside milestone cards, in order. Everything stacks on phones.",
   fields: [
-    defineField({
-      name: "useAlternateBackground",
-      title: "Use Alternate Background",
-      type: "boolean",
-      initialValue: false,
-    }),
-    defineField({
-      name: "eyebrow",
-      type: "string",
-      description: "Optional short label shown above the heading.",
-    }),
     defineField({
       name: "title",
       title: "Heading",

@@ -11,6 +11,13 @@ const benefitCard = defineArrayMember({
   type: "object",
   fields: [
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt text", type: "string" })],
+    }),
+    defineField({
       name: "icon",
       title: "Icon",
       type: "object",
@@ -22,7 +29,12 @@ const benefitCard = defineArrayMember({
         defineField({ name: "name", title: "Name", type: "string" }),
         // The icon's SVG markup, captured at pick time so the frontend can
         // render it without bundling the full Lucide icon set.
-        defineField({ name: "svg", title: "SVG markup", type: "string", hidden: true }),
+        defineField({
+          name: "svg",
+          title: "SVG markup",
+          type: "string",
+          hidden: true,
+        }),
       ],
       validation: (rule) =>
         rule.custom((value) => {
@@ -67,62 +79,13 @@ export default defineType({
   title: "Feature Grid",
   type: "object",
   icon: LayoutGrid,
-  description:
-    "A reusable grid for features, services, reasons, or benefits.",
-  initialValue: {
-    eyebrow: "Highlights",
-    title: "Useful features for common marketing pages.",
-    intro:
-      "Replace this sample with a short explanation of what these items help visitors understand.",
-    cards: [
-      {
-        _key: "starter-feature-one",
-        _type: "featureGridItem",
-        title: "Clear content structure",
-        body: [
-          {
-            _key: "starter-feature-one-body",
-            _type: "block",
-            children: [
-              {
-                _key: "starter-feature-one-span",
-                _type: "span",
-                marks: [],
-                text: "Explain one reusable strength, service, or outcome.",
-              },
-            ],
-            markDefs: [],
-            style: "normal",
-          },
-        ],
-      },
-    ],
-  },
+  description: "A reusable grid for features, services, reasons, or benefits.",
   fields: [
-    defineField({
-      name: "useCreamBackground",
-      title: "Use Alternate Background",
-      type: "boolean",
-      description:
-        "Turn on to separate this section from the surrounding page content.",
-      initialValue: false,
-    }),
-    defineField({
-      name: "eyebrow",
-      type: "string",
-      description: "Optional text shown above the section title",
-    }),
     defineField({
       name: "title",
       type: "string",
       description: "The main heading for the feature grid.",
       validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "intro",
-      type: "text",
-      rows: 4,
-      description: "Optional paragraph shown under the section heading",
     }),
     defineField({
       name: "cards",

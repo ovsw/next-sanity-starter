@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
+  STARTER_ASSETS,
   STARTER_DOCUMENT_TYPES,
   STARTER_IMAGE_ASSET_ID,
   seed,
@@ -25,7 +26,11 @@ function createFakeClient({
     assets: {
       async upload(type, body, options) {
         calls.uploads.push({ body, options, type });
-        return { _id: STARTER_IMAGE_ASSET_ID };
+        return {
+          _id: STARTER_ASSETS.find(
+            (asset) => options.filename === `starter-${asset.name}.png`,
+          ).id,
+        };
       },
     },
     async fetch(query) {
@@ -60,7 +65,7 @@ test("seed writes only after confirming the dataset is empty", async () => {
   const result = await seed(client);
 
   assert.equal(result.documents, STARTER_DOCUMENT_TYPES.size);
-  assert.equal(client.calls.uploads.length, 1);
+  assert.equal(client.calls.uploads.length, STARTER_ASSETS.length);
   assert.equal(client.calls.commits.length, 1);
   assert.deepEqual(
     client.calls.commits[0].map((operation) => operation.document._id),
@@ -87,15 +92,15 @@ test("unseed deletes marked starter IDs and preserves unrelated documents", asyn
   const deletedIds = client.calls.commits[0].map((operation) => operation.id);
 
   assert.deepEqual(result, {
-    assets: 2,
+    assets: STARTER_ASSETS.length,
     documents: STARTER_DOCUMENT_TYPES.size,
   });
   assert.deepEqual(deletedIds, [
     ...STARTER_DOCUMENT_TYPES.keys(),
-    STARTER_IMAGE_ASSET_ID,
-    "image-extra-owned",
+    ...STARTER_ASSETS.map((asset) => asset.id),
   ]);
   assert.equal(deletedIds.includes("unrelated-document"), false);
+  assert.equal(deletedIds.includes("image-extra-owned"), false);
 });
 
 test("unseed refuses unmarked starter IDs", async () => {
@@ -106,10 +111,7 @@ test("unseed refuses unmarked starter IDs", async () => {
   );
   const client = createFakeClient({ documents });
 
-  await assert.rejects(
-    unseed(client),
-    /homePage/,
-  );
+  await assert.rejects(unseed(client), /homePage/);
   assert.equal(client.calls.commits.length, 0);
 });
 
@@ -128,4 +130,25 @@ test("seed reads Studio env directly instead of the legacy root env file", () =>
 
   assert.doesNotMatch(source, /rootDirectory,\s*"\.env\.local"/);
   assert.match(source, /rootDirectory,\s*"studio",\s*"\.env\.local"/);
+});
+
+test("seed covers every section and uses only the bundled PNG assets", async () => {
+  const { pageBuilderBlockTypes } =
+    await import("../schemas/blocks/page-builder.ts");
+  const blocks = starterDocuments.flatMap((document) => document.blocks ?? []);
+  assert.deepEqual(
+    new Set(blocks.map((block) => block._type)),
+    new Set(pageBuilderBlockTypes),
+  );
+  const assets = new Set(STARTER_ASSETS.map((asset) => asset.id));
+  function check(value) {
+    if (!value || typeof value !== "object") return;
+    if (value._type === "image") assert.ok(assets.has(value.asset._ref));
+    for (const child of Object.values(value)) check(child);
+  }
+  check(starterDocuments);
+  const story = blocks.find((block) => block._type === "storyFeature");
+  assert.ok(story.description);
+  assert.equal(story.richText, undefined);
+  assert.equal(story.keyDetails, undefined);
 });

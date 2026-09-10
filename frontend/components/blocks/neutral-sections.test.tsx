@@ -57,10 +57,12 @@ describe("neutral Page Builder sections", () => {
     expect(
       screen.getByRole("heading", { name: "What people say" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "What people say" })).toHaveAttribute("data-alternate", "true");
+    expect(
+      screen.getByRole("region", { name: "What people say" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: "Customer quotes" }),
-    ).toHaveAttribute("tabindex", "0");
+    ).not.toHaveAttribute("tabindex");
     const quotes = container.querySelectorAll("blockquote");
     expect(quotes).toHaveLength(2);
     expect(quotes[0]).toHaveTextContent("Clear and useful.");
@@ -70,7 +72,9 @@ describe("neutral Page Builder sections", () => {
       "data-sanity",
       "avery:name",
     );
-    expect(screen.getByLabelText("Rated 4.5 out of 5")).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Rated 4.5 out of 5"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Empty quote")).not.toBeInTheDocument();
   });
 

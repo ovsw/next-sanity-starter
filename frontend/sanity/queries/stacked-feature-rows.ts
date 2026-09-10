@@ -1,3 +1,4 @@
+import { imageQuery } from "./shared/image";
 import { groq } from "next-sanity";
 import { urlInternalHref } from "./shared/internal-href";
 import { simpleRichTextQuery } from "./shared/simple-rich-text";
@@ -5,10 +6,9 @@ import { simpleRichTextQuery } from "./shared/simple-rich-text";
 // @sanity-typegen-ignore
 export const stackedFeatureRowsQuery = groq`
   _type == "stackedFeatureRows" => {
-    useAlternateBackground,
-    eyebrow,
     title,
     "rows": array::compact(rows[]{
+      image { ${imageQuery} },
       _key,
       "icon": icon{ name, svg },
       title,
