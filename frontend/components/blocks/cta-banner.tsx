@@ -27,6 +27,9 @@ export default function CtaBanner({
   if (!title) return null;
 
   const titleId = `cta-banner-${stegaClean(_key)}-title`;
+  const visibleButtons = (buttons ?? []).filter(
+    (button) => getSafeLinkHref(button.href) && button.text,
+  );
 
   return (
     <section className="py-32" aria-labelledby={titleId}>
@@ -50,12 +53,12 @@ export default function CtaBanner({
                 </p>
               ) : null}
             </div>
-            {buttons?.length ? (
+            {visibleButtons.length ? (
               <div
                 className="mt-8 flex flex-wrap gap-2"
                 data-sanity={dataAttribute?.("buttons")}
               >
-                {buttons.slice(0, 2).map((button) => {
+                {visibleButtons.slice(0, 2).map((button) => {
                   const href = getSafeLinkHref(button.href);
                   if (!href || !button.text) return null;
                   return (

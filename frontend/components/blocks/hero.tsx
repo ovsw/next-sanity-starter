@@ -28,6 +28,9 @@ export default function Hero({
   title,
 }: HeroProps) {
   const cleanTitle = stegaClean(title)?.trim();
+  const visibleButtons = (buttons ?? []).filter(
+    (button) => getSafeLinkHref(button.href) && button.text,
+  );
   if (!cleanTitle) return null;
 
   const titleId = `hero-${stegaClean(_key)}-title`;
@@ -60,12 +63,12 @@ export default function Hero({
                 <PortableTextRenderer value={body} />
               </div>
             ) : null}
-            {buttons?.length ? (
+            {visibleButtons.length ? (
               <div
                 className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start"
                 data-sanity={dataAttribute?.("buttons")}
               >
-                {buttons.slice(0, 2).map((button, index) => {
+                {visibleButtons.map((button, index) => {
                   const href = getSafeLinkHref(button.href);
                   if (!href || !button.text) return null;
                   return (

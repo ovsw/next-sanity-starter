@@ -194,8 +194,8 @@ export type TeamMembers = {
       _type: "span";
       _key: string;
     }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
+    style?: "normal";
+    listItem?: never;
     markDefs?: Array<{
       href?: string;
       _type: "link";
@@ -1627,16 +1627,8 @@ export type BLOG_INDEX_QUERY_RESULT =
                 _type: "span";
                 _key: string;
               }>;
-              style?:
-                | "blockquote"
-                | "h1"
-                | "h2"
-                | "h3"
-                | "h4"
-                | "h5"
-                | "h6"
-                | "normal";
-              listItem?: "bullet" | "number";
+              style?: "normal";
+              listItem?: never;
               markDefs: Array<{
                 href?: string;
                 _type: "link";
@@ -2322,16 +2314,8 @@ export type BLOG_INDEX_QUERY_RESULT =
                 _type: "span";
                 _key: string;
               }>;
-              style?:
-                | "blockquote"
-                | "h1"
-                | "h2"
-                | "h3"
-                | "h4"
-                | "h5"
-                | "h6"
-                | "normal";
-              listItem?: "bullet" | "number";
+              style?: "normal";
+              listItem?: never;
               markDefs: Array<{
                 href?: string;
                 _type: "link";
@@ -2979,16 +2963,8 @@ export type BLOG_INDEX_QUERY_RESULT =
                 _type: "span";
                 _key: string;
               }>;
-              style?:
-                | "blockquote"
-                | "h1"
-                | "h2"
-                | "h3"
-                | "h4"
-                | "h5"
-                | "h6"
-                | "normal";
-              listItem?: "bullet" | "number";
+              style?: "normal";
+              listItem?: never;
               markDefs: Array<{
                 href?: string;
                 _type: "link";
@@ -3932,9 +3908,8 @@ export type HOME_PAGE_QUERY_RESULT = {
             _type: "span";
             _key: string;
           }>;
-          style?:
-            "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-          listItem?: "bullet" | "number";
+          style?: "normal";
+          listItem?: never;
           markDefs: Array<{
             href?: string;
             _type: "link";
@@ -4650,9 +4625,8 @@ export type PAGE_QUERY_RESULT = {
             _type: "span";
             _key: string;
           }>;
-          style?:
-            "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-          listItem?: "bullet" | "number";
+          style?: "normal";
+          listItem?: never;
           markDefs: Array<{
             href?: string;
             _type: "link";

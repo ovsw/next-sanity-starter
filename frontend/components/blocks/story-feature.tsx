@@ -19,14 +19,17 @@ function StoryButtons({
   buttons,
   dataAttribute,
 }: Readonly<Pick<StoryFeatureProps, "buttons" | "dataAttribute">>) {
-  if (!buttons?.length) return null;
+  const visibleButtons = (buttons ?? []).filter((button) =>
+    getSafeLinkHref(button.href),
+  );
+  if (!visibleButtons.length) return null;
 
   return (
     <div
       className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start"
       data-sanity={dataAttribute?.("buttons")}
     >
-      {buttons.slice(0, 1).map((button, index) => {
+      {visibleButtons.slice(0, 1).map((button, index) => {
         const href = getSafeLinkHref(button.href);
         const label = button.text || "Continue";
 

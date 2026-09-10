@@ -473,45 +473,6 @@ export const starterDocuments = [
         ],
       },
       {
-        _key: "starter-home-testimonials",
-        _type: "testimonials",
-        title: "What readers say",
-        eyebrow: "Feedback",
-        testimonials: [{ _key: "starter-quote-ref", ...ref("starter-testimonial-reader") }],
-      },
-      {
-        _key: "starter-home-feature-rows",
-        _type: "stackedFeatureRows",
-        title: "Build with clear steps",
-        rows: [
-          {
-            _key: "starter-feature-edit",
-            _type: "stackedFeatureRow",
-            title: "Edit your content",
-            items: [{ _key: "starter-feature-edit-point", _type: "stackedFeatureRowItem", body: simpleText("starter-feature-edit-copy", "Choose the sections that fit your page and put them in order.") }],
-            link: { text: "Open Blog", url: internalUrl("blogIndex") },
-          },
-          {
-            _key: "starter-feature-review",
-            _type: "stackedFeatureRow",
-            title: "Review before publishing",
-            items: [{ _key: "starter-feature-review-point", _type: "stackedFeatureRowItem", body: simpleText("starter-feature-review-copy", "Check the draft on desktop and phone before you publish.") }],
-          },
-        ],
-      },
-      {
-        _key: "starter-home-timeline",
-        _type: "stackedTimeline",
-        title: "From first draft to launch",
-        intro: "A simple example process. Replace it with your own steps.",
-        items: [
-          { _key: "starter-timeline-plan", _type: "stackedTimelineItem", title: "Plan", meta: "Step one", text: "Choose the audience and purpose of each page.", image: imageRef },
-          { _key: "starter-timeline-write", _type: "stackedTimelineItem", title: "Write", text: "Add useful text and clear images." },
-          { _key: "starter-timeline-review", _type: "stackedTimelineItem", title: "Review", text: "Check links, content, and page layout before launch." },
-        ],
-        buttons: [button("starter-timeline-action", "View About", "starter-page-about")],
-      },
-      {
         _key: "starter-home-faq",
         _type: "faqAccordion",
         title: "Reusable FAQ",

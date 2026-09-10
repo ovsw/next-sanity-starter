@@ -64,7 +64,7 @@ export async function CategoryArchiveRoute({
         siteUrl={siteUrl}
       />
       <PageHeading
-        title={category.title}
+        title={title}
         description={category.description}
         titleAttribute={fieldDataAttribute?.("title")}
         descriptionAttribute={fieldDataAttribute?.("description")}

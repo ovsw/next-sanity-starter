@@ -109,7 +109,7 @@ export default function StackedTimeline({
                         fill
                         alt={stegaClean(item.image.alt) || ""}
                         src={urlFor(item.image).width(1280).height(720).url()}
-                        sizes="(min-width: 1024px) 50vw, 100vw"
+                        sizes="(min-width: 768px) 50vw, 100vw"
                         placeholder={
                           item.image.asset.metadata?.lqip ? "blur" : undefined
                         }

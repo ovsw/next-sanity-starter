@@ -156,7 +156,7 @@ export default defineType({
     prepare: ({ title, rows }) => {
       const count = Array.isArray(rows) ? rows.length : 0;
       return {
-        title: title || "Stacked Feature Rows",
+        title: title || "Feature Cards",
         subtitle: `${count} ${count === 1 ? "row" : "rows"}`,
       };
     },

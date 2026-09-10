@@ -108,7 +108,11 @@ export function LatestPostCard({
       href={postHref}
       title={post.title}
       description={post.excerpt}
-      image={<BlogImage dataAttribute={dataAttribute} post={post} />}
+      image={
+        post.image?.asset?._id ? (
+          <BlogImage dataAttribute={dataAttribute} post={post} />
+        ) : undefined
+      }
       titleAttribute={dataAttribute?.("title")}
       descriptionAttribute={dataAttribute?.("excerpt")}
       date={
