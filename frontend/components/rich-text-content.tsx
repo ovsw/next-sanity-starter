@@ -1,3 +1,5 @@
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+// Shadcnblocks blogpost1: Typography prose, alert, and native table.
 import {
   PortableText,
   type PortableTextBlockComponent,
@@ -76,7 +78,9 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       <ul className="mb-4 list-outside list-disc space-y-2 pl-6">{children}</ul>
     ),
     number: ({ children }) => (
-      <ol className="mb-4 list-outside list-decimal space-y-2 pl-6">{children}</ol>
+      <ol className="mb-4 list-outside list-decimal space-y-2 pl-6">
+        {children}
+      </ol>
     ),
   },
   marks: {
@@ -137,9 +141,11 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       if (!headerRow) return null;
 
       return (
-        <div className="my-8 overflow-x-auto">
-          <table className="w-full min-w-[40rem] border-collapse text-left text-sm">
-            {value.title ? <caption className="sr-only">{value.title}</caption> : null}
+        <div className="relative my-8 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            {value.title ? (
+              <caption className="sr-only">{value.title}</caption>
+            ) : null}
             <thead>
               <tr>
                 {headerRow.cells.map((cell: string, index: number) => (
@@ -179,10 +185,10 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       if (!(title || body)) return null;
 
       return (
-        <aside className="my-8 border-l-4 border-border pl-5">
-          {title ? <p className="mb-2 font-semibold text-foreground">{title}</p> : null}
-          {body ? <p className="my-0 text-muted-foreground">{body}</p> : null}
-        </aside>
+        <Alert role="note" className="not-prose my-8">
+          {title && <AlertTitle>{title}</AlertTitle>}
+          {body && <AlertDescription>{body}</AlertDescription>}
+        </Alert>
       );
     },
   },
@@ -214,7 +220,7 @@ export default function RichTextContent({
   return (
     <div
       className={cn(
-        "max-w-none text-base leading-7 text-foreground/80 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_a]:font-medium [&_blockquote]:blockquote-accent [&_blockquote]:px-5 [&_blockquote]:py-3 [&_blockquote]:text-foreground [&_figcaption]:text-muted-foreground [&_h2]:mt-12 [&_h2]:border-b [&_h2]:border-border [&_h2]:pb-3 [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-normal [&_h3]:mt-10 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:tracking-normal [&_h4]:mt-8 [&_h4]:text-xl [&_h4]:font-semibold [&_li]:my-2 [&_ol]:my-6 [&_ol]:pl-6 [&_p]:my-5 [&_p]:text-pretty [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:my-6 [&_ul]:pl-6",
+        "prose max-w-none prose-headings:tracking-tight prose-a:text-foreground prose-p:text-muted-foreground prose-img:rounded-lg",
         className,
       )}
       data-sanity={dataSanity}

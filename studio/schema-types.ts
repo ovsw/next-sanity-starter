@@ -8,9 +8,7 @@ import testimonial from "./schemas/documents/testimonial";
 import navigation, {
   navigationSchemaTypes,
 } from "./schemas/documents/navigation";
-import settings, {
-  settingsSchemaTypes,
-} from "./schemas/documents/settings";
+import settings, { settingsSchemaTypes } from "./schemas/documents/settings";
 import teamMember from "./schemas/documents/team-member";
 import blogIndex from "./schemas/documents/blog-index";
 import blogPostSettings from "./schemas/documents/blog-post-settings";
@@ -36,7 +34,6 @@ import {
 } from "./schemas/blocks/shared/blog-post-sidebar";
 // Schema UI objects
 import hero from "./schemas/blocks/hero";
-import hero1 from "./schemas/blocks/hero/hero-1";
 import latestArticles from "./schemas/blocks/latest-articles";
 import faqAccordion from "./schemas/blocks/faq-accordion";
 import storyFeature from "./schemas/blocks/story-feature";
@@ -84,7 +81,6 @@ export const schemaTypes = [
   blogPostSidebar,
   // blocks
   hero,
-  hero1,
   latestArticles,
   faqAccordion,
   storyFeature,

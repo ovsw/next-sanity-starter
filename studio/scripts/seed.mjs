@@ -48,14 +48,29 @@ export const STARTER_SEED = {
   version: 1,
 };
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Neutral workspace placeholder"><rect width="1200" height="800" fill="#f4f1ec"/><rect x="160" y="140" width="880" height="520" rx="24" fill="#ffffff"/><path d="M240 278h420M240 362h720M240 446h540M240 530h320" stroke="#171717" stroke-width="34" stroke-linecap="round"/><circle cx="914" cy="274" r="70" fill="#d6d3cb"/><path d="M824 534c46-90 134-90 180 0" fill="none" stroke="#171717" stroke-width="34" stroke-linecap="round"/></svg>`;
-const svgBuffer = Buffer.from(svg);
-export const STARTER_IMAGE_ASSET_ID = `image-${createHash("sha1").update(svgBuffer).digest("hex")}-1200x800-svg`;
-const imageRef = {
+// Asset IDs derive from the bundled bytes, not from any project's dataset.
+export const STARTER_ASSETS = ["landscape", "square", "avatar"].map((name) => {
+  const buffer = readFileSync(
+    path.join(directory, "seed-assets", `${name}.png`),
+  );
+  const width = buffer.readUInt32BE(16);
+  const height = buffer.readUInt32BE(20);
+  return {
+    name,
+    buffer,
+    id: `image-${createHash("sha1").update(buffer).digest("hex")}-${width}x${height}-png`,
+  };
+});
+export const STARTER_IMAGE_ASSET_ID = STARTER_ASSETS[0].id;
+const placeholder = (name) => ({
   _type: "image",
-  alt: "Neutral placeholder used to test editable image fields.",
-  asset: { _type: "reference", _ref: STARTER_IMAGE_ASSET_ID },
-};
+  alt: "Neutral placeholder image.",
+  asset: {
+    _type: "reference",
+    _ref: STARTER_ASSETS.find((asset) => asset.name === name).id,
+  },
+});
+const imageRef = placeholder("landscape");
 
 const ref = (_ref) => ({ _type: "reference", _ref });
 const slug = (current) => ({ _type: "slug", current });
@@ -120,7 +135,12 @@ export const starterDocuments = [
       addressLines: ["123 Example Street", "Sample City"],
     },
     socialLinks: [
-      { _key: "starter-social", _type: "socialLink", label: "LinkedIn", url: "https://example.com" },
+      {
+        _key: "starter-social",
+        _type: "socialLink",
+        label: "LinkedIn",
+        url: "https://example.com",
+      },
     ],
   },
   {
@@ -129,7 +149,7 @@ export const starterDocuments = [
     ...marker,
     name: "Example Editor",
     slug: slug("example-editor"),
-    image: imageRef,
+    image: placeholder("avatar"),
   },
   {
     _id: "starter-category-notes",
@@ -137,15 +157,22 @@ export const starterDocuments = [
     ...marker,
     title: "Field Notes",
     slug: slug("field-notes"),
-    description: "Short articles that test category archives and article metadata.",
-    meta: meta("Field Notes | Starter Example", "Example category metadata for the Starter seed."),
+    description:
+      "Short articles that test category archives and article metadata.",
+    meta: meta(
+      "Field Notes | Starter Example",
+      "Example category metadata for the Starter seed.",
+    ),
   },
   {
     _id: "starter-faq-getting-started",
     _type: "faq",
     ...marker,
     title: "What should this sample content prove?",
-    body: simpleText("starter-faq-body", "It proves that reusable FAQ entries can be selected and rendered."),
+    body: simpleText(
+      "starter-faq-body",
+      "It proves that reusable FAQ entries can be selected and rendered.",
+    ),
   },
   {
     _id: "starter-team-member-editor",
@@ -155,8 +182,11 @@ export const starterDocuments = [
     role: "Content Editor",
     email: "morgan@example.com",
     phone: "+1 555 0101",
-    image: imageRef,
-    bio: simpleText("starter-team-bio", "Morgan is a neutral profile used to test team sections."),
+    image: placeholder("avatar"),
+    bio: simpleText(
+      "starter-team-bio",
+      "Morgan is a neutral profile used to test team sections.",
+    ),
     sortOrder: 1,
   },
   {
@@ -165,8 +195,11 @@ export const starterDocuments = [
     ...marker,
     name: "Example Reader",
     title: "Seed content reviewer",
-    image: imageRef,
-    body: simpleText("starter-testimonial-body", "The sample content made every editing surface easy to find."),
+    image: placeholder("avatar"),
+    body: simpleText(
+      "starter-testimonial-body",
+      "The sample content made every editing surface easy to find.",
+    ),
     rating: 5,
   },
   {
@@ -183,28 +216,48 @@ export const starterDocuments = [
         eyebrow: "Page",
         title: "A normal routed page",
         richText: [
-          block("starter-page-copy", "This page proves normal page routing and rich text rendering."),
+          block(
+            "starter-page-copy",
+            "This page proves normal page routing and rich text rendering.",
+          ),
           {
             _key: "starter-page-table",
             _type: "table",
             title: "Simple comparison",
             rows: [
-              { _key: "starter-table-row-1", _type: "tableRow", cells: ["Field", "Purpose"] },
-              { _key: "starter-table-row-2", _type: "tableRow", cells: ["Slug", "/about/"] },
+              {
+                _key: "starter-table-row-1",
+                _type: "tableRow",
+                cells: ["Field", "Purpose"],
+              },
+              {
+                _key: "starter-table-row-2",
+                _type: "tableRow",
+                cells: ["Slug", "/about/"],
+              },
             ],
           },
-          { _key: "starter-page-callout", _type: "callout", title: "Callout", body: "This tests the callout object." },
+          {
+            _key: "starter-page-callout",
+            _type: "callout",
+            title: "Callout",
+            body: "This tests the callout object.",
+          },
         ],
       },
       {
         _key: "starter-page-cta",
         _type: "ctaBanner",
+        image: imageRef,
         title: "Ready for the next example?",
         description: "Return to the home page to inspect the full block set.",
         buttons: [button("starter-page-cta-button", "View home", "homePage")],
       },
     ],
-    meta: meta("About | Starter Example", "Example metadata for a normal seeded page."),
+    meta: meta(
+      "About | Starter Example",
+      "Example metadata for a normal seeded page.",
+    ),
   },
   {
     _id: "starter-post-field-guide",
@@ -212,31 +265,48 @@ export const starterDocuments = [
     ...marker,
     title: "Starter Field Guide",
     slug: slug("starter-field-guide"),
-    excerpt: simpleText("starter-post-excerpt", "A short neutral post that tests article lists, sidebars, and structured data."),
+    excerpt: simpleText(
+      "starter-post-excerpt",
+      "A short neutral post that tests article lists, sidebars, and structured data.",
+    ),
     author: ref("starter-author-editor"),
     publishedAt: "2026-01-15T12:00:00.000Z",
     image: { ...imageRef, caption: "Neutral placeholder image." },
     category: ref("starter-category-notes"),
     body: [
-      block("starter-post-intro", "This article proves blog post rendering, author metadata, category links, and the sidebar."),
+      block(
+        "starter-post-intro",
+        "This article proves blog post rendering, author metadata, category links, and the sidebar.",
+      ),
       block("starter-post-heading", "What it covers", "h2"),
-      block("starter-post-body", "It is intentionally short so it can be deleted once real project content exists."),
+      block(
+        "starter-post-body",
+        "It is intentionally short so it can be deleted once real project content exists.",
+      ),
     ],
-    meta: meta("Starter Field Guide | Starter Example", "Example metadata for a seeded blog post."),
+    meta: meta(
+      "Starter Field Guide | Starter Example",
+      "Example metadata for a seeded blog post.",
+    ),
   },
   {
     _id: "blogPostSettings",
     _type: "blogPostSettings",
     ...marker,
     title: "Need a next step?",
-    description: "Use this shared panel to point readers toward a relevant action.",
+    description:
+      "Use this shared panel to point readers toward a relevant action.",
     actions: [
       {
         _key: "starter-sidebar-action",
         _type: "blogPostSidebarAction",
         title: "Explore the sample page",
         description: "Confirms internal links from the blog sidebar.",
-        button: { _type: "button", text: "Open About", url: internalUrl("starter-page-about") },
+        button: {
+          _type: "button",
+          text: "Open About",
+          url: internalUrl("starter-page-about"),
+        },
       },
     ],
   },
@@ -246,24 +316,11 @@ export const starterDocuments = [
     ...marker,
     title: "Blog",
     description: "Example articles for testing the Starter blog.",
-    blocks: [
-      {
-        _key: "starter-blog-rich-text",
-        _type: "richTextBlock",
-        eyebrow: "Blog",
-        title: "Blog index introduction",
-        richText: simpleText("starter-blog-copy", "This block proves the Blog index can carry editable page sections."),
-      },
-      {
-        _key: "starter-blog-latest",
-        _type: "latestArticles",
-        eyebrow: "Latest",
-        title: "Latest posts",
-        description: "This section renders the seeded post and category link.",
-        fallbackImage: imageRef,
-      },
-    ],
-    meta: meta("Blog | Starter Example", "Example metadata for the seeded Blog index."),
+    blocks: [],
+    meta: meta(
+      "Blog | Starter Example",
+      "Example metadata for the seeded Blog index.",
+    ),
   },
   {
     _id: "homePage",
@@ -277,45 +334,143 @@ export const starterDocuments = [
         _type: "hero",
         eyebrow: "Starter seed",
         title: "Neutral sample content for a clean project.",
-        body: simpleText("starter-hero-body", "Use this optional seed to inspect the editing model, then remove it before adding real content."),
+        body: simpleText(
+          "starter-hero-body",
+          "Use this optional seed to inspect the editing model, then remove it before adding real content.",
+        ),
         buttons: [
-          button("starter-hero-primary", "Read the guide", "starter-post-field-guide"),
-          button("starter-hero-secondary", "View About", "starter-page-about", "secondary"),
+          button(
+            "starter-hero-primary",
+            "Read the guide",
+            "starter-post-field-guide",
+          ),
+          button(
+            "starter-hero-secondary",
+            "View About",
+            "starter-page-about",
+            "secondary",
+          ),
         ],
         image: imageRef,
       },
       {
         _key: "starter-home-benefits",
         _type: "benefitCards",
-        eyebrow: "Sections",
         title: "Reusable sections are ready to edit.",
-        intro: "These cards prove list rendering and icon-free cards.",
         cards: [
-          { _key: "starter-benefit-1", _type: "featureGridItem", title: "Structured pages", body: simpleText("starter-benefit-body-1", "Pages use reusable blocks that can be reordered.") },
-          { _key: "starter-benefit-2", _type: "featureGridItem", title: "Reusable references", body: simpleText("starter-benefit-body-2", "FAQ and team sections pull from shared documents.") },
+          {
+            _key: "starter-benefit-1",
+            _type: "featureGridItem",
+            image: placeholder("square"),
+            title: "Structured pages",
+            body: simpleText(
+              "starter-benefit-body-1",
+              "Pages use reusable blocks that can be reordered.",
+            ),
+          },
+          {
+            _key: "starter-benefit-2",
+            _type: "featureGridItem",
+            image: placeholder("square"),
+            title: "Reusable references",
+            body: simpleText(
+              "starter-benefit-body-2",
+              "FAQ and team sections pull from shared documents.",
+            ),
+          },
         ],
       },
       {
         _key: "starter-home-story",
         _type: "storyFeature",
-        eyebrow: "Image and text",
         title: "A required image field with plain copy.",
-        image: imageRef,
-        imageCaption: "The seed uses one neutral placeholder asset.",
-        richText: [
-          block("starter-story-copy", "This section proves image, caption, narrative, details, and buttons."),
-          block("starter-story-quote", "Seed content is useful only until real content is ready.", "blockquote"),
-        ],
-        keyDetails: { _type: "object", title: "Includes", items: ["Image", "Caption", "Details"] },
+        image: placeholder("square"),
+        description:
+          "Pair a clear message with an image and a useful next step.",
         buttons: [button("starter-story-button", "Open Blog", "blogIndex")],
+      },
+      {
+        _key: "starter-home-timeline",
+        _type: "stackedTimeline",
+        title: "A clear path from idea to launch.",
+        intro: "Use these milestones to explain how your process works.",
+        items: [
+          {
+            _key: "discover",
+            _type: "stackedTimelineItem",
+            title: "Discover",
+            meta: "Step 1",
+            text: "Agree on the goals and the content your visitors need.",
+            image: imageRef,
+          },
+          {
+            _key: "create",
+            _type: "stackedTimelineItem",
+            title: "Create",
+            meta: "Step 2",
+            text: "Build the pages, review the details, and prepare to launch.",
+            image: imageRef,
+          },
+        ],
+      },
+      {
+        _key: "starter-home-features",
+        _type: "stackedFeatureRows",
+        title: "Useful details, easy to find.",
+        rows: [
+          {
+            _key: "pages",
+            _type: "stackedFeatureRow",
+            title: "Build your pages",
+            image: placeholder("square"),
+            items: [
+              {
+                _key: "pages-copy",
+                _type: "stackedFeatureRowItem",
+                body: simpleText(
+                  "pages-body",
+                  "Choose sections and arrange them to suit your content.",
+                ),
+              },
+            ],
+          },
+          {
+            _key: "publish",
+            _type: "stackedFeatureRow",
+            title: "Review and publish",
+            image: placeholder("square"),
+            items: [
+              {
+                _key: "publish-copy",
+                _type: "stackedFeatureRowItem",
+                body: simpleText(
+                  "publish-body",
+                  "Preview each page before you share it with your visitors.",
+                ),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        _key: "starter-home-testimonials",
+        _type: "testimonials",
+        title: "A reader's perspective",
+        testimonials: [
+          { _key: "reader", ...ref("starter-testimonial-reader") },
+        ],
       },
       {
         _key: "starter-home-team",
         _type: "teamMembers",
-        eyebrow: "People",
         title: "Team member reference",
-        richText: simpleText("starter-team-copy", "This section proves selected team profiles."),
-        members: [{ _key: "starter-team-ref", ...ref("starter-team-member-editor") }],
+        richText: simpleText(
+          "starter-team-copy",
+          "This section proves selected team profiles.",
+        ),
+        members: [
+          { _key: "starter-team-ref", ...ref("starter-team-member-editor") },
+        ],
       },
       {
         _key: "starter-home-testimonials",
@@ -359,55 +514,111 @@ export const starterDocuments = [
       {
         _key: "starter-home-faq",
         _type: "faqAccordion",
-        eyebrow: "FAQ",
         title: "Reusable FAQ",
-        subtitle: "Selected FAQ documents render here.",
-        faqs: [{ _key: "starter-faq-ref", ...ref("starter-faq-getting-started") }],
-        link: {
-          _type: "object",
-          title: "Read the guide",
-          description: "Internal link proof.",
-          url: internalUrl("starter-post-field-guide"),
-        },
+        faqs: [
+          { _key: "starter-faq-ref", ...ref("starter-faq-getting-started") },
+        ],
       },
       {
         _key: "starter-home-latest",
         _type: "latestArticles",
         eyebrow: "Publishing",
         title: "Latest articles",
-        description: "This block proves the seeded post appears in article lists.",
-        buttons: [button("starter-latest-button", "Open Blog", "blogIndex", "outline")],
+        description:
+          "This block proves the seeded post appears in article lists.",
+        buttons: [
+          button("starter-latest-button", "Open Blog", "blogIndex", "outline"),
+        ],
         fallbackImage: imageRef,
       },
       {
         _key: "starter-home-cta",
         _type: "ctaBanner",
+        image: imageRef,
         title: "Remove the seed when real content starts.",
-        description: "The unseed command removes only marked Starter sample records.",
-        buttons: [button("starter-home-cta-button", "Open About", "starter-page-about")],
+        description:
+          "The unseed command removes only marked Starter sample records.",
+        buttons: [
+          button("starter-home-cta-button", "Open About", "starter-page-about"),
+        ],
       },
     ],
-    meta: meta("Starter Example | Starter Example", "Neutral Starter seed content for testing page rendering and metadata."),
+    meta: meta(
+      "Starter Example | Starter Example",
+      "Neutral Starter seed content for testing page rendering and metadata.",
+    ),
   },
   {
     _id: "navigation",
     _type: "navigation",
     ...marker,
     items: [
-      { _key: "starter-nav-home", _type: "navigationLink", label: "Home", destination: { _type: "navigationDestination", kind: "internal", internal: ref("homePage"), openInNewTab: false } },
-      { _key: "starter-nav-about", _type: "navigationLink", label: "About", destination: { _type: "navigationDestination", kind: "internal", internal: ref("starter-page-about"), openInNewTab: false } },
+      {
+        _key: "starter-nav-home",
+        _type: "navigationLink",
+        label: "Home",
+        destination: {
+          _type: "navigationDestination",
+          kind: "internal",
+          internal: ref("homePage"),
+          openInNewTab: false,
+        },
+      },
+      {
+        _key: "starter-nav-about",
+        _type: "navigationLink",
+        label: "About",
+        destination: {
+          _type: "navigationDestination",
+          kind: "internal",
+          internal: ref("starter-page-about"),
+          openInNewTab: false,
+        },
+      },
       {
         _key: "starter-nav-resources",
         _type: "navigationGroup",
         label: "Resources",
         links: [
-          { _key: "starter-nav-blog", _type: "navigationChildLink", label: "Blog", description: "Article index", destination: { _type: "navigationDestination", kind: "internal", internal: ref("blogIndex"), openInNewTab: false } },
-          { _key: "starter-nav-category", _type: "navigationChildLink", label: "Field Notes", description: "Category archive", destination: { _type: "navigationDestination", kind: "internal", internal: ref("starter-category-notes"), openInNewTab: false } },
+          {
+            _key: "starter-nav-blog",
+            _type: "navigationChildLink",
+            label: "Blog",
+            description: "Article index",
+            destination: {
+              _type: "navigationDestination",
+              kind: "internal",
+              internal: ref("blogIndex"),
+              openInNewTab: false,
+            },
+          },
+          {
+            _key: "starter-nav-category",
+            _type: "navigationChildLink",
+            label: "Field Notes",
+            description: "Category archive",
+            destination: {
+              _type: "navigationDestination",
+              kind: "internal",
+              internal: ref("starter-category-notes"),
+              openInNewTab: false,
+            },
+          },
         ],
       },
     ],
     actions: [
-      { _key: "starter-nav-action", _type: "navigationAction", label: "Read guide", destination: { _type: "navigationDestination", kind: "internal", internal: ref("starter-post-field-guide"), openInNewTab: false } },
+      {
+        _key: "starter-nav-action",
+        _type: "navigationAction",
+        label: "Read guide",
+        destination: {
+          _type: "navigationDestination",
+          kind: "internal",
+          internal: ref("starter-post-field-guide"),
+          openInNewTab: false,
+        },
+      },
     ],
   },
   {
@@ -421,14 +632,32 @@ export const starterDocuments = [
         _type: "footerColumn",
         heading: "Content",
         links: [
-          { _key: "starter-footer-home", _type: "footerLink", label: "Home", destination: { _type: "footerDestination", kind: "internal", internal: ref("homePage"), openInNewTab: false } },
-          { _key: "starter-footer-blog", _type: "footerLink", label: "Blog", destination: { _type: "footerDestination", kind: "internal", internal: ref("blogIndex"), openInNewTab: false } },
+          {
+            _key: "starter-footer-home",
+            _type: "footerLink",
+            label: "Home",
+            destination: {
+              _type: "footerDestination",
+              kind: "internal",
+              internal: ref("homePage"),
+              openInNewTab: false,
+            },
+          },
+          {
+            _key: "starter-footer-blog",
+            _type: "footerLink",
+            label: "Blog",
+            destination: {
+              _type: "footerDestination",
+              kind: "internal",
+              internal: ref("blogIndex"),
+              openInNewTab: false,
+            },
+          },
         ],
       },
     ],
-    legalLinks: [
-      { _key: "starter-footer-privacy", _type: "footerLink", label: "Privacy", destination: { _type: "footerDestination", kind: "external", external: "/privacy", openInNewTab: false } },
-    ],
+    legalLinks: [],
     copyrightStartYear: 2026,
     copyrightOwner: "Starter Example",
   },
@@ -476,47 +705,47 @@ async function getStarterDocuments(client) {
 async function assertOwnedSeedSet(client) {
   const documents = await getStarterDocuments(client);
   const foundIds = new Set(documents.map((document) => document._id));
-  const missing = [...STARTER_DOCUMENT_TYPES.keys()].filter((id) => !foundIds.has(id));
+  const missing = [...STARTER_DOCUMENT_TYPES.keys()].filter(
+    (id) => !foundIds.has(id),
+  );
   if (missing.length) {
-    throw new Error(`Unseed refused: missing Starter seed documents: ${missing.join(", ")}.`);
+    throw new Error(
+      `Unseed refused: missing Starter seed documents: ${missing.join(", ")}.`,
+    );
   }
   const unsafe = documents.filter((document) => !assertOwnedDocument(document));
   if (unsafe.length) {
-    throw new Error(`Unseed refused: these IDs are not marked as Starter seed content: ${unsafe.map((document) => document._id).join(", ")}.`);
+    throw new Error(
+      `Unseed refused: these IDs are not marked as Starter seed content: ${unsafe.map((document) => document._id).join(", ")}.`,
+    );
   }
-}
-
-async function getOwnedAssetIds(client) {
-  const ids = await client.fetch(
-    "*[_id in $ids && _starterSeed.name == $name].blocks[].image.asset._ref",
-    { ids: [...STARTER_DOCUMENT_TYPES.keys()], name: STARTER_SEED.name },
-  );
-  return [...new Set([STARTER_IMAGE_ASSET_ID, ...ids].filter(Boolean))];
 }
 
 export async function seed(client) {
   await assertDatasetIsEmpty(client);
-  const asset = await client.assets.upload("image", svgBuffer, {
-    filename: "starter-example.svg",
-    contentType: "image/svg+xml",
-  });
-  const documents = JSON.parse(
-    JSON.stringify(starterDocuments).replaceAll(
-      STARTER_IMAGE_ASSET_ID,
-      asset._id,
-    ),
-  );
+  let serialized = JSON.stringify(starterDocuments);
+  const assetIds = [];
+  for (const source of STARTER_ASSETS) {
+    const asset = await client.assets.upload("image", source.buffer, {
+      filename: `starter-${source.name}.png`,
+      contentType: "image/png",
+    });
+    assetIds.push(asset._id);
+    serialized = serialized.replaceAll(source.id, asset._id);
+  }
+  const documents = JSON.parse(serialized);
   let transaction = client.transaction();
   for (const document of documents) {
     transaction = transaction.createIfNotExists(document);
   }
   await transaction.commit();
-  return { documents: documents.length, assetId: asset._id };
+  return { documents: documents.length, assetIds };
 }
 
 export async function unseed(client) {
   await assertOwnedSeedSet(client);
-  const assetIds = await getOwnedAssetIds(client);
+  // Never delete replacement images uploaded by an editor.
+  const assetIds = STARTER_ASSETS.map((asset) => asset.id);
   let transaction = client.transaction();
   for (const id of [...STARTER_DOCUMENT_TYPES.keys(), ...assetIds]) {
     transaction = transaction.delete(id);
@@ -535,13 +764,18 @@ async function main() {
   }
   if (command === "unseed") {
     const result = await unseed(client);
-    console.log(`Removed ${result.documents} Starter documents and ${result.assets} asset(s).`);
+    console.log(
+      `Removed ${result.documents} Starter documents and ${result.assets} asset(s).`,
+    );
     return;
   }
   throw new Error(`Unknown command: ${command}`);
 }
 
-if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+if (
+  process.argv[1] &&
+  pathToFileURL(process.argv[1]).href === import.meta.url
+) {
   main().catch((error) => {
     console.error(error.message);
     process.exitCode = 1;

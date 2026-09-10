@@ -6,23 +6,8 @@ export default defineType({
   title: "Team Members",
   type: "object",
   icon: UsersRound,
-  description:
-    "A team section that displays selected Team Member documents.",
+  description: "A team section that displays selected Team Member documents.",
   fields: [
-    defineField({
-      name: "useCreamBackground",
-      title: "Use Alternate Background",
-      type: "boolean",
-      description:
-        "Turn on to separate this section from the surrounding page content.",
-      initialValue: false,
-    }),
-    defineField({
-      name: "eyebrow",
-      type: "string",
-      title: "Eyebrow",
-      description: "Optional short label shown above the section title.",
-    }),
     defineField({
       name: "title",
       type: "string",

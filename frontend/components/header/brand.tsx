@@ -1,15 +1,10 @@
 import Image from "next/image";
 import type { HeaderBrandModel, HeaderLogoModel } from "./model";
 
-function Logo({
-  alt,
-  logo,
-}: {
-  alt: string;
-  logo: HeaderLogoModel;
-}) {
+function Logo({ alt, logo }: { alt: string; logo: HeaderLogoModel }) {
   return (
     <Image
+      className="h-8 w-auto max-w-48 object-contain"
       alt={alt}
       height={logo.height}
       priority

@@ -1,85 +1,48 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
-/*
- * Button roles — see DESIGN.md § Components → Buttons.
- *
- * Four variants (primary, outline, copper, ghost/link) and three sizes
- * (default, compact, hero). Buttons are flat at rest and lift on hover; the
- * teal action shadow is an opt-in emphasis flag, not a default.
- * Call sites should not override height, padding, or radius.
- */
+// Standard shadcn button roles. Old CMS values are compatibility aliases only.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-control font-semibold transition-[background-color,border-color,color,box-shadow,translate] motion-base hover:-translate-y-0.5 hover:shadow-interactive-lift disabled:pointer-events-none disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 focus-ring hover:[--focus-ring-keep:var(--shadow-interactive-lift)] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        /* `default` is the CMS's name for the primary role; both are kept so
-           stored Sanity documents keep resolving. See BUTTON_VARIANTS. */
         default:
-          "bg-primary text-primary-foreground hover:bg-accent-hover hover:text-primary-foreground",
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
         primary:
-          "bg-primary text-primary-foreground hover:bg-accent-hover hover:text-primary-foreground",
-        /* `secondary` is the CMS's name for the outline role. */
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
         secondary:
-          "border border-border-strong bg-transparent text-foreground hover:border-primary/30 hover:bg-card hover:text-foreground",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         outline:
-          "border border-border-strong bg-transparent text-foreground hover:border-primary/30 hover:bg-card hover:text-foreground",
-        copper: "bg-copper-600 text-white hover:brightness-110",
-        ghost: "hover:bg-secondary hover:text-secondary-foreground hover:shadow-none",
-        link: "text-primary underline-offset-4 hover:underline hover:shadow-none hover:translate-y-0",
-        destructive: "bg-destructive text-primary-foreground hover:brightness-110",
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        copper:
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
       },
       size: {
-        /* Rare. The one action in a section built around a monumental
-           headline — see the Hero Is Earned rule in DESIGN.md. The larger
-           label matters more than the taller box: at the default 14.5px a
-           button reads as an afterthought beside 66px display type. */
-        hero:
-          "typo-button-lg h-(--control-height-hero) px-(--control-inline-hero) has-[>svg]:px-7",
-        default:
-          "typo-button h-(--control-height) px-(--control-inline) has-[>svg]:px-6",
-        compact:
-          "typo-button h-(--control-height-compact) px-(--control-inline-compact) has-[>svg]:px-4",
-        icon: "typo-button size-11",
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+        compact: "h-8 rounded-md px-3 text-xs",
+        hero: "h-10 rounded-md px-8",
       },
-      /* On dark or photographic surfaces the outline variant needs a light edge. */
-      onDark: {
-        true: "",
-        false: "",
-      },
-      /* Rare. Reserved for the one primary action a page is built around. */
-      emphasis: {
-        true: "shadow-teal-action hover:shadow-teal-action",
-        false: "",
-      },
+      onDark: { true: "", false: "" },
+      emphasis: { true: "", false: "" },
     },
-    compoundVariants: [
-      {
-        variant: ["outline", "secondary"],
-        onDark: true,
-        class:
-          "border-edge-on-dark-strong text-white hover:border-white/45 hover:bg-white/10 hover:text-white",
-      },
-      {
-        variant: "copper",
-        emphasis: true,
-        class:
-          "shadow-[0_14px_40px_-12px_rgb(171_88_45_/_0.35)] hover:shadow-[0_14px_40px_-12px_rgb(171_88_45_/_0.35)]",
-      },
-    ],
     defaultVariants: {
-      variant: "primary",
+      variant: "default",
       size: "default",
       onDark: false,
       emphasis: false,
     },
-  }
+  },
 );
-
 function Button({
   className,
   variant,
@@ -89,18 +52,16 @@ function Button({
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
+  VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "button";
-
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, onDark, emphasis, className }))}
+      className={cn(
+        buttonVariants({ variant, size, onDark, emphasis, className }),
+      )}
       {...props}
     />
   );
 }
-
 export { Button, buttonVariants };

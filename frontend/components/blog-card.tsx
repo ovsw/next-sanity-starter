@@ -1,3 +1,4 @@
+import { PostCard } from "@/components/shadcnblocks/post-card";
 import { categoryPath, postPath } from "@/lib/routes";
 import { dataset, projectId } from "@/sanity/lib/env";
 import { urlFor } from "@/sanity/lib/image";
@@ -79,7 +80,13 @@ export function documentDataAttribute({
     }).toString();
 }
 
-export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean }) {
+export function LatestPostCard({
+  post,
+  stega,
+}: {
+  post: BlogPost;
+  stega: boolean;
+}) {
   const slug = stegaClean(post.slug?.current);
   if (!slug) return null;
   const postHref = postPath(slug);
@@ -88,76 +95,41 @@ export function LatestPostCard({ post, stega }: { post: BlogPost; stega: boolean
   const categoryLabel = stegaClean(category?.title);
   const categorySlug = stegaClean(category?.slug?.current);
   const categoryHref = categoryPath(categorySlug);
-  const dataAttribute = documentDataAttribute({ id: post._id, stega, type: "post" });
+  const dataAttribute = documentDataAttribute({
+    id: post._id,
+    stega,
+    type: "post",
+  });
   const categoryDataAttribute = category
     ? documentDataAttribute({ id: category._id, stega, type: "category" })
     : undefined;
   return (
-    <article>
-      <BlogImage dataAttribute={dataAttribute} post={post} />
-      {categoryLabel && categoryHref ? (
-        <Link
-          data-sanity={categoryDataAttribute?.("title")}
-          href={categoryHref}
-        >
-          {categoryLabel}
-        </Link>
-      ) : null}
-      <div>
-        <PublicationDate dataAttribute={dataAttribute} value={post.publishedAt} />
-        <h3
-          data-sanity={dataAttribute?.("title")}
-        >
-          <Link href={postHref}>{post.title}</Link>
-        </h3>
-        {post.excerpt ? (
-          <p
-            data-sanity={dataAttribute?.("excerpt")}
+    <PostCard
+      href={postHref}
+      title={post.title}
+      description={post.excerpt}
+      image={<BlogImage dataAttribute={dataAttribute} post={post} />}
+      titleAttribute={dataAttribute?.("title")}
+      descriptionAttribute={dataAttribute?.("excerpt")}
+      date={
+        <PublicationDate
+          dataAttribute={dataAttribute}
+          value={post.publishedAt}
+        />
+      }
+      category={
+        categoryLabel && categoryHref ? (
+          <Link
+            data-sanity={categoryDataAttribute?.("title")}
+            href={categoryHref}
           >
-            {post.excerpt}
-          </p>
-        ) : null}
-      </div>
-    </article>
+            {categoryLabel}
+          </Link>
+        ) : null
+      }
+    />
   );
 }
 
-export function RegularPostCard({ post, stega }: { post: BlogPost; stega: boolean }) {
-  const slug = stegaClean(post.slug?.current);
-  if (!slug) return null;
-  const postHref = postPath(slug);
-  if (!postHref) return null;
-  const categoryReference = post.category;
-  const category = stegaClean(categoryReference?.title);
-  const categorySlug = stegaClean(categoryReference?.slug?.current);
-  const categoryHref = categoryPath(categorySlug);
-  const dataAttribute = documentDataAttribute({ id: post._id, stega, type: "post" });
-  const categoryDataAttribute = categoryReference
-    ? documentDataAttribute({ id: categoryReference._id, stega, type: "category" })
-    : undefined;
-  return (
-    <article>
-      <BlogImage dataAttribute={dataAttribute} post={post} />
-      {category && categoryHref ? (
-        <Link data-sanity={categoryDataAttribute?.("title")} href={categoryHref}>
-          {category}
-        </Link>
-      ) : null}
-      <div>
-        <PublicationDate dataAttribute={dataAttribute} value={post.publishedAt} />
-        <h3
-          data-sanity={dataAttribute?.("title")}
-        >
-          <Link href={postHref}>{post.title}</Link>
-        </h3>
-        {post.excerpt ? (
-          <p
-            data-sanity={dataAttribute?.("excerpt")}
-          >
-            {post.excerpt}
-          </p>
-        ) : null}
-      </div>
-    </article>
-  );
-}
+// The archive and latest sections use the same blog1 card.
+export const RegularPostCard = LatestPostCard;

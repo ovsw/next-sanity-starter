@@ -17,21 +17,30 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
     blocksField.of.filter(({ hidden }) => !hidden).map(({ type }) => type),
     [...pageBuilderBlockTypes],
   );
-  assert.deepEqual([...pageBuilderBlockTypes], [
-    "hero",
-    "richTextBlock",
-    "benefitCards",
-    "storyFeature",
-    "latestArticles",
-    "faqAccordion",
-    "teamMembers",
-    "ctaBanner",
-    "testimonials",
-    "stackedFeatureRows",
-    "stackedTimeline",
-  ]);
-  assert.equal(blocksField.of.some(({ hidden }) => hidden), false);
-  assert.equal(new Set(pageBuilderBlockTypes).size, pageBuilderBlockTypes.length);
+  assert.deepEqual(
+    [...pageBuilderBlockTypes],
+    [
+      "hero",
+      "richTextBlock",
+      "benefitCards",
+      "storyFeature",
+      "latestArticles",
+      "faqAccordion",
+      "teamMembers",
+      "ctaBanner",
+      "testimonials",
+      "stackedFeatureRows",
+      "stackedTimeline",
+    ],
+  );
+  assert.equal(
+    blocksField.of.some(({ hidden }) => hidden),
+    false,
+  );
+  assert.equal(
+    new Set(pageBuilderBlockTypes).size,
+    pageBuilderBlockTypes.length,
+  );
 });
 
 test("blogIndex uses the singleton configuration", () => {

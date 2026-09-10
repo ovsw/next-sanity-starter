@@ -79,9 +79,9 @@ test("supports keyboard access on starter routes", async ({ page }) => {
   if (await faqButton.count()) {
     await faqButton.focus();
     await page.keyboard.press("Enter");
-    await expect(faqButton).toHaveAttribute("aria-expanded", "false");
-    await page.keyboard.press("Enter");
     await expect(faqButton).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Enter");
+    await expect(faqButton).toHaveAttribute("aria-expanded", "false");
   }
 });
 

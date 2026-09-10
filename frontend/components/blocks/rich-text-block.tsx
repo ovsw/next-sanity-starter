@@ -1,3 +1,4 @@
+// Shadcnblocks blogpost1: centered prose body.
 import RichTextContent from "@/components/rich-text-content";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import type { PortableTextProps } from "@portabletext/react";
@@ -28,12 +29,13 @@ export default function RichTextBlock({
   if (!(displayEyebrow || displayTitle || richText?.length)) return null;
 
   return (
-    <section aria-labelledby={headingId}>
-      <div>
+    <section className="container pb-24" aria-labelledby={headingId}>
+      <div className="mx-auto max-w-3xl">
         {displayEyebrow || displayTitle ? (
-          <header>
+          <header className="mb-8 space-y-4">
             {displayEyebrow ? (
               <p
+                className="text-sm font-medium text-muted-foreground"
                 data-sanity={dataAttribute?.("eyebrow")}
               >
                 {eyebrow}
@@ -41,6 +43,7 @@ export default function RichTextBlock({
             ) : null}
             {displayTitle ? (
               <h2
+                className="text-3xl font-extrabold tracking-tight"
                 data-sanity={dataAttribute?.("title")}
                 id={headingId}
               >

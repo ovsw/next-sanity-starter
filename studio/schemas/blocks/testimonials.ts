@@ -7,20 +7,8 @@ export default defineType({
   type: "object",
   icon: MessageSquareQuote,
   description:
-    "Quotes from selected Testimonial documents. Three cards on desktop, one card wide with swipe on phones.",
+    "Centered quotes and attribution from selected Testimonial documents.",
   fields: [
-    defineField({
-      name: "useAlternateBackground",
-      title: "Use Alternate Background",
-      type: "boolean",
-      initialValue: false,
-    }),
-    defineField({
-      name: "eyebrow",
-      title: "Eyebrow",
-      type: "string",
-      description: "Short label shown above the heading.",
-    }),
     defineField({
       name: "title",
       title: "Heading",
@@ -50,14 +38,13 @@ export default defineType({
   ],
   preview: {
     select: {
-      eyebrow: "eyebrow",
       title: "title",
       testimonials: "testimonials",
     },
-    prepare: ({ eyebrow, title, testimonials }) => {
+    prepare: ({ title, testimonials }) => {
       const count = Array.isArray(testimonials) ? testimonials.length : 0;
       return {
-        title: title || eyebrow || "Testimonials",
+        title: title || "Testimonials",
         subtitle: `Testimonials · ${count} ${count === 1 ? "quote" : "quotes"}`,
       };
     },

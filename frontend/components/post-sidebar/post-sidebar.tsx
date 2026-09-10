@@ -1,3 +1,11 @@
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+// Shadcnblocks cta3: grouped post actions in a bordered call-to-action section.
+import { buttonVariants } from "@/components/ui/button";
 import { ChevronRight, ExternalLink, Mail, Phone } from "lucide-react";
 import { stegaClean } from "next-sanity";
 import Link from "next/link";
@@ -34,11 +42,16 @@ function ActionLink({
   const dataSanity = dataAttribute?.(`${path}.button.text`);
 
   return isInternal ? (
-    <Link data-sanity={dataSanity} href={href}>
+    <Link
+      className={buttonVariants({ variant: "outline" })}
+      data-sanity={dataSanity}
+      href={href}
+    >
       {children}
     </Link>
   ) : (
     <a
+      className={buttonVariants({ variant: "outline" })}
       data-sanity={dataSanity}
       href={href}
       rel={isHttp && openInNewTab ? "noopener noreferrer" : undefined}
@@ -67,11 +80,13 @@ function SidebarAction({
     "openInNewTab" in action && stegaClean(action.openInNewTab) === true;
 
   return (
-    <p data-sanity={dataAttribute?.(path)}>
+    <div className="space-y-4" data-sanity={dataAttribute?.(path)}>
       {action.description ? (
-        <span data-sanity={dataAttribute?.(`${path}.description`)}>
-          {action.description}
-          {" "}
+        <span
+          className="block text-sm text-muted-foreground"
+          data-sanity={dataAttribute?.(`${path}.description`)}
+        >
+          {action.description}{" "}
         </span>
       ) : null}
       <ActionLink
@@ -83,7 +98,7 @@ function SidebarAction({
         <span>{label}</span>
         {getActionIcon(href, isInternal)}
       </ActionLink>
-    </p>
+    </div>
   );
 }
 
@@ -101,52 +116,79 @@ export function PostSidebar({
 
   return (
     <aside
+      className="container py-32"
       aria-label="Post actions"
       data-sanity={dataAttribute?.("actions")}
     >
-      {sidebar.title || sidebar.description ? (
-        <header>
-          {sidebar.title ? (
-            <h2 data-sanity={dataAttribute?.("title")}>{sidebar.title}</h2>
-          ) : null}
-          {sidebar.description ? (
-            <p data-sanity={dataAttribute?.("description")}>
-              {sidebar.description}
-            </p>
-          ) : null}
-        </header>
-      ) : null}
-      {[leadAction, ...restActions].map((action) => {
-        if (!action) return null;
-        const actionKey = stegaClean(action._key);
-        const actionPath = `actions[_key=="${actionKey}"]`;
-
-        return (
-          <section key={actionKey}>
-            {action.title ? (
-              <h3 data-sanity={dataAttribute?.(`${actionPath}.title`)}>
-                {action.title}
-              </h3>
+      <div className="grid grid-cols-1 gap-10 rounded-lg border p-6 shadow-sm lg:grid-cols-2 lg:px-20 lg:py-16">
+        {sidebar.title || sidebar.description ? (
+          <header>
+            {sidebar.title ? (
+              <h2
+                className="mb-2 text-2xl font-bold lg:text-4xl"
+                data-sanity={dataAttribute?.("title")}
+              >
+                {sidebar.title}
+              </h2>
             ) : null}
-            <SidebarAction
-              action={action}
-              dataAttribute={dataAttribute}
-              path={actionPath}
-            />
-          </section>
-        );
-      })}
+            {sidebar.description ? (
+              <p
+                className="text-muted-foreground"
+                data-sanity={dataAttribute?.("description")}
+              >
+                {sidebar.description}
+              </p>
+            ) : null}
+          </header>
+        ) : null}
+        <div className="flex flex-col gap-4">
+          {[leadAction, ...restActions].map((action) => {
+            if (!action) return null;
+            const actionKey = stegaClean(action._key);
+            const actionPath = `actions[_key=="${actionKey}"]`;
+
+            return (
+              <section className="rounded-xl border px-6 py-4" key={actionKey}>
+                {action.title ? (
+                  <h3
+                    className="mb-2 font-medium"
+                    data-sanity={dataAttribute?.(`${actionPath}.title`)}
+                  >
+                    {action.title}
+                  </h3>
+                ) : null}
+                <SidebarAction
+                  action={action}
+                  dataAttribute={dataAttribute}
+                  path={actionPath}
+                />
+              </section>
+            );
+          })}
+        </div>
+      </div>
     </aside>
   );
 }
 
-export function PostTableOfContentsRail({ headings }: { headings: PostHeading[] }) {
+// Shadcnblocks faq1 accordion structure used for the optional reading index.
+export function PostTableOfContentsRail({
+  headings,
+}: {
+  headings: PostHeading[];
+}) {
   return (
-    <aside aria-label="Post table of contents">
-      <details open>
-        <summary>Table of contents</summary>
-        <PostTableOfContents headings={headings} />
-      </details>
+    <aside className="mb-10" aria-label="Post table of contents">
+      <Accordion type="single" collapsible defaultValue="contents">
+        <AccordionItem value="contents">
+          <AccordionTrigger className="font-semibold hover:no-underline">
+            Table of contents
+          </AccordionTrigger>
+          <AccordionContent>
+            <PostTableOfContents headings={headings} />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </aside>
   );
 }

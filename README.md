@@ -92,7 +92,7 @@ The sample content creates global settings, navigation, footer, the homepage, a 
 pnpm unseed
 ```
 
-Unseed removes only marked Starter sample documents and their Starter sample asset. It refuses partial or unmarked targets instead of emptying a dataset generally.
+Unseed removes only marked Starter sample documents and the bundled Starter sample assets. Replacement images uploaded by editors are preserved. It refuses partial or unmarked targets instead of emptying a dataset generally.
 
 The section library includes testimonials, stacked feature rows with optional
 links, and a timeline. These sections use existing shared content types and
