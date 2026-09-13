@@ -14,6 +14,7 @@ import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
 import StackedTimeline from "@/components/blocks/stacked-timeline";
 import {
   resolveSectionBoundaries,
+  type SectionEdgeTreatment,
 } from "@/components/blocks/section-boundaries";
 // page-builder-generator:component-imports
 import { dataset, projectId } from "@/sanity/lib/env";
@@ -67,6 +68,14 @@ const componentMap: Partial<{
   // page-builder-generator:component-map
 };
 
+// Code owns irregular top edges. A section listed here overlaps the section
+// above it at a different-background join; the renderer must pass
+// `topTreatment` to `sectionSceneClassName`.
+const sectionEdgeTreatments: Partial<Record<Block["_type"], SectionEdgeTreatment>> =
+  {
+    ctaBanner: "wave",
+  };
+
 export default function Blocks({
   blocks,
   documentId,
@@ -86,8 +95,7 @@ export default function Blocks({
         key: block._key,
         theme: "theme" in block ? (block.theme as string | null) : null,
         kind: block._type === "hero" ? ("hero" as const) : ("content" as const),
-        edgeTreatment:
-          block._type === "ctaBanner" ? ("wave" as const) : ("none" as const),
+        edgeTreatment: sectionEdgeTreatments[block._type] ?? "none",
       },
     ];
   });
@@ -162,6 +170,8 @@ export default function Blocks({
   );
 }
 
+// Sections that render nothing must not create joins. Keep each rule aligned
+// with the renderer's own empty result.
 function isRenderableBlock(block: Block) {
   if (block._type === "richTextBlock") {
     return Boolean(
@@ -190,5 +200,6 @@ function isRenderableBlock(block: Block) {
       ),
     );
   }
+  // page-builder-generator:visible-blocks
   return true;
 }

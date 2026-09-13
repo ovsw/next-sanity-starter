@@ -25,13 +25,27 @@ const registrations = [
   "frontend/components/blocks/index.tsx",
 ];
 const script = "scripts/create-page-builder-block.mjs";
+const boundaries = "frontend/components/blocks/section-boundaries.ts";
 const exec = promisify(execFile);
 const requireFrontend = createRequire(join(root, "frontend/package.json"));
+
+// Compile a TypeScript source with the same stubs the generated renderer needs.
+function load(source, file, modules = {}) {
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+  }).outputText;
+  const exports = {};
+  new Function("require", "exports", compiled)(
+    (name) => modules[name] ?? requireFrontend(name),
+    exports,
+  );
+  return exports;
+}
 
 async function fixture(t) {
   const dir = await mkdtemp(join(tmpdir(), "starter-generator-"));
   t.after(() => rm(dir, { recursive: true, force: true }));
-  for (const file of [script, ...registrations]) {
+  for (const file of [script, boundaries, ...registrations]) {
     await mkdir(dirname(join(dir, file)), { recursive: true });
     await copyFile(join(root, file), join(dir, file));
   }
@@ -110,11 +124,28 @@ for (const scope of ["content", "general", "home"])
         '"sampleFeature",\n  // page-builder-generator:editing-types',
       ),
     );
+    assert.ok(
+      sources[3].includes(
+        'import SampleFeature, { hasSampleFeatureContent } from "@/components/blocks/sample-feature";',
+      ),
+    );
+    assert.ok(
+      sources[3].includes(
+        'if (block._type === "sampleFeature") return hasSampleFeatureContent(block);\n  // page-builder-generator:visible-blocks',
+      ),
+    );
     const schema = await readFile(
       join(f.dir, "studio/schemas/blocks/sample-feature.ts"),
       "utf8",
     );
     assert.ok(schema.includes(`title: ${JSON.stringify(title)}`));
+    assert.match(schema, /import sectionTheme from "\.\/shared\/section-theme"/);
+    assert.match(schema, /fields: \[\n    sectionTheme,/);
+    const query = await readFile(
+      join(f.dir, "frontend/sanity/queries/sample-feature.ts"),
+      "utf8",
+    );
+    assert.match(query, /_type == "sampleFeature" => \{\n    theme,/);
     for (const file of [
       "studio/schemas/blocks/sample-feature.ts",
       "frontend/sanity/queries/sample-feature.ts",
@@ -134,23 +165,25 @@ for (const scope of ["content", "general", "home"])
       "utf8",
     );
     assert.match(component, /aria-labelledby=\{headingId\}/);
+    assert.ok(component.includes('dataAttribute?.("theme")'));
     assert.ok(component.includes('dataAttribute?.("title")'));
     assert.ok(component.includes('dataAttribute?.("description")'));
-    const compiled = ts.transpileModule(component, {
-      compilerOptions: {
-        module: ts.ModuleKind.CommonJS,
-        jsx: ts.JsxEmit.ReactJSX,
-      },
-    }).outputText;
-    const exports = {};
-    new Function("require", "exports", compiled)(
-      (name) =>
-        name === "next-sanity"
-          ? { stegaClean: (value) => value }
-          : requireFrontend(name),
-      exports,
+    const stubs = {
+      "next-sanity": { stegaClean: (value) => value },
+      "@/lib/utils": { cn: (...args) => args.filter(Boolean).join(" ") },
+    };
+    const scene = load(
+      await readFile(join(f.dir, boundaries), "utf8"),
+      boundaries,
+      stubs,
     );
+    const exports = load(component, "sample-feature.tsx", {
+      ...stubs,
+      "./section-boundaries": scene,
+    });
     assert.equal(exports.default({ _key: "test", title: null }), null);
+    assert.equal(exports.hasSampleFeatureContent({ title: "  " }), false);
+    assert.equal(exports.hasSampleFeatureContent({ title: "Hello" }), true);
     const rendered = exports.default({
       _key: "test",
       title: "Hello",
@@ -162,7 +195,24 @@ for (const scope of ["content", "general", "home"])
       rendered.props["aria-labelledby"],
       "sample-feature-test-title",
     );
-    const [heading, paragraph] = rendered.props.children.props.children;
+    assert.equal(rendered.props["data-sanity"], "edit:theme");
+    assert.equal(
+      rendered.props.className,
+      scene.sectionSceneClassName("light", "outer", "outer"),
+    );
+    const themed = exports.default({
+      _key: "test",
+      title: "Hello",
+      theme: "dark",
+      top: "seam",
+      bottom: "edge",
+    });
+    assert.equal(
+      themed.props.className,
+      scene.sectionSceneClassName("dark", "seam", "edge"),
+    );
+    const [heading, paragraph] =
+      rendered.props.children.props.children.props.children;
     assert.equal(heading.props.children, "Hello");
     assert.equal(heading.props["data-sanity"], "edit:title");
     assert.equal(paragraph.props.children, "Details");

@@ -131,12 +131,14 @@ function insertAtMarker(source, marker, line, file) {
 
 function schemaTemplate({ camel, title }) {
   return `import { defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "${camel}",
   title: ${JSON.stringify(title)},
   type: "object",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       type: "string",
@@ -165,6 +167,7 @@ function queryTemplate({ camel }) {
 // @sanity-typegen-ignore
 export const ${camel}Query = groq\`
   _type == "${camel}" => {
+    theme,
     title,
     description
   }
@@ -175,44 +178,66 @@ export const ${camel}Query = groq\`
 function componentTemplate({ camel, kebab, pascal }) {
   return `import type { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
+import {
+  resolveSectionTheme,
+  sectionSceneClassName,
+  type SectionSceneProps,
+} from "./section-boundaries";
 
 type PageBlock =
   | NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["blocks"]>[number]
   | NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 
-type ${pascal}Props = Extract<PageBlock, { _type: "${camel}" }> & {
+type ${pascal}Block = Extract<PageBlock, { _type: "${camel}" }>;
+
+type ${pascal}Props = ${pascal}Block & {
   dataAttribute?: (path: string) => string | undefined;
-};
+} & SectionSceneProps;
+
+// The Page Builder excludes sections without content from visible adjacency.
+// Keep this rule aligned with the renderer's empty result below.
+export function has${pascal}Content(block: Pick<${pascal}Block, "title">) {
+  return Boolean(stegaClean(block.title)?.trim());
+}
 
 export default function ${pascal}({
   _key,
+  bottom = "outer",
   dataAttribute,
   description,
+  theme,
   title,
+  top = "outer",
 }: ${pascal}Props) {
-  if (!title) return null;
+  if (!has${pascal}Content({ title })) return null;
 
   const headingId = \`${kebab}-\${stegaClean(_key)}-title\`;
 
   return (
     <section
       aria-labelledby={headingId}
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
       id={\`${kebab}-\${stegaClean(_key)}\`}
     >
-      <div>
-        <h2
-          data-sanity={dataAttribute?.("title")}
-          id={headingId}
-        >
-          {title}
-        </h2>
-        {description ? (
-          <p
-            data-sanity={dataAttribute?.("description")}
+      <div className="container">
+        <div className="mx-auto max-w-3xl">
+          <h2
+            className="text-3xl font-extrabold tracking-tight"
+            data-sanity={dataAttribute?.("title")}
+            id={headingId}
           >
-            {description}
-          </p>
-        ) : null}
+            {title}
+          </h2>
+          {stegaClean(description)?.trim() ? (
+            <p
+              className="mt-4 text-muted-foreground"
+              data-sanity={dataAttribute?.("description")}
+            >
+              {description}
+            </p>
+          ) : null}
+        </div>
       </div>
     </section>
   );
@@ -311,17 +336,22 @@ export async function buildPlan(options) {
   const components = insertAtMarker(
     insertAtMarker(
       insertAtMarker(
-        originals.components,
-        "// page-builder-generator:component-imports",
-        `import ${names.pascal} from "@/components/blocks/${names.kebab}";`,
+        insertAtMarker(
+          originals.components,
+          "// page-builder-generator:component-imports",
+          `import ${names.pascal}, { has${names.pascal}Content } from "@/components/blocks/${names.kebab}";`,
+          paths.components,
+        ),
+        "  // page-builder-generator:editing-types",
+        `  "${names.camel}",`,
         paths.components,
       ),
-      "  // page-builder-generator:editing-types",
-      `  "${names.camel}",`,
+      "  // page-builder-generator:component-map",
+      `  ${names.camel}: ${names.pascal},`,
       paths.components,
     ),
-    "  // page-builder-generator:component-map",
-    `  ${names.camel}: ${names.pascal},`,
+    "  // page-builder-generator:visible-blocks",
+    `  if (block._type === "${names.camel}") return has${names.pascal}Content(block);`,
     paths.components,
   );
 
@@ -453,7 +483,7 @@ async function main() {
     console.log(`Created and registered ${plan.names.camel}.`);
     for (const file of files) console.log(`- ${file}`);
     console.log(
-      "Next: shape the schema, query, and renderer together, then run pnpm typegen once.",
+      "Next: shape the schema, query, renderer, and its content rule together, then run pnpm typegen once.",
     );
     if (!options.preview)
       console.log(
