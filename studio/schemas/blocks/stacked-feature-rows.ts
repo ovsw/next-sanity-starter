@@ -4,6 +4,7 @@ import NavigationIconInput, {
   createNavigationIconPreview,
 } from "../inputs/navigation-icon-input";
 import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
+import sectionTheme from "./shared/section-theme";
 
 const richTextToPlainText = (value: unknown): string => {
   if (!Array.isArray(value)) return "";
@@ -136,6 +137,7 @@ export default defineType({
   description:
     "A grid of feature cards with images, supporting points, and optional links.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       title: "Heading",

@@ -1,5 +1,6 @@
 import { Megaphone } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "ctaBanner",
@@ -27,6 +28,7 @@ export default defineType({
     ],
   },
   fields: [
+    sectionTheme,
     defineField({
       name: "image",
       title: "Image",

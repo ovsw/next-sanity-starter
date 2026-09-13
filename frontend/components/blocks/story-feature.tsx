@@ -5,6 +5,7 @@ import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 
 type StoryFeatureBlock = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -13,7 +14,7 @@ type StoryFeatureBlock = Extract<
 
 type StoryFeatureProps = StoryFeatureBlock & {
   dataAttribute?: (path: string) => string | undefined;
-};
+} & SectionSceneProps;
 
 function StoryButtons({
   buttons,
@@ -68,12 +69,15 @@ export default function StoryFeature({
   image,
   description,
   title,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: StoryFeatureProps) {
   const headingId = `story-feature-${stegaClean(_key)}`;
   if (!stegaClean(title)?.trim()) return null;
 
   return (
-    <section className="py-32" aria-labelledby={headingId}>
+    <section className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)} data-sanity={dataAttribute?.("theme")} aria-labelledby={headingId}>
       <div className="container">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">

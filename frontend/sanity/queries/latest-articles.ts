@@ -6,6 +6,7 @@ import { urlInternalHref } from "./shared/internal-href";
 // @sanity-typegen-ignore
 export const latestArticlesQuery = groq`
   _type == "latestArticles" => {
+    theme,
     eyebrow,
     title,
     description,

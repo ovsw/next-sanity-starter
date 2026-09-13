@@ -9,15 +9,19 @@ import { PortableText } from "@portabletext/react";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 type Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "benefitCards" }
-> & { dataAttribute?: (path: string) => string | undefined };
+> & { dataAttribute?: (path: string) => string | undefined } & SectionSceneProps;
 export default function BenefitCards({
   _key,
   title,
   cards,
   dataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: Props) {
   if (!cards?.length) return null;
   return (
@@ -25,6 +29,8 @@ export default function BenefitCards({
       title={title}
       id={`benefit-cards-${stegaClean(_key)}`}
       titleAttribute={dataAttribute?.("title")}
+      sectionClassName={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      sectionDataAttribute={dataAttribute?.("theme")}
     >
       {cards.map((card) => {
         const path = `cards[_key=="${card._key}"]`;

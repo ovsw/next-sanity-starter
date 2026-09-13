@@ -1,5 +1,6 @@
 import { BookOpenText } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 // Content contract for Shadcnblocks feature1.
 export default defineType({
   name: "storyFeature",
@@ -7,6 +8,7 @@ export default defineType({
   type: "object",
   icon: BookOpenText,
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       title: "Heading",

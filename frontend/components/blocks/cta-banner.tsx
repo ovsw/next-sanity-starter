@@ -6,6 +6,12 @@ import { getSafeLinkHref } from "@/lib/safe-href";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Link from "next/link";
+import {
+  resolveSectionTheme,
+  sectionSceneClassName,
+  type SectionBoundary,
+  type SectionEdgeTreatment,
+} from "./section-boundaries";
 
 type CtaBannerBlock = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -14,6 +20,9 @@ type CtaBannerBlock = Extract<
 
 type CtaBannerProps = CtaBannerBlock & {
   dataAttribute?: (path: string) => string | undefined;
+  top?: SectionBoundary;
+  bottom?: SectionBoundary;
+  topTreatment?: SectionEdgeTreatment;
 };
 
 export default function CtaBanner({
@@ -23,6 +32,10 @@ export default function CtaBanner({
   description,
   image,
   title,
+  top = "outer",
+  bottom = "outer",
+  topTreatment = "none",
+  theme,
 }: CtaBannerProps) {
   if (!title) return null;
 
@@ -32,7 +45,16 @@ export default function CtaBanner({
   );
 
   return (
-    <section className="py-32" aria-labelledby={titleId}>
+    <section
+      className={sectionSceneClassName(
+        resolveSectionTheme(theme),
+        top,
+        bottom,
+        topTreatment,
+      )}
+      data-sanity={dataAttribute?.("theme")}
+      aria-labelledby={titleId}
+    >
       <div className="container">
         <div className="mx-auto flex max-w-5xl flex-col justify-between overflow-hidden rounded-lg border py-0 md:flex-row md:items-center">
           <div className="p-6 md:max-w-96 md:py-8">

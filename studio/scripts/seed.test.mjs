@@ -152,3 +152,26 @@ test("seed covers every section and uses only the bundled PNG assets", async () 
   assert.equal(story.richText, undefined);
   assert.equal(story.keyDetails, undefined);
 });
+
+test("homepage seed demonstrates a seam, a straight edge, a wave tuck, and a suppressed wave", () => {
+  const home = starterDocuments.find((document) => document._id === "homePage");
+  const joins = home.blocks.slice(1).map((block, index) => {
+    const upper = home.blocks[index];
+    return {
+      upper: upper._type,
+      lower: block._type,
+      match: upper._type !== "hero" && upper.theme === block.theme,
+    };
+  });
+  for (const block of home.blocks.slice(1)) {
+    assert.ok(["light", "dark"].includes(block.theme), block._key);
+  }
+  assert.ok(joins.some((join) => join.match && join.lower !== "ctaBanner"));
+  assert.ok(
+    joins.some(
+      (join) => !join.match && join.upper !== "hero" && join.lower !== "ctaBanner",
+    ),
+  );
+  assert.ok(joins.some((join) => !join.match && join.lower === "ctaBanner"));
+  assert.ok(joins.some((join) => join.match && join.lower === "ctaBanner"));
+});

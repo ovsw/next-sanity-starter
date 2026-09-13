@@ -1,6 +1,6 @@
 import { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from "@/sanity.types";
 import { type LivePerspective } from "next-sanity/live";
-import { createDataAttribute } from "next-sanity";
+import { createDataAttribute, stegaClean } from "next-sanity";
 import LatestArticles from "@/components/blocks/latest-articles";
 import FaqAccordion from "@/components/blocks/faq-accordion";
 import StoryFeature from "@/components/blocks/story-feature";
@@ -12,6 +12,10 @@ import Hero from "@/components/blocks/hero";
 import Testimonials from "@/components/blocks/testimonials";
 import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
 import StackedTimeline from "@/components/blocks/stacked-timeline";
+import {
+  resolveSectionBoundaries,
+  type SectionEdgeTreatment,
+} from "@/components/blocks/section-boundaries";
 // page-builder-generator:component-imports
 import { dataset, projectId } from "@/sanity/lib/env";
 
@@ -64,6 +68,14 @@ const componentMap: Partial<{
   // page-builder-generator:component-map
 };
 
+// Code owns irregular top edges. A section listed here overlaps the section
+// above it at a different-background join; the renderer must pass
+// `topTreatment` to `sectionSceneClassName`.
+const sectionEdgeTreatments: Partial<Record<Block["_type"], SectionEdgeTreatment>> =
+  {
+    ctaBanner: "wave",
+  };
+
 export default function Blocks({
   blocks,
   documentId,
@@ -76,6 +88,19 @@ export default function Blocks({
   perspective: LivePerspective;
   stega: boolean;
 }) {
+  const visibleSections = blocks.flatMap((block) => {
+    if (!componentMap[block._type] || !isRenderableBlock(block)) return [];
+    return [
+      {
+        key: block._key,
+        theme: "theme" in block ? (block.theme as string | null) : null,
+        kind: block._type === "hero" ? ("hero" as const) : ("content" as const),
+        edgeTreatment: sectionEdgeTreatments[block._type] ?? "none",
+      },
+    ];
+  });
+  const resolvedBoundaries = resolveSectionBoundaries(visibleSections);
+
   return (
     <>
       {blocks?.map((block) => {
@@ -132,14 +157,49 @@ export default function Blocks({
               }
             : serverFieldEditingBlockTypes.has(block._type)
               ? { dataAttribute }
-              : {};
+            : {};
+        const boundary = resolvedBoundaries.find(({ key }) => key === block._key);
 
         return (
           <div data-sanity={dataSanity} key={block._key}>
-            <Component {...block} {...editingProps} />
+            <Component {...block} {...editingProps} {...boundary} />
           </div>
         );
       })}
     </>
   );
+}
+
+// Sections that render nothing must not create joins. Keep each rule aligned
+// with the renderer's own empty result.
+function isRenderableBlock(block: Block) {
+  if (block._type === "richTextBlock") {
+    return Boolean(
+      stegaClean(block.eyebrow)?.trim() ||
+        stegaClean(block.title)?.trim() ||
+        block.richText?.length,
+    );
+  }
+  if (block._type === "ctaBanner" || block._type === "hero") {
+    return Boolean(stegaClean(block.title)?.trim());
+  }
+  if (block._type === "benefitCards") return Boolean(block.cards?.length);
+  if (block._type === "stackedFeatureRows") return Boolean(block.rows?.length);
+  if (block._type === "latestArticles") return Boolean(block.articles?.length);
+  if (block._type === "faqAccordion") return Boolean(block.faqs?.length);
+  if (block._type === "teamMembers") {
+    return Boolean(block.members?.some((member) => member.document));
+  }
+  if (block._type === "testimonials") {
+    return Boolean(block.testimonials?.some((item) => item.document?.body?.length));
+  }
+  if (block._type === "stackedTimeline") {
+    return Boolean(
+      block.items?.some(
+        (item) => stegaClean(item.title)?.trim() && stegaClean(item.text)?.trim(),
+      ),
+    );
+  }
+  // page-builder-generator:visible-blocks
+  return true;
 }

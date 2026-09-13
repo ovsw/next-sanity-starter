@@ -5,6 +5,7 @@ import { urlInternalHref } from "./shared/internal-href";
 // @sanity-typegen-ignore
 export const storyFeatureQuery = groq`
   _type == "storyFeature" => {
+    theme,
     title,
     description,
     image { ${imageQuery} },

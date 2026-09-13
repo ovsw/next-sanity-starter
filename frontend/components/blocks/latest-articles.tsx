@@ -5,11 +5,13 @@ import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { categoryPath, postPath } from "@/lib/routes";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 
 type LatestArticlesProps = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "latestArticles" }
 >;
+type LatestArticlesSectionProps = LatestArticlesProps & { dataAttribute?: (path: string) => string | undefined } & SectionSceneProps;
 
 type Article = NonNullable<LatestArticlesProps["articles"]>[number];
 type ArticleImage = LatestArticlesProps["fallbackImage"];
@@ -108,11 +110,16 @@ export default function LatestArticles({
   eyebrow,
   fallbackImage,
   title,
-}: LatestArticlesProps) {
+  dataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
+}: LatestArticlesSectionProps) {
   if (!articles?.length) return null;
 
   return (
-    <section className="container py-32" id="latest-posts">
+    <section className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)} data-sanity={dataAttribute?.("theme")} id="latest-posts">
+      <div className="container">
       <header className="mb-12 space-y-4">
         {eyebrow ? <p>{eyebrow}</p> : null}
         {title ? (
@@ -129,6 +136,7 @@ export default function LatestArticles({
             key={article._id}
           />
         ))}
+      </div>
       </div>
     </section>
   );

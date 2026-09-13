@@ -37,6 +37,13 @@ Remove that empty lock directory only after confirming its process has stopped.
 Replace the generated fields with the real content model, then run TypeGen.
 Keep the `page-builder-generator:*` markers at their registration points.
 
+A generated section already follows the section theme and boundary contract
+below: it has the shared `theme` field, projects `theme`, renders through
+`sectionSceneClassName`, targets its theme field from empty space, and exports
+a content rule that the dispatcher uses to exclude it when empty. When you
+change what the renderer needs before it shows content, update that exported
+rule in the same edit.
+
 For a manual addition, preserve the mirrored folder structure:
 
 1. Define the Studio schema in `studio/schemas/blocks/`.
@@ -46,7 +53,58 @@ For a manual addition, preserve the mirrored folder structure:
 5. Create its GROQ projection in `frontend/sanity/queries/`.
 6. Register the projection in `frontend/sanity/queries/page-builder.ts`.
 7. Create its React renderer in `frontend/components/blocks/` and register it in the `componentMap` in `frontend/components/blocks/index.tsx`.
-8. Run TypeGen. Do not edit `studio/schema.json` or `frontend/sanity.types.ts` by hand.
+8. Add its field-editing type and its empty-content rule to `isRenderableBlock` in the same file. Follow the section theme and boundary contract below.
+9. Run TypeGen. Do not edit `studio/schema.json` or `frontend/sanity.types.ts` by hand.
+
+## Section themes and boundaries
+
+Editors choose which content belongs together. Code owns the visual rules.
+
+- **Theme.** Every non-hero section includes the shared field from
+  `studio/schemas/blocks/shared/section-theme.ts` as its first field and
+  projects `theme` in its GROQ query. The Website resolves a missing or
+  unexpected value to Light with `resolveSectionTheme`. Heroes have no theme
+  field and keep their own treatment.
+- **Spacing.** The renderer's outer element uses
+  `sectionSceneClassName(theme, top, bottom)` and accepts `SectionSceneProps`.
+  Do not add unrelated outer vertical padding. Internal content spacing stays
+  with the section's design.
+- **Seams and edges.** The Page Builder in `frontend/components/blocks/index.tsx`
+  compares each pair of visible neighbors. Matching backgrounds form a seam and
+  each side contributes half its section padding. Different backgrounds, and
+  every join below a hero, form an edge with full padding. The first and last
+  visible sections keep full outer spacing.
+- **Visible adjacency.** Only sections that render content take part. Each
+  section's empty-content rule lives in `isRenderableBlock`, next to the
+  `page-builder-generator:visible-blocks` marker, and must match the renderer's
+  own empty result. Unsupported blocks are skipped the same way.
+- **Empty-space editing.** The outer element carries
+  `data-sanity={dataAttribute?.("theme")}` so a click on empty space in Studio
+  Presentation focuses the theme field. Content elements keep their own field
+  targets.
+- **Theme tokens.** `.section-scene-light` and `.section-scene-dark` in
+  `frontend/app/globals.css` reassign the shared color tokens, so text, links,
+  buttons, cards, icons, and focus states adapt without variant changes.
+
+### Irregular edges and tucks
+
+Code supplies an irregular top edge; there is no editor shape selector.
+
+1. Register the section type in `sectionEdgeTreatments` in
+   `frontend/components/blocks/index.tsx`, for example `ctaBanner: "wave"`.
+2. Have the renderer accept `topTreatment` and pass it as the fourth argument
+   of `sectionSceneClassName`.
+3. Give the treatment a class in `frontend/app/globals.css` that paints the
+   shape with `background: inherit`, pulls the section up by the tuck depth
+   with a negative top margin, and adds that depth back to the top padding so
+   content stays clear. Follow `.section-scene-wave-top`.
+
+The resolver enables a treatment only at a different-background join. At a
+seam it suppresses the treatment so no gap or third color appears. A later
+section paints above the earlier one, so when both neighbors have treatments,
+the lower one wins. A wave after a hero tucks the hero underneath. The Starter
+ships one shallow wave on the CTA banner; add more shapes only when a project
+needs them. Footer tucks are not shipped, but a project copy may add one.
 
 ## Add a nested block
 
@@ -73,7 +131,8 @@ For visual changes, treat the existing design system as the default:
 ## Definition of done
 
 - The same `_type` is present at every required top-level registration point.
-- The GROQ projection returns every field the renderer uses.
+- The GROQ projection returns every field the renderer uses, including `theme` for non-hero sections.
+- The renderer uses `sectionSceneClassName`, targets its theme field, and has a matching empty-content rule in the dispatcher.
 - The Studio preview and frontend renderer work with realistic content.
 - Generated files are current and are not manually edited.
 - Repository verification passes:

@@ -9,21 +9,26 @@ import {
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { PortableText } from "@portabletext/react";
 import { stegaClean } from "next-sanity";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 type Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "faqAccordion" }
-> & { dataAttribute?: (path: string) => string | undefined };
+> & { dataAttribute?: (path: string) => string | undefined } & SectionSceneProps;
 export default function FaqAccordion({
   _key,
   title,
   faqs,
   dataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: Props) {
   const visible = (faqs ?? []).filter((f) => stegaClean(f.title)?.trim());
   if (!visible.length) return null;
   return (
     <section
-      className="py-32"
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
       id={`faq-${stegaClean(_key)}`}
       aria-labelledby={`faq-accordion-${stegaClean(_key)}`}
     >

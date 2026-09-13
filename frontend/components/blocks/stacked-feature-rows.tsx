@@ -11,15 +11,19 @@ import { stegaClean } from "next-sanity";
 import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 type Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "stackedFeatureRows" }
-> & { dataAttribute?: (path: string) => string | undefined };
+> & { dataAttribute?: (path: string) => string | undefined } & SectionSceneProps;
 export default function StackedFeatureRows({
   _key,
   title,
   rows,
   dataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: Props) {
   if (!rows?.length) return null;
   return (
@@ -27,6 +31,8 @@ export default function StackedFeatureRows({
       title={title}
       id={`stacked-feature-rows-${stegaClean(_key)}`}
       titleAttribute={dataAttribute?.("title")}
+      sectionClassName={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      sectionDataAttribute={dataAttribute?.("theme")}
     >
       {rows.map((row) => {
         const path = `rows[_key=="${row._key}"]`;

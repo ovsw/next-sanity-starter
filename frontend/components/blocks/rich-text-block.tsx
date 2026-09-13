@@ -3,6 +3,11 @@ import RichTextContent from "@/components/rich-text-content";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import type { PortableTextProps } from "@portabletext/react";
 import { stegaClean } from "next-sanity";
+import {
+  resolveSectionTheme,
+  sectionSceneClassName,
+  type SectionBoundary,
+} from "./section-boundaries";
 
 type RichTextBlockData = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -11,6 +16,8 @@ type RichTextBlockData = Extract<
 
 type RichTextBlockProps = RichTextBlockData & {
   dataAttribute?: (path: string) => string | undefined;
+  top?: SectionBoundary;
+  bottom?: SectionBoundary;
 };
 
 export default function RichTextBlock({
@@ -19,6 +26,9 @@ export default function RichTextBlock({
   eyebrow,
   richText,
   title,
+  top = "outer",
+  bottom = "outer",
+  theme,
 }: RichTextBlockProps) {
   const displayEyebrow = stegaClean(eyebrow)?.trim();
   const displayTitle = stegaClean(title)?.trim();
@@ -29,8 +39,13 @@ export default function RichTextBlock({
   if (!(displayEyebrow || displayTitle || richText?.length)) return null;
 
   return (
-    <section className="container pb-24" aria-labelledby={headingId}>
-      <div className="mx-auto max-w-3xl">
+    <section
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
+      aria-labelledby={headingId}
+    >
+      <div className="container">
+        <div className="mx-auto max-w-3xl">
         {displayEyebrow || displayTitle ? (
           <header className="mb-8 space-y-4">
             {displayEyebrow ? (
@@ -58,6 +73,7 @@ export default function RichTextBlock({
             value={richText as PortableTextProps["value"]}
           />
         ) : null}
+        </div>
       </div>
     </section>
   );

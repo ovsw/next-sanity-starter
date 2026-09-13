@@ -4,6 +4,7 @@ import { simpleRichTextQuery } from "./shared/simple-rich-text";
 // @sanity-typegen-ignore
 export const faqAccordionQuery = groq`
   _type == "faqAccordion" => {
+    theme,
     title,
     "faqs": array::compact(faqs[]{
       _key,

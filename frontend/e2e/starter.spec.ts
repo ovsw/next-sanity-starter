@@ -120,3 +120,61 @@ test("keeps the starter page free of horizontal overflow", async ({ page }) => {
     ).toBe(0);
   }
 });
+
+test("homepage sections join with seams, edges, and a wave tuck", async ({ page }) => {
+  await page.goto("/");
+  const homepage = page.getByRole("heading", {
+    level: 1,
+    name: "Neutral sample content for a clean project.",
+  });
+  test.skip(!(await homepage.isVisible()), "Starter homepage sample content is not seeded");
+
+  const sections = await page.locator("main section.section-scene").evaluateAll(
+    (elements) =>
+      elements.map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        const heading = element.querySelector("h2");
+        return {
+          top: rect.top + window.scrollY,
+          bottom: rect.bottom + window.scrollY,
+          paddingTop: parseFloat(style.paddingTop),
+          paddingBottom: parseFloat(style.paddingBottom),
+          background: style.backgroundColor,
+          wave: element.classList.contains("section-scene-wave-top"),
+          cta: Boolean(element.getAttribute("aria-labelledby")?.startsWith("cta-banner-")),
+          contentTop:
+            (heading?.getBoundingClientRect().top ?? rect.top) + window.scrollY,
+        };
+      }),
+  );
+  expect(sections.length).toBeGreaterThanOrEqual(6);
+
+  const joins = sections.slice(1).map((lower, index) => {
+    const upper = sections[index];
+    return { upper, lower, match: upper.background === lower.background };
+  });
+  const seam = joins.find((join) => join.match && !join.lower.wave);
+  const edge = joins.find((join) => !join.match && !join.lower.wave);
+  const tuck = joins.find((join) => !join.match && join.lower.wave);
+  const flatWave = joins.find((join) => join.match && join.lower.cta);
+
+  // Seam: both sides contribute half padding. Edge: full padding on both sides.
+  expect(seam).toBeDefined();
+  expect(edge).toBeDefined();
+  expect(seam!.upper.paddingBottom).toBeLessThan(edge!.upper.paddingBottom);
+  expect(seam!.lower.paddingTop).toBeLessThan(edge!.lower.paddingTop);
+  expect(seam!.lower.top).toBeCloseTo(seam!.upper.bottom, 0);
+  expect(edge!.lower.top).toBeCloseTo(edge!.upper.bottom, 0);
+
+  // Wave tuck: the lower section overlaps the upper one and keeps content clear.
+  expect(tuck).toBeDefined();
+  expect(tuck!.lower.top).toBeLessThan(tuck!.upper.bottom);
+  expect(tuck!.lower.contentTop).toBeGreaterThan(tuck!.upper.bottom);
+
+  // A wave section on a matching background stays flat.
+  expect(flatWave).toBeDefined();
+  expect(flatWave!.lower.wave).toBe(false);
+  expect(flatWave!.lower.paddingTop).toBe(seam!.lower.paddingTop);
+  expect(flatWave!.lower.top).toBeCloseTo(flatWave!.upper.bottom, 0);
+});
