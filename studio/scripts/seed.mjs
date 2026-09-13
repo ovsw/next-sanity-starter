@@ -213,6 +213,7 @@ export const starterDocuments = [
       {
         _key: "starter-page-rich-text",
         _type: "richTextBlock",
+        theme: "light",
         eyebrow: "Page",
         title: "A normal routed page",
         richText: [
@@ -248,6 +249,7 @@ export const starterDocuments = [
       {
         _key: "starter-page-cta",
         _type: "ctaBanner",
+        theme: "light",
         image: imageRef,
         title: "Ready for the next example?",
         description: "Return to the home page to inspect the full block set.",
@@ -356,6 +358,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-benefits",
         _type: "benefitCards",
+        theme: "light",
         title: "Reusable sections are ready to edit.",
         cards: [
           {
@@ -383,6 +386,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-story",
         _type: "storyFeature",
+        theme: "light",
         title: "A required image field with plain copy.",
         image: placeholder("square"),
         description:
@@ -390,8 +394,21 @@ export const starterDocuments = [
         buttons: [button("starter-story-button", "Open Blog", "blogIndex")],
       },
       {
+        _key: "starter-home-cta-flat",
+        _type: "ctaBanner",
+        theme: "light",
+        image: imageRef,
+        title: "Matching backgrounds join without a wave.",
+        description:
+          "This call to action shares the Light theme above it, so the seam stays flat.",
+        buttons: [
+          button("starter-home-cta-flat-button", "Read the guide", "starter-post-field-guide"),
+        ],
+      },
+      {
         _key: "starter-home-timeline",
         _type: "stackedTimeline",
+        theme: "dark",
         title: "A clear path from idea to launch.",
         intro: "Use these milestones to explain how your process works.",
         items: [
@@ -416,6 +433,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-features",
         _type: "stackedFeatureRows",
+        theme: "light",
         title: "Useful details, easy to find.",
         rows: [
           {
@@ -455,6 +473,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-testimonials",
         _type: "testimonials",
+        theme: "light",
         title: "A reader's perspective",
         testimonials: [
           { _key: "reader", ...ref("starter-testimonial-reader") },
@@ -463,6 +482,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-team",
         _type: "teamMembers",
+        theme: "light",
         title: "Team member reference",
         richText: simpleText(
           "starter-team-copy",
@@ -475,6 +495,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-faq",
         _type: "faqAccordion",
+        theme: "light",
         title: "Reusable FAQ",
         faqs: [
           { _key: "starter-faq-ref", ...ref("starter-faq-getting-started") },
@@ -483,6 +504,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-latest",
         _type: "latestArticles",
+        theme: "light",
         eyebrow: "Publishing",
         title: "Latest articles",
         description:
@@ -495,6 +517,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-cta",
         _type: "ctaBanner",
+        theme: "dark",
         image: imageRef,
         title: "Remove the seed when real content starts.",
         description:
