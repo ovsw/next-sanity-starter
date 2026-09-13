@@ -1,5 +1,6 @@
 import { ListOrdered } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 const item = defineArrayMember({
   name: "stackedTimelineItem",
@@ -70,6 +71,7 @@ export default defineType({
   description:
     "An introduction with up to two actions beside milestone cards, in order. Everything stacks on phones.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       title: "Heading",

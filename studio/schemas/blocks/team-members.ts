@@ -1,5 +1,6 @@
 import { UsersRound } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "teamMembers",
@@ -8,6 +9,7 @@ export default defineType({
   icon: UsersRound,
   description: "A team section that displays selected Team Member documents.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       type: "string",

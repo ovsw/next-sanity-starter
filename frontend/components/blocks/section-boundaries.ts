@@ -4,6 +4,12 @@ import { stegaClean } from "next-sanity";
 export type SectionTheme = "light" | "dark";
 export type SectionBoundary = "outer" | "seam" | "edge";
 export type SectionEdgeTreatment = "none" | "wave";
+export type SectionSceneProps = {
+  theme?: string | null;
+  top?: SectionBoundary;
+  bottom?: SectionBoundary;
+  topTreatment?: SectionEdgeTreatment;
+};
 
 export type SectionDescriptor = {
   key: string;

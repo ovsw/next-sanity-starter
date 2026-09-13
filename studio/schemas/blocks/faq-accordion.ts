@@ -1,5 +1,6 @@
 import { MessageCircle } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "faqAccordion",
@@ -8,6 +9,7 @@ export default defineType({
   icon: MessageCircle,
   description: "A reusable FAQ section built from selected FAQ documents.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       type: "string",

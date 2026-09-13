@@ -5,19 +5,23 @@ import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 type Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "testimonials" }
 > & {
   dataAttribute?: (path: string) => string | undefined;
   testimonialDataAttribute?: (id: string, path: string) => string | undefined;
-};
+} & SectionSceneProps;
 export default function Testimonials({
   _key,
   title,
   testimonials,
   dataAttribute,
   testimonialDataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: Props) {
   const quotes = (testimonials ?? []).flatMap((r) =>
     r.document?.body?.length && stegaClean(toPlainText(r.document.body)).trim()
@@ -27,7 +31,8 @@ export default function Testimonials({
   if (!quotes.length) return null;
   return (
     <section
-      className="py-32"
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
       aria-labelledby={`testimonials-${stegaClean(_key)}-title`}
     >
       <div className="container">

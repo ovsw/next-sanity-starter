@@ -6,11 +6,13 @@ import { stegaClean } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 // Shadcnblocks timeline3: sticky introduction with milestone cards.
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 
 type StackedTimelineProps = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
   { _type: "stackedTimeline" }
 > & { dataAttribute?: (path: string) => string | undefined };
+type ThemedStackedTimelineProps = StackedTimelineProps & SectionSceneProps;
 
 export default function StackedTimeline({
   _key,
@@ -19,7 +21,10 @@ export default function StackedTimeline({
   items,
   buttons,
   dataAttribute,
-}: StackedTimelineProps) {
+  bottom = "outer",
+  top = "outer",
+  theme,
+}: ThemedStackedTimelineProps) {
   const renderableItems = (items ?? []).filter(
     (item) => stegaClean(item.title)?.trim() && stegaClean(item.text)?.trim(),
   );
@@ -29,7 +34,8 @@ export default function StackedTimeline({
 
   return (
     <section
-      className="py-32"
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
       aria-labelledby={hasTitle ? headingId : undefined}
     >
       <div className="container max-w-6xl">

@@ -1,5 +1,6 @@
 import { MessageSquareQuote } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "testimonials",
@@ -9,6 +10,7 @@ export default defineType({
   description:
     "Centered quotes and attribution from selected Testimonial documents.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       title: "Heading",

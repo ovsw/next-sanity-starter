@@ -4,6 +4,7 @@ import NavigationIconInput, {
   createNavigationIconPreview,
 } from "../inputs/navigation-icon-input";
 import { isNavigationIconName } from "../inputs/lucide-icon-catalog";
+import sectionTheme from "./shared/section-theme";
 
 const benefitCard = defineArrayMember({
   name: "featureGridItem",
@@ -81,6 +82,7 @@ export default defineType({
   icon: LayoutGrid,
   description: "A reusable grid for features, services, reasons, or benefits.",
   fields: [
+    sectionTheme,
     defineField({
       name: "title",
       type: "string",

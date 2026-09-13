@@ -173,5 +173,22 @@ function isRenderableBlock(block: Block) {
   if (block._type === "ctaBanner" || block._type === "hero") {
     return Boolean(stegaClean(block.title)?.trim());
   }
+  if (block._type === "benefitCards") return Boolean(block.cards?.length);
+  if (block._type === "stackedFeatureRows") return Boolean(block.rows?.length);
+  if (block._type === "latestArticles") return Boolean(block.articles?.length);
+  if (block._type === "faqAccordion") return Boolean(block.faqs?.length);
+  if (block._type === "teamMembers") {
+    return Boolean(block.members?.some((member) => member.document));
+  }
+  if (block._type === "testimonials") {
+    return Boolean(block.testimonials?.some((item) => item.document?.body?.length));
+  }
+  if (block._type === "stackedTimeline") {
+    return Boolean(
+      block.items?.some(
+        (item) => stegaClean(item.title)?.trim() && stegaClean(item.text)?.trim(),
+      ),
+    );
+  }
   return true;
 }

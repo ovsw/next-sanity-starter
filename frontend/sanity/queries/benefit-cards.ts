@@ -5,6 +5,7 @@ import { simpleRichTextQuery } from "./shared/simple-rich-text";
 // @sanity-typegen-ignore
 export const benefitCardsQuery = groq`
   _type == "benefitCards" => {
+    theme,
     title,
     "cards": array::compact(cards[]{
       image { ${imageQuery} },

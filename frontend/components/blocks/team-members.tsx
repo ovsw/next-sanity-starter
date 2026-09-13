@@ -4,6 +4,7 @@ import { urlFor } from "@/sanity/lib/image";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { stegaClean } from "next-sanity";
 import Image from "next/image";
+import { resolveSectionTheme, sectionSceneClassName, type SectionSceneProps } from "./section-boundaries";
 
 type Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -11,7 +12,7 @@ type Props = Extract<
 > & {
   dataAttribute?: (path: string) => string | undefined;
   memberDataAttribute?: (id: string, path: string) => string | undefined;
-};
+} & SectionSceneProps;
 export default function TeamMembers({
   _key,
   title,
@@ -19,6 +20,9 @@ export default function TeamMembers({
   members,
   dataAttribute,
   memberDataAttribute,
+  bottom = "outer",
+  top = "outer",
+  theme,
 }: Props) {
   const people = (members ?? []).flatMap((m) =>
     m.document ? [{ key: m._key, person: m.document }] : [],
@@ -28,7 +32,8 @@ export default function TeamMembers({
   const hasTitle = Boolean(stegaClean(title)?.trim());
   return (
     <section
-      className="py-32"
+      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      data-sanity={dataAttribute?.("theme")}
       id="team"
       aria-labelledby={hasTitle ? headingId : undefined}
     >

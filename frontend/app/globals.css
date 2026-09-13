@@ -151,6 +151,11 @@
 .section-scene-light {
   --color-background: #ffffff;
   --color-foreground: #18181b;
+  --color-card: #ffffff;
+  --color-card-foreground: #18181b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #18181b;
+  --color-muted: #f4f4f5;
   --color-muted-foreground: #52525b;
   --color-border: #e4e4e7;
   --color-border-strong: #d4d4d8;
@@ -166,6 +171,11 @@
 .section-scene-dark {
   --color-background: #18181b;
   --color-foreground: #fafafa;
+  --color-card: #27272a;
+  --color-card-foreground: #fafafa;
+  --color-popover: #27272a;
+  --color-popover-foreground: #fafafa;
+  --color-muted: #27272a;
   --color-muted-foreground: #d4d4d8;
   --color-border: #3f3f46;
   --color-border-strong: #52525b;

@@ -5,20 +5,29 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 // Shadcnblocks feature3. Omit optional media and icons when content has none.
 export function FeatureGrid({
   title,
   id,
   titleAttribute,
   children,
+  sectionClassName,
+  sectionDataAttribute,
 }: {
   title: ReactNode;
   id: string;
   titleAttribute?: string;
   children: ReactNode;
+  sectionClassName?: string;
+  sectionDataAttribute?: string;
 }) {
   return (
-    <section className="py-32" aria-labelledby={id}>
+    <section
+      className={cn(sectionClassName ?? "py-32")}
+      data-sanity={sectionDataAttribute}
+      aria-labelledby={id}
+    >
       <div className="container">
         <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
           <h2
