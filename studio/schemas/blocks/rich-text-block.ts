@@ -1,5 +1,6 @@
 import { TextIcon } from "lucide-react";
 import { defineField, defineType } from "sanity";
+import sectionTheme from "./shared/section-theme";
 
 export default defineType({
   name: "richTextBlock",
@@ -28,6 +29,7 @@ export default defineType({
     ],
   },
   fields: [
+    sectionTheme,
     defineField({
       name: "eyebrow",
       type: "string",

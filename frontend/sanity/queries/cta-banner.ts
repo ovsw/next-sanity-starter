@@ -5,6 +5,7 @@ import { urlInternalHref } from "./shared/internal-href";
 // @sanity-typegen-ignore
 export const ctaBannerQuery = groq`
   _type == "ctaBanner" => {
+    theme,
     image { ${imageQuery} },
     title,
     description,

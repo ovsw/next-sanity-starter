@@ -1,6 +1,6 @@
 import { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from "@/sanity.types";
 import { type LivePerspective } from "next-sanity/live";
-import { createDataAttribute } from "next-sanity";
+import { createDataAttribute, stegaClean } from "next-sanity";
 import LatestArticles from "@/components/blocks/latest-articles";
 import FaqAccordion from "@/components/blocks/faq-accordion";
 import StoryFeature from "@/components/blocks/story-feature";
@@ -12,6 +12,9 @@ import Hero from "@/components/blocks/hero";
 import Testimonials from "@/components/blocks/testimonials";
 import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
 import StackedTimeline from "@/components/blocks/stacked-timeline";
+import {
+  resolveSectionBoundaries,
+} from "@/components/blocks/section-boundaries";
 // page-builder-generator:component-imports
 import { dataset, projectId } from "@/sanity/lib/env";
 
@@ -76,6 +79,18 @@ export default function Blocks({
   perspective: LivePerspective;
   stega: boolean;
 }) {
+  const visibleSections = blocks.flatMap((block) => {
+    if (!componentMap[block._type] || !isRenderableBlock(block)) return [];
+    return [
+      {
+        key: block._key,
+        theme: "theme" in block ? (block.theme as string | null) : null,
+        kind: block._type === "hero" ? ("hero" as const) : ("content" as const),
+      },
+    ];
+  });
+  const resolvedBoundaries = resolveSectionBoundaries(visibleSections);
+
   return (
     <>
       {blocks?.map((block) => {
@@ -132,14 +147,29 @@ export default function Blocks({
               }
             : serverFieldEditingBlockTypes.has(block._type)
               ? { dataAttribute }
-              : {};
+            : {};
+        const boundary = resolvedBoundaries.find(({ key }) => key === block._key);
 
         return (
           <div data-sanity={dataSanity} key={block._key}>
-            <Component {...block} {...editingProps} />
+            <Component {...block} {...editingProps} {...boundary} />
           </div>
         );
       })}
     </>
   );
+}
+
+function isRenderableBlock(block: Block) {
+  if (block._type === "richTextBlock") {
+    return Boolean(
+      stegaClean(block.eyebrow)?.trim() ||
+        stegaClean(block.title)?.trim() ||
+        block.richText?.length,
+    );
+  }
+  if (block._type === "ctaBanner" || block._type === "hero") {
+    return Boolean(stegaClean(block.title)?.trim());
+  }
+  return true;
 }

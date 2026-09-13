@@ -778,6 +778,23 @@
             "value": "ctaBanner"
           }
         },
+        "theme": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "light"
+              },
+              {
+                "type": "string",
+                "value": "dark"
+              }
+            ]
+          },
+          "optional": true
+        },
         "image": {
           "type": "objectAttribute",
           "value": {
@@ -883,6 +900,23 @@
             "type": "string",
             "value": "richTextBlock"
           }
+        },
+        "theme": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "light"
+              },
+              {
+                "type": "string",
+                "value": "dark"
+              }
+            ]
+          },
+          "optional": true
         },
         "eyebrow": {
           "type": "objectAttribute",
