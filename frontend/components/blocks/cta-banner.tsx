@@ -10,6 +10,7 @@ import {
   resolveSectionTheme,
   sectionSceneClassName,
   type SectionBoundary,
+  type SectionEdgeTreatment,
 } from "./section-boundaries";
 
 type CtaBannerBlock = Extract<
@@ -21,6 +22,7 @@ type CtaBannerProps = CtaBannerBlock & {
   dataAttribute?: (path: string) => string | undefined;
   top?: SectionBoundary;
   bottom?: SectionBoundary;
+  topTreatment?: SectionEdgeTreatment;
 };
 
 export default function CtaBanner({
@@ -32,6 +34,7 @@ export default function CtaBanner({
   title,
   top = "outer",
   bottom = "outer",
+  topTreatment = "none",
   theme,
 }: CtaBannerProps) {
   if (!title) return null;
@@ -43,7 +46,12 @@ export default function CtaBanner({
 
   return (
     <section
-      className={sectionSceneClassName(resolveSectionTheme(theme), top, bottom)}
+      className={sectionSceneClassName(
+        resolveSectionTheme(theme),
+        top,
+        bottom,
+        topTreatment,
+      )}
       data-sanity={dataAttribute?.("theme")}
       aria-labelledby={titleId}
     >

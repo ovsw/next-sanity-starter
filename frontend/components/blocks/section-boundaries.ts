@@ -3,11 +3,13 @@ import { stegaClean } from "next-sanity";
 
 export type SectionTheme = "light" | "dark";
 export type SectionBoundary = "outer" | "seam" | "edge";
+export type SectionEdgeTreatment = "none" | "wave";
 
 export type SectionDescriptor = {
   key: string;
   theme?: string | null;
   kind?: "hero" | "content";
+  edgeTreatment?: SectionEdgeTreatment;
 };
 
 export type ResolvedSectionBoundary = {
@@ -15,6 +17,8 @@ export type ResolvedSectionBoundary = {
   theme: SectionTheme | null;
   top: SectionBoundary;
   bottom: SectionBoundary;
+  topTreatment: SectionEdgeTreatment;
+  topTuck: boolean;
 };
 
 export function resolveSectionTheme(value: string | null | undefined): SectionTheme {
@@ -32,8 +36,21 @@ export function resolveSectionBoundaries(
       theme: section.theme == null ? null : resolveSectionTheme(section.theme),
       top: previous ? resolveJoin(previous, section) : "outer",
       bottom: next ? resolveJoin(section, next) : "outer",
+      topTreatment: previous
+        ? resolveTreatment(previous, section)
+        : "none",
+      topTuck: Boolean(previous && resolveTreatment(previous, section) !== "none"),
     };
   });
+}
+
+function resolveTreatment(
+  upper: SectionDescriptor,
+  lower: SectionDescriptor,
+): SectionEdgeTreatment {
+  return resolveJoin(upper, lower) === "edge"
+    ? (lower.edgeTreatment ?? "none")
+    : "none";
 }
 
 function resolveJoin(upper: SectionDescriptor, lower: SectionDescriptor): SectionBoundary {
@@ -48,6 +65,7 @@ export function sectionSceneClassName(
   theme: SectionTheme,
   top: SectionBoundary,
   bottom: SectionBoundary,
+  topTreatment: SectionEdgeTreatment = "none",
 ) {
   return cn(
     "section-scene",
@@ -56,5 +74,6 @@ export function sectionSceneClassName(
     bottom === "seam"
       ? "section-scene-seam-bottom"
       : "section-scene-edge-bottom",
+    topTreatment === "wave" ? "section-scene-wave-top" : undefined,
   );
 }

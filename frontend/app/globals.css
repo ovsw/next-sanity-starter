@@ -180,6 +180,22 @@
 }
 .section-scene-seam-top { padding-top: clamp(2rem, 4.5vw, 4rem); }
 .section-scene-seam-bottom { padding-bottom: clamp(2rem, 4.5vw, 4rem); }
+.section-scene-wave-top {
+  z-index: 1;
+  margin-top: -2rem;
+  padding-top: calc(clamp(4rem, 9vw, 8rem) + 2rem);
+}
+.section-scene-wave-top::before {
+  position: absolute;
+  z-index: -1;
+  top: -1.5rem;
+  right: 0;
+  left: 0;
+  height: 3rem;
+  content: "";
+  background: inherit;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -86,6 +86,8 @@ export default function Blocks({
         key: block._key,
         theme: "theme" in block ? (block.theme as string | null) : null,
         kind: block._type === "hero" ? ("hero" as const) : ("content" as const),
+        edgeTreatment:
+          block._type === "ctaBanner" ? ("wave" as const) : ("none" as const),
       },
     ];
   });

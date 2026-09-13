@@ -24,11 +24,11 @@ describe("Page Builder section boundaries", () => {
         { key: "hero", kind: "hero" },
       ]),
     ).toEqual([
-      { key: "first", theme: "light", top: "outer", bottom: "seam" },
-      { key: "same", theme: "light", top: "seam", bottom: "edge" },
-      { key: "different", theme: "dark", top: "edge", bottom: "edge" },
-      { key: "unknown", theme: null, top: "edge", bottom: "edge" },
-      { key: "hero", theme: null, top: "edge", bottom: "outer" },
+      { key: "first", theme: "light", top: "outer", bottom: "seam", topTreatment: "none", topTuck: false },
+      { key: "same", theme: "light", top: "seam", bottom: "edge", topTreatment: "none", topTuck: false },
+      { key: "different", theme: "dark", top: "edge", bottom: "edge", topTreatment: "none", topTuck: false },
+      { key: "unknown", theme: null, top: "edge", bottom: "edge", topTreatment: "none", topTuck: false },
+      { key: "hero", theme: null, top: "edge", bottom: "outer", topTreatment: "none", topTuck: false },
     ]);
   });
 
@@ -39,11 +39,21 @@ describe("Page Builder section boundaries", () => {
     expect(
       resolveSectionBoundaries([
         { key: "one", theme: encodedDark },
-        { key: "two", theme: "dark" },
+        { key: "two", theme: "dark", edgeTreatment: "wave" },
       ]).map(({ top, bottom }) => [top, bottom]),
     ).toEqual([
       ["outer", "seam"],
       ["seam", "outer"],
     ]);
+  });
+
+  it("enables a wave tuck only at a different-background join", () => {
+    const [, edge, matching] = resolveSectionBoundaries([
+      { key: "light", theme: "light" },
+      { key: "dark-wave", theme: "dark", edgeTreatment: "wave" },
+      { key: "dark-wave-2", theme: "dark", edgeTreatment: "wave" },
+    ]);
+    expect(edge).toMatchObject({ top: "edge", topTreatment: "wave", topTuck: true });
+    expect(matching).toMatchObject({ top: "seam", topTreatment: "none", topTuck: false });
   });
 });
