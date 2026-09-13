@@ -142,6 +142,7 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
           paddingBottom: parseFloat(style.paddingBottom),
           background: style.backgroundColor,
           wave: element.classList.contains("section-scene-wave-top"),
+          cta: Boolean(element.getAttribute("aria-labelledby")?.startsWith("cta-banner-")),
           contentTop:
             (heading?.getBoundingClientRect().top ?? rect.top) + window.scrollY,
         };
@@ -156,7 +157,7 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
   const seam = joins.find((join) => join.match && !join.lower.wave);
   const edge = joins.find((join) => !join.match && !join.lower.wave);
   const tuck = joins.find((join) => !join.match && join.lower.wave);
-  const flatWave = joins.find((join) => join.match);
+  const flatWave = joins.find((join) => join.match && join.lower.cta);
 
   // Seam: both sides contribute half padding. Edge: full padding on both sides.
   expect(seam).toBeDefined();
@@ -173,5 +174,7 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
 
   // A wave section on a matching background stays flat.
   expect(flatWave).toBeDefined();
-  expect(sections.every((section) => !section.wave || !joins.some((join) => join.lower === section && join.match))).toBe(true);
+  expect(flatWave!.lower.wave).toBe(false);
+  expect(flatWave!.lower.paddingTop).toBe(seam!.lower.paddingTop);
+  expect(flatWave!.lower.top).toBeCloseTo(flatWave!.upper.bottom, 0);
 });
