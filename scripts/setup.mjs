@@ -96,14 +96,13 @@ function normalizeStudioHostname(value) {
 export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).toString("hex")) {
   const config = validateSetupValues(values);
   const quotedSiteName = JSON.stringify(config.siteName);
-  const studioUrl = `https://${config.studioHostname}.sanity.studio`;
 
   return {
     frontend: [
       `NEXT_PUBLIC_SITE_NAME=${quotedSiteName}`,
       `NEXT_PUBLIC_SITE_URL=${config.siteUrl}`,
       "NEXT_PUBLIC_SITE_ENV=development",
-      `NEXT_PUBLIC_STUDIO_URL=${studioUrl}`,
+      "NEXT_PUBLIC_STUDIO_URL=http://localhost:3333",
       "NEXT_PUBLIC_SANITY_API_VERSION=2026-03-23",
       `NEXT_PUBLIC_SANITY_PROJECT_ID=${config.projectId}`,
       `NEXT_PUBLIC_SANITY_DATASET=${config.dataset}`,
@@ -113,12 +112,19 @@ export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).to
     ].join("\n"),
     studio: [
       `SANITY_STUDIO_TITLE=${quotedSiteName}`,
-      `SANITY_STUDIO_PREVIEW_URL=${config.siteUrl}`,
+      "SANITY_STUDIO_PREVIEW_URL=http://localhost:3000",
       "SANITY_STUDIO_API_VERSION=2026-03-23",
       `SANITY_STUDIO_PROJECT_ID=${config.projectId}`,
       `SANITY_STUDIO_DATASET=${config.dataset}`,
       `SANITY_STUDIO_HOSTNAME=${config.studioHostname}`,
       `SANITY_AUTH_TOKEN=${config.sanityAuthToken}`,
+      "",
+    ].join("\n"),
+    studioProduction: [
+      `SANITY_STUDIO_PREVIEW_URL=${config.siteUrl}`,
+      "",
+      "# After the first deployment, add and commit the app ID printed by Sanity:",
+      "# SANITY_STUDIO_APP_ID=your-sanity-studio-app-id",
       "",
     ].join("\n"),
   };
@@ -129,6 +135,10 @@ export async function writeSetupFiles(rootDirectory, values, { force = false } =
   const targets = [
     [path.join(rootDirectory, "frontend", ".env.local"), files.frontend],
     [path.join(rootDirectory, "studio", ".env.local"), files.studio],
+    [
+      path.join(rootDirectory, "studio", ".env.production"),
+      files.studioProduction,
+    ],
   ];
 
   await Promise.all(
@@ -178,7 +188,7 @@ function parseArguments(argumentsList) {
 async function collectValues(provided) {
   const prompts = [
     ["siteName", "Site name", undefined, false],
-    ["siteUrl", "Public URL", "http://localhost:3000", false],
+    ["siteUrl", "Public URL", undefined, false],
     ["projectId", "Sanity project ID", undefined, false],
     ["dataset", "Sanity dataset", "production", false],
     ["readToken", "Sanity API read token", undefined, true],
@@ -225,7 +235,7 @@ async function main() {
   const argumentsMap = parseArguments(process.argv.slice(2));
   const values = await collectValues(argumentsMap);
   await writeSetupFiles(process.cwd(), values, { force: argumentsMap.force });
-  console.log("Local Website and Studio configuration written.");
+  console.log("Local Website, Studio, and production Studio configuration written.");
   console.log("No hosted resources were created or changed.");
 }
 

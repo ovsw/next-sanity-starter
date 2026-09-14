@@ -245,10 +245,14 @@ test("manual overrides must be complete, paired, and allowlisted", () => {
   );
 });
 
-test("Sanity origins exactly cover both services with the right credentials", () => {
-  const origins = desiredSanityOrigins();
-  assert.equal(origins.length, SLOT_COUNT * 2);
-  assert.equal(new Set(origins.map(({ origin }) => origin)).size, SLOT_COUNT * 2);
+test("Sanity origins cover local services and the production preview", () => {
+  const productionOrigin = "https://example.com";
+  const origins = desiredSanityOrigins({ productionOrigin });
+  assert.equal(origins.length, SLOT_COUNT * 2 + 1);
+  assert.equal(
+    new Set(origins.map(({ origin }) => origin)).size,
+    SLOT_COUNT * 2 + 1,
+  );
   for (let slot = 0; slot < SLOT_COUNT; slot += 1) {
     assert.deepEqual(origins[slot * 2], {
       origin: `http://localhost:${FRONTEND_BASE_PORT + slot}`,
@@ -259,4 +263,12 @@ test("Sanity origins exactly cover both services with the right credentials", ()
       credentials: true,
     });
   }
+  assert.deepEqual(origins.at(-1), {
+    origin: productionOrigin,
+    credentials: true,
+  });
+  assert.equal(
+    desiredSanityOrigins({ productionOrigin: "http://localhost:3000" }).length,
+    SLOT_COUNT * 2,
+  );
 });

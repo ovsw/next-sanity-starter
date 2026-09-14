@@ -26,11 +26,16 @@ pnpm install
 pnpm run setup
 ```
 
-Setup asks for the site name, public URL, Sanity project ID, dataset, Sanity API read token, Sanity auth token, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
+Setup asks for the site name, public URL, Sanity project ID, dataset, Sanity API read token, Sanity auth token, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files and a commit-ready `studio/.env.production` file. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
 
-If local env files already exist, setup stops instead of replacing them. Use `pnpm run setup --force` only when you intend to replace both files.
+If any target environment file already exists, setup stops instead of replacing it. Use `pnpm run setup --force` only when you intend to replace all three files.
 
-The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed `.env.local.example` files list the supported names.
+The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed environment example files list the supported names.
+
+The Studio uses `studio/.env.local` to preview the local Website. A production
+Studio build uses the deployed Website URL in `studio/.env.production`. After
+the first Studio deployment, add the app ID printed by Sanity to that production
+file and commit it so every checkout updates the same hosted Studio.
 
 Start both apps:
 
@@ -65,9 +70,9 @@ is reused; a busy saved port stops the launch. To select a pair explicitly:
 pnpm dev:worktree --frontend-port 3001 --studio-port 3334
 ```
 
-Run `pnpm setup:sanity-cors` to print the allowed local origins. Add them with
-credentials enabled in your project's Sanity CORS settings. This command does
-not change hosted settings.
+Run `pnpm setup:sanity-cors` to print the allowed local origins and the
+production Website origin. Add them with credentials enabled in your project's
+Sanity CORS settings. This command does not change hosted settings.
 
 On Linux, `pnpm dev:stop` lists this repository's development servers. Use
 `pnpm dev:stop --here` to stop the current worktree's servers, `--port 3001`
@@ -108,6 +113,7 @@ SEO sharing uses an editor-selected image when present, then a generated card.
 pnpm dev
 pnpm dev:frontend
 pnpm dev:studio
+pnpm deploy:studio
 pnpm seed
 pnpm unseed
 pnpm verify
@@ -132,10 +138,12 @@ The Website and Studio deploy separately.
 
 For Vercel, import your repository and set the root directory to `frontend`. Copy the Website environment values into that project's settings.
 
-Deploy the Studio manually after configuring its hosted environment values:
+Deploy the Studio manually after confirming that `SANITY_STUDIO_PREVIEW_URL`
+in `studio/.env.production` contains the deployed Website origin:
 
 ```bash
-pnpm --dir studio deploy
+pnpm setup:sanity-cors
+pnpm deploy:studio
 ```
 
 These commands target the accounts you configure. The Starter does not provision hosting or credentials.

@@ -71,3 +71,8 @@ Before adding or changing a Page Builder section, read `docs/agents/page-builder
 ### Development workflow
 
 Before changing workspace dependencies, Sanity schemas, GROQ queries, or development scripts, consult the relevant section of `README.md`.
+
+### Sanity CLI
+
+Run Sanity CLI commands from the Studio workspace so the CLI loads the local
+credentials. See `docs/agents/sanity-cli.md`.
