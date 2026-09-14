@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  resolveSectionBands,
   resolveSectionBoundaries,
   resolveSectionTheme,
 } from "./section-boundaries";
@@ -55,5 +56,26 @@ describe("Page Builder section boundaries", () => {
     ]);
     expect(edge).toMatchObject({ top: "edge", topTreatment: "wave", topTuck: true });
     expect(matching).toMatchObject({ top: "seam", topTreatment: "none", topTuck: false });
+  });
+
+  it("groups seam-joined sections into bands and marks a tucked lead", () => {
+    expect(
+      resolveSectionBands(
+        resolveSectionBoundaries([
+          { key: "hero", kind: "hero" },
+          { key: "a", theme: "light" },
+          { key: "b", theme: "light" },
+          { key: "c", theme: "dark", edgeTreatment: "wave" },
+          { key: "d", theme: "dark" },
+          { key: "e", theme: "dark", edgeTreatment: "wave" },
+          { key: "f", theme: "light" },
+        ]),
+      ),
+    ).toEqual([
+      { keys: ["hero"], theme: null, tuck: false },
+      { keys: ["a", "b"], theme: "light", tuck: false },
+      { keys: ["c", "d", "e"], theme: "dark", tuck: true },
+      { keys: ["f"], theme: "light", tuck: false },
+    ]);
   });
 });

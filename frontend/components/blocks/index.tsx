@@ -13,7 +13,9 @@ import Testimonials from "@/components/blocks/testimonials";
 import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
 import StackedTimeline from "@/components/blocks/stacked-timeline";
 import {
+  resolveSectionBands,
   resolveSectionBoundaries,
+  type SectionBand,
   type SectionEdgeTreatment,
 } from "@/components/blocks/section-boundaries";
 // page-builder-generator:component-imports
@@ -101,71 +103,95 @@ export default function Blocks({
   });
   const resolvedBoundaries = resolveSectionBoundaries(visibleSections);
 
+  // A band is a run of visible sections joined by seams: one continuous
+  // surface. The stylesheet paints surface texture on the band, so the
+  // texture does not restart at every seam. A block that renders nothing
+  // stays inside the band around it; a leading one gets a plain wrapper.
+  const bandStarts = new Map(
+    resolveSectionBands(resolvedBoundaries).map((band) => [band.keys[0], band]),
+  );
+  const groups: { band?: SectionBand; blocks: Block[] }[] = [];
+  for (const block of blocks) {
+    const band = bandStarts.get(block._key);
+    if (band || groups.length === 0) groups.push({ band, blocks: [] });
+    groups[groups.length - 1].blocks.push(block);
+  }
+
+  function renderBlock(block: Block) {
+    const Component = componentMap[block._type] as
+      React.ComponentType<Block & BlockEditingProps> | undefined;
+    if (!Component) return null;
+
+    const blockPath = `blocks[_key=="${block._key}"]`;
+    const dataSanity = stega
+      ? createDataAttribute({
+          baseUrl:
+            process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
+          dataset,
+          id: documentId,
+          path: blockPath,
+          projectId,
+          type: documentType,
+        }).toString()
+      : undefined;
+    const dataAttribute = stega
+      ? (path: string) =>
+          createDataAttribute({
+            baseUrl:
+              process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
+            dataset,
+            id: documentId,
+            path: `${blockPath}.${path}`,
+            projectId,
+            type: documentType,
+          }).toString()
+      : undefined;
+    const editingProps: BlockEditingProps =
+      block._type === "teamMembers" || block._type === "testimonials"
+        ? {
+            dataAttribute,
+            [block._type === "teamMembers"
+              ? "memberDataAttribute"
+              : "testimonialDataAttribute"]: stega
+              ? (memberId: string, path: string) =>
+                  createDataAttribute({
+                    baseUrl:
+                      process.env.NEXT_PUBLIC_STUDIO_URL ||
+                      "http://localhost:3333",
+                    dataset,
+                    id: memberId,
+                    path,
+                    projectId,
+                    type:
+                      block._type === "teamMembers"
+                        ? "teamMember"
+                        : "testimonial",
+                  }).toString()
+              : undefined,
+          }
+        : serverFieldEditingBlockTypes.has(block._type)
+          ? { dataAttribute }
+        : {};
+    const boundary = resolvedBoundaries.find(({ key }) => key === block._key);
+
+    return (
+      <div data-sanity={dataSanity} key={block._key}>
+        <Component {...block} {...editingProps} {...boundary} />
+      </div>
+    );
+  }
+
   return (
     <>
-      {blocks?.map((block) => {
-        const Component = componentMap[block._type] as
-          React.ComponentType<Block & BlockEditingProps> | undefined;
-        if (!Component) return null;
-
-        const blockPath = `blocks[_key=="${block._key}"]`;
-        const dataSanity = stega
-          ? createDataAttribute({
-              baseUrl:
-                process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
-              dataset,
-              id: documentId,
-              path: blockPath,
-              projectId,
-              type: documentType,
-            }).toString()
-          : undefined;
-        const dataAttribute = stega
-          ? (path: string) =>
-              createDataAttribute({
-                baseUrl:
-                  process.env.NEXT_PUBLIC_STUDIO_URL || "http://localhost:3333",
-                dataset,
-                id: documentId,
-                path: `${blockPath}.${path}`,
-                projectId,
-                type: documentType,
-              }).toString()
-          : undefined;
-        const editingProps: BlockEditingProps =
-          block._type === "teamMembers" || block._type === "testimonials"
-            ? {
-                dataAttribute,
-                [block._type === "teamMembers"
-                  ? "memberDataAttribute"
-                  : "testimonialDataAttribute"]: stega
-                  ? (memberId: string, path: string) =>
-                      createDataAttribute({
-                        baseUrl:
-                          process.env.NEXT_PUBLIC_STUDIO_URL ||
-                          "http://localhost:3333",
-                        dataset,
-                        id: memberId,
-                        path,
-                        projectId,
-                        type:
-                          block._type === "teamMembers"
-                            ? "teamMember"
-                            : "testimonial",
-                      }).toString()
-                  : undefined,
-              }
-            : serverFieldEditingBlockTypes.has(block._type)
-              ? { dataAttribute }
-            : {};
-        const boundary = resolvedBoundaries.find(({ key }) => key === block._key);
-
-        return (
-          <div data-sanity={dataSanity} key={block._key}>
-            <Component {...block} {...editingProps} {...boundary} />
-          </div>
-        );
-      })}
+      {groups.map(({ band, blocks: bandBlocks }) => (
+        <div
+          data-band={band?.theme ?? undefined}
+          data-band-tuck={band?.tuck ? "" : undefined}
+          key={bandBlocks[0]._key}
+        >
+          {bandBlocks.map(renderBlock)}
+        </div>
+      ))}
     </>
   );
 }

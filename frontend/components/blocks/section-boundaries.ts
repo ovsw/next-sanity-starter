@@ -83,3 +83,32 @@ export function sectionSceneClassName(
     topTreatment === "wave" ? "section-scene-wave-top" : undefined,
   );
 }
+
+export type SectionBand = {
+  /** Keys of the sections in the band, in page order. */
+  keys: string[];
+  theme: SectionTheme | null;
+  /** The first section tucks over the section above, so the band's top follows its shape. */
+  tuck: boolean;
+};
+
+/**
+ * Groups consecutive sections joined by seams into bands. Sections in one
+ * band share a theme and read as one continuous surface, so the stylesheet
+ * paints surface texture once per band instead of once per section. An
+ * outer or edge boundary always starts a new band.
+ */
+export function resolveSectionBands(
+  boundaries: ResolvedSectionBoundary[],
+): SectionBand[] {
+  const bands: SectionBand[] = [];
+  for (const boundary of boundaries) {
+    const current = bands[bands.length - 1];
+    if (current && boundary.top === "seam") {
+      current.keys.push(boundary.key);
+      continue;
+    }
+    bands.push({ keys: [boundary.key], theme: boundary.theme, tuck: boundary.topTuck });
+  }
+  return bands;
+}
