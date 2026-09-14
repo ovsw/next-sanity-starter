@@ -359,11 +359,22 @@ export async function allocatePorts({
   throw new Error(`All ${SLOT_COUNT} worktree port slots are busy.`);
 }
 
-export function desiredSanityOrigins() {
-  return Array.from({ length: SLOT_COUNT }, (_, slot) => portsForSlot(slot)).flatMap(
+export function desiredSanityOrigins({ productionOrigin } = {}) {
+  const localOrigins = Array.from(
+    { length: SLOT_COUNT },
+    (_, slot) => portsForSlot(slot),
+  ).flatMap(
     ({ frontendPort, studioPort }) => [
       { origin: `http://localhost:${frontendPort}`, credentials: true },
       { origin: `http://localhost:${studioPort}`, credentials: true },
     ],
   );
+
+  if (
+    !productionOrigin ||
+    localOrigins.some(({ origin }) => origin === productionOrigin)
+  ) {
+    return localOrigins;
+  }
+  return [...localOrigins, { origin: productionOrigin, credentials: true }];
 }
