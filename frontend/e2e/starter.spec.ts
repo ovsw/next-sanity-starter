@@ -177,4 +177,26 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
   expect(flatWave!.lower.wave).toBe(false);
   expect(flatWave!.lower.paddingTop).toBe(seam!.lower.paddingTop);
   expect(flatWave!.lower.top).toBeCloseTo(flatWave!.upper.bottom, 0);
+
+  // Seam-joined dark sections share one band, and a wave section leads a
+  // tucked band whose overlay reaches above the band box.
+  const bands = await page.locator("main [data-band='dark']").evaluateAll((elements) =>
+    elements.map((element) => {
+      const first = element.querySelector("section.section-scene");
+      const overlayTop = parseFloat(getComputedStyle(element, "::before").top);
+      return {
+        sections: element.querySelectorAll("section.section-scene").length,
+        tuck: element.hasAttribute("data-band-tuck"),
+        leadsWithWave: Boolean(first?.classList.contains("section-scene-wave-top")),
+        overlayTop,
+      };
+    }),
+  );
+  expect(bands.some((band) => band.sections > 1)).toBe(true);
+  expect(bands.some((band) => band.tuck)).toBe(true);
+  for (const band of bands) {
+    expect(band.tuck).toBe(band.leadsWithWave);
+    if (band.tuck) expect(band.overlayTop).toBeLessThan(0);
+    else expect(band.overlayTop).toBe(0);
+  }
 });

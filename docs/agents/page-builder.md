@@ -74,6 +74,13 @@ Editors choose which content belongs together. Code owns the visual rules.
   each side contributes half its section padding. Different backgrounds, and
   every join below a hero, form an edge with full padding. The first and last
   visible sections keep full outer spacing.
+- **Bands.** `resolveSectionBands` in `section-boundaries.ts` groups
+  seam-joined sections into bands, and the Page Builder wraps each band in a
+  div with `data-band="<theme>"` and `data-band-tuck` when its first section
+  tucks. A Dark band carries one tonal sweep and one grain overlay that span
+  the whole run, so the texture does not restart at a seam. The band paints
+  no background; sections keep their own colour. The glow, shade, and grain
+  tokens live in `frontend/app/globals.css` next to the tuck depth token.
 - **Visible adjacency.** Only sections that render content take part. Each
   section's empty-content rule lives in `isRenderableBlock`, next to the
   `page-builder-generator:visible-blocks` marker, and must match the renderer's
@@ -95,9 +102,11 @@ Code supplies an irregular top edge; there is no editor shape selector.
 2. Have the renderer accept `topTreatment` and pass it as the fourth argument
    of `sectionSceneClassName`.
 3. Give the treatment a class in `frontend/app/globals.css` that paints the
-   shape with `background: inherit`, pulls the section up by the tuck depth
-   with a negative top margin, and adds that depth back to the top padding so
-   content stays clear. Follow `.section-scene-wave-top`.
+   shape with `background: inherit` and pulls the section up by the tuck depth
+   with a negative top margin. Follow `.section-scene-wave-top`. The section
+   above pads its bottom by the tuck depth and the crest height (the
+   `[data-band]:has(+ [data-band-tuck])` rule), so content on both sides sits
+   the same distance from the shape.
 
 The resolver enables a treatment only at a different-background join. At a
 seam it suppresses the treatment so no gap or third color appears. A later

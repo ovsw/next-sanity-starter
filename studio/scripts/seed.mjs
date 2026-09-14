@@ -358,7 +358,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-benefits",
         _type: "benefitCards",
-        theme: "light",
+        theme: "dark",
         title: "Reusable sections are ready to edit.",
         cards: [
           {
@@ -406,6 +406,18 @@ export const starterDocuments = [
         ],
       },
       {
+        _key: "starter-home-cta",
+        _type: "ctaBanner",
+        theme: "dark",
+        image: imageRef,
+        title: "A wave leads a dark band.",
+        description:
+          "The two Dark sections below share this surface, so the glow and grain run across all three without a restart.",
+        buttons: [
+          button("starter-home-cta-button", "Open About", "starter-page-about"),
+        ],
+      },
+      {
         _key: "starter-home-timeline",
         _type: "stackedTimeline",
         theme: "dark",
@@ -433,7 +445,7 @@ export const starterDocuments = [
       {
         _key: "starter-home-features",
         _type: "stackedFeatureRows",
-        theme: "light",
+        theme: "dark",
         title: "Useful details, easy to find.",
         rows: [
           {
@@ -513,18 +525,6 @@ export const starterDocuments = [
           button("starter-latest-button", "Open Blog", "blogIndex", "outline"),
         ],
         fallbackImage: imageRef,
-      },
-      {
-        _key: "starter-home-cta",
-        _type: "ctaBanner",
-        theme: "dark",
-        image: imageRef,
-        title: "Remove the seed when real content starts.",
-        description:
-          "The unseed command removes only marked Starter sample records.",
-        buttons: [
-          button("starter-home-cta-button", "Open About", "starter-page-about"),
-        ],
       },
     ],
     meta: meta(

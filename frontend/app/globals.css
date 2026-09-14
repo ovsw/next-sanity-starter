@@ -37,6 +37,18 @@
   --space-card: 1.5rem;
   --space-stack: 1.5rem;
   --space-header-gap: 3rem;
+  /* A tucked section overlaps the section above by this depth. The wave
+     crest rises this height above the section box and meets the box top
+     at both edges, so the silhouette is one rounded shape. */
+  --section-tuck-depth: 2rem;
+  --section-wave-height: 1.5rem;
+  /* Dark band surface: two soft glows, a shadow between them, and a grain
+     over everything. Tune here. */
+  --band-glow: color-mix(in oklch, #fafafa 12%, transparent);
+  --band-shade: color-mix(in oklch, #000000 45%, transparent);
+  --grain-size: 180px;
+  --grain-opacity: 0.45;
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 @layer base {
   * {
@@ -192,19 +204,70 @@
 .section-scene-seam-bottom { padding-bottom: clamp(2rem, 4.5vw, 4rem); }
 .section-scene-wave-top {
   z-index: 1;
-  margin-top: -2rem;
-  padding-top: calc(clamp(4rem, 9vw, 8rem) + 2rem);
+  margin-top: calc(-1 * var(--section-tuck-depth));
+}
+/* The section above a tucked section loses the tuck depth and the wave crest
+   to the overlap. It pads its bottom by that much, so its content sits as far
+   from the crest as the tucked section's content sits from the wave's foot. */
+[data-band]:has(+ [data-band-tuck]) > :last-child > .section-scene {
+  padding-bottom: calc(
+    clamp(4rem, 9vw, 8rem) + var(--section-tuck-depth) + var(--section-wave-height)
+  );
 }
 .section-scene-wave-top::before {
   position: absolute;
   z-index: -1;
-  top: -1.5rem;
+  top: calc(-1 * var(--section-wave-height));
   right: 0;
   left: 0;
-  height: 3rem;
+  height: var(--section-wave-height);
   content: "";
   background: inherit;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+/* Band surface. The Page Builder wraps each run of seam-joined sections in a
+   band (see resolveSectionBands). A dark band carries one tonal sweep and one
+   grain overlay sized to the whole run, so the texture never restarts at a
+   seam. The band paints no background: sections keep their own colour and
+   the overlays blend above them. flow-root keeps a leading wave section's
+   negative margin from collapsing through the band, so the band box starts
+   at the join and the wave overflows above it; the overlays reach up to the
+   wave crest and curve with it. z-index 1 matches the wave section, so DOM
+   order still decides which neighbour paints on top. */
+[data-band="dark"] {
+  display: flow-root;
+  position: relative;
+  z-index: 1;
+}
+[data-band="dark"]::before,
+[data-band="dark"]::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+/* Tonal sweep: two large glows, top-left and bottom-right, with a shadow in
+   the top-right corner between them. Sized to the band, so a long run gets
+   one slow sweep rather than a glow per section. */
+[data-band="dark"]::before {
+  background-image:
+    radial-gradient(170% 95% at 8% 0%, var(--band-glow), transparent 70%),
+    radial-gradient(170% 95% at 96% 100%, var(--band-glow), transparent 70%),
+    radial-gradient(120% 60% at 100% 0%, var(--band-shade), transparent 70%);
+}
+[data-band="dark"]::after {
+  background-image: var(--grain-image);
+  background-size: var(--grain-size);
+  mix-blend-mode: soft-light;
+  opacity: var(--grain-opacity);
+}
+[data-band="dark"][data-band-tuck]::before,
+[data-band="dark"][data-band-tuck]::after {
+  top: calc(-1 * (var(--section-tuck-depth) + var(--section-wave-height)));
+  border-top-left-radius: 50% var(--section-wave-height);
+  border-top-right-radius: 50% var(--section-wave-height);
 }
 
 @media (prefers-reduced-motion: reduce) {
