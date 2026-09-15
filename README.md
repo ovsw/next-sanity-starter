@@ -128,9 +128,13 @@ Run `pnpm verify` before opening a pull request. It checks generated Sanity type
 
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
 
-The workspace patches `sanity-plugin-media@5.0.11` to restore its wide-screen
-tags panel and tag icon. When upgrading that plugin, check both fixes before
-removing or replacing the patch.
+The Studio uses the `media-6.1.8-drag.1` prerelease from the `ovsw/plugins`
+fork. It adds drag-to-folder moves and Ctrl/Cmd-click asset picking from
+`sanity-io/plugins#2014`. Switch back to the npm package after upstream merges
+and publishes the change.
+
+The workspace also patches this build to restore its tag icon. Check that fix
+before removing or replacing the patch.
 
 ## Deploy your copy
 

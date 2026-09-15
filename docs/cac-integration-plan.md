@@ -10,7 +10,7 @@ Source: CAC `57e8e7f`; starter baseline: `c87caa3`.
 | Group | Owner | Status | Completion proof |
 | --- | --- | --- | --- |
 | Routing, redirects, SEO, images, links | Socrates | Implemented | Focused regressions passed; combined typecheck and builds passed |
-| Studio media fixes and simpler link fields | Main agent | Implemented | Media 5.0.11 patch installed; schema extraction and Studio build passed; stored destination shapes preserved |
+| Studio media fixes and simpler link fields | Main agent | Implemented | Forked Media 6.1.8 build and tag-icon patch installed; schema extraction and Studio build passed; stored destination shapes preserved |
 | Worktree tools | Hypatia | Implemented | 17 focused tests; real paired launch, scoped listing, shutdown, and released ports verified |
 | Page Builder generator | Main agent + Hypatia | Implemented | 11 tests cover scopes, dry runs, duplicates, locks, rollback, and concurrent edits |
 | Testimonials, feature rows, timeline | Euler + main integration | Implemented | Registered all layers, generated types, seeded examples, renderer tests and browser fixture passed |
