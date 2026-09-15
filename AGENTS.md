@@ -39,7 +39,7 @@ environment state (which dataset is configured, which env file is loaded) are
 exactly what makes handing off write access dangerous.
 
 ## Testing
-- Prefer focused functional/accessibility checks and one-time visual inspection;
+- Prefer focused functional/accessibility checks and user visual inspection (prompt the user to visually inspect the exact URLs, do not use browsers to do it yourself);
 - DO NOT create or maintain screenshot baselines unless explicitly requested.
 
 ## Commits
