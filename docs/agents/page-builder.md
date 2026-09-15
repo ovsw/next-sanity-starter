@@ -144,7 +144,7 @@ For visual changes, treat the existing design system as the default:
 - The renderer uses `sectionSceneClassName`, targets its theme field, and has a matching empty-content rule in the dispatcher.
 - The Studio preview and frontend renderer work with realistic content.
 - Generated files are current and are not manually edited.
-- Repository verification passes:
+- Browser-free repository verification passes:
 
   ```bash
   pnpm verify
