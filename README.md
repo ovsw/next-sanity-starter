@@ -124,7 +124,11 @@ pnpm build
 pnpm typegen
 ```
 
-Run `pnpm verify` before opening a pull request. It checks generated Sanity types, TypeScript, lint, focused tests, both production builds, and the browser acceptance journey.
+`pnpm verify` checks generated Sanity types, TypeScript, lint, focused tests,
+both production builds, and the Playwright acceptance journey. Playwright uses
+real Google Chrome in headless mode. It does not record screenshots, video, or
+traces. If Chrome is missing, install it with
+`pnpm --dir frontend exec playwright install chrome`.
 
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
 

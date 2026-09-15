@@ -9,7 +9,10 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
     channel: "chrome",
-    trace: "retain-on-failure",
+    headless: true,
+    screenshot: "off",
+    trace: "off",
+    video: "off",
   },
   webServer: {
     command: process.env.PLAYWRIGHT_REUSE_BUILD
