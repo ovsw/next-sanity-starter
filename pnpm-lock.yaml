@@ -153,8 +153,8 @@ importers:
         specifier: ^30.0.1
         version: 30.0.1(@noble/hashes@2.2.0)
       postcss:
-        specifier: ^8.5.16
-        version: 8.5.16
+        specifier: ^8.5.28
+        version: 8.5.28
       react-email:
         specifier: ^6.6.7
         version: 6.6.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6978,6 +6978,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.18:
+    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   nanoid@5.1.16:
     resolution: {integrity: sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ==}
     engines: {node: ^18 || >=20}
@@ -7370,12 +7375,12 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.16:
-    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.23:
     resolution: {integrity: sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.5.28:
+    resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
 
   powershell-utils@0.1.0:
@@ -13318,7 +13323,7 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.2
       '@tailwindcss/oxide': 4.3.2
-      postcss: 8.5.16
+      postcss: 8.5.28
       tailwindcss: 4.3.2
 
   '@tailwindcss/typography@0.5.20(tailwindcss@4.3.2)':
@@ -16335,6 +16340,8 @@ snapshots:
 
   nanoid@3.3.17: {}
 
+  nanoid@3.3.18: {}
+
   nanoid@5.1.16: {}
 
   nanoid@6.0.1: {}
@@ -16743,15 +16750,15 @@ snapshots:
   postcss-value-parser@4.2.0:
     optional: true
 
-  postcss@8.5.16:
+  postcss@8.5.23:
     dependencies:
-      nanoid: 3.3.15
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.23:
+  postcss@8.5.28:
     dependencies:
-      nanoid: 3.3.17
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -17629,7 +17636,7 @@ snapshots:
       kleur: 4.1.5
       open: 11.0.0
       ora: 8.2.0
-      postcss: 8.5.16
+      postcss: 8.5.28
       postcss-selector-parser: 7.1.4
       prompts: 2.4.2
       recast: 0.23.19
@@ -18401,7 +18408,7 @@ snapshots:
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
-      postcss: 8.5.23
+      postcss: 8.5.28
       rolldown: 1.1.4
       tinyglobby: 0.2.17
     optionalDependencies:
