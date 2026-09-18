@@ -246,14 +246,18 @@ export const starterDocuments = [
           },
         ],
       },
+    ],
+    // A replaced Scaffold lives here. The Website never renders this array.
+    blocksArchive: [
       {
-        _key: "starter-page-cta",
-        _type: "ctaBanner",
-        theme: "light",
-        image: imageRef,
-        title: "Ready for the next example?",
-        description: "Return to the home page to inspect the full block set.",
-        buttons: [button("starter-page-cta-button", "View home", "homePage")],
+        _key: "starter-page-archived-scaffold",
+        _type: "scaffold",
+        name: "About page intro",
+        proposedSectionShape: "Short intro with an eyebrow and one paragraph.",
+        richText: simpleText(
+          "starter-page-archived-copy",
+          "This Scaffold was replaced by the rich text section above. It must not appear on the page.",
+        ),
       },
     ],
     meta: meta(
@@ -332,199 +336,46 @@ export const starterDocuments = [
     description: "Neutral content that proves the retained Starter model.",
     blocks: [
       {
-        _key: "starter-home-hero",
-        _type: "hero",
+        _key: "starter-home-intro",
+        _type: "richTextBlock",
+        theme: "light",
         eyebrow: "Starter seed",
         title: "Neutral sample content for a clean project.",
-        body: simpleText(
-          "starter-hero-body",
+        richText: simpleText(
+          "starter-home-intro-copy",
           "Use this optional seed to inspect the editing model, then remove it before adding real content.",
         ),
-        buttons: [
-          button(
-            "starter-hero-primary",
-            "Read the guide",
-            "starter-post-field-guide",
-          ),
-          button(
-            "starter-hero-secondary",
-            "View About",
-            "starter-page-about",
-            "secondary",
-          ),
-        ],
-        image: imageRef,
       },
       {
-        _key: "starter-home-benefits",
-        _type: "benefitCards",
-        theme: "dark",
-        title: "Reusable sections are ready to edit.",
-        cards: [
-          {
-            _key: "starter-benefit-1",
-            _type: "featureGridItem",
-            image: placeholder("square"),
-            title: "Structured pages",
-            body: simpleText(
-              "starter-benefit-body-1",
-              "Pages use reusable blocks that can be reordered.",
-            ),
-          },
-          {
-            _key: "starter-benefit-2",
-            _type: "featureGridItem",
-            image: placeholder("square"),
-            title: "Reusable references",
-            body: simpleText(
-              "starter-benefit-body-2",
-              "FAQ and team sections pull from shared documents.",
-            ),
-          },
-        ],
-      },
-      {
-        _key: "starter-home-story",
-        _type: "storyFeature",
+        _key: "starter-home-seam",
+        _type: "richTextBlock",
         theme: "light",
-        title: "A required image field with plain copy.",
-        image: placeholder("square"),
-        description:
-          "Pair a clear message with an image and a useful next step.",
-        buttons: [button("starter-story-button", "Open Blog", "blogIndex")],
-      },
-      {
-        _key: "starter-home-cta-flat",
-        _type: "ctaBanner",
-        theme: "light",
-        image: imageRef,
-        title: "Matching backgrounds join without a wave.",
-        description:
-          "This call to action shares the Light theme above it, so the seam stays flat.",
-        buttons: [
-          button("starter-home-cta-flat-button", "Read the guide", "starter-post-field-guide"),
-        ],
-      },
-      {
-        _key: "starter-home-cta",
-        _type: "ctaBanner",
-        theme: "dark",
-        image: imageRef,
-        title: "A wave leads a dark band.",
-        description:
-          "The two Dark sections below share this surface, so the glow and grain run across all three without a restart.",
-        buttons: [
-          button("starter-home-cta-button", "Open About", "starter-page-about"),
-        ],
-      },
-      {
-        _key: "starter-home-timeline",
-        _type: "stackedTimeline",
-        theme: "dark",
-        title: "A clear path from idea to launch.",
-        intro: "Use these milestones to explain how your process works.",
-        items: [
-          {
-            _key: "discover",
-            _type: "stackedTimelineItem",
-            title: "Discover",
-            meta: "Step 1",
-            text: "Agree on the goals and the content your visitors need.",
-            image: imageRef,
-          },
-          {
-            _key: "create",
-            _type: "stackedTimelineItem",
-            title: "Create",
-            meta: "Step 2",
-            text: "Build the pages, review the details, and prepare to launch.",
-            image: imageRef,
-          },
-        ],
-      },
-      {
-        _key: "starter-home-features",
-        _type: "stackedFeatureRows",
-        theme: "dark",
-        title: "Useful details, easy to find.",
-        rows: [
-          {
-            _key: "pages",
-            _type: "stackedFeatureRow",
-            title: "Build your pages",
-            image: placeholder("square"),
-            items: [
-              {
-                _key: "pages-copy",
-                _type: "stackedFeatureRowItem",
-                body: simpleText(
-                  "pages-body",
-                  "Choose sections and arrange them to suit your content.",
-                ),
-              },
-            ],
-          },
-          {
-            _key: "publish",
-            _type: "stackedFeatureRow",
-            title: "Review and publish",
-            image: placeholder("square"),
-            items: [
-              {
-                _key: "publish-copy",
-                _type: "stackedFeatureRowItem",
-                body: simpleText(
-                  "publish-body",
-                  "Preview each page before you share it with your visitors.",
-                ),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        _key: "starter-home-testimonials",
-        _type: "testimonials",
-        theme: "light",
-        title: "A reader's perspective",
-        testimonials: [
-          { _key: "reader", ...ref("starter-testimonial-reader") },
-        ],
-      },
-      {
-        _key: "starter-home-team",
-        _type: "teamMembers",
-        theme: "light",
-        title: "Team member reference",
+        title: "Matching themes join at a seam.",
         richText: simpleText(
-          "starter-team-copy",
-          "This section proves selected team profiles.",
+          "starter-home-seam-copy",
+          "This section shares the Light theme above it, so each side contributes half its padding.",
         ),
-        members: [
-          { _key: "starter-team-ref", ...ref("starter-team-member-editor") },
-        ],
       },
       {
-        _key: "starter-home-faq",
-        _type: "faqAccordion",
-        theme: "light",
-        title: "Reusable FAQ",
-        faqs: [
-          { _key: "starter-faq-ref", ...ref("starter-faq-getting-started") },
-        ],
+        _key: "starter-home-edge",
+        _type: "richTextBlock",
+        theme: "dark",
+        title: "A different theme forms an edge.",
+        richText: simpleText(
+          "starter-home-edge-copy",
+          "This Dark section keeps full padding on both sides of the join.",
+        ),
       },
       {
-        _key: "starter-home-latest",
-        _type: "latestArticles",
-        theme: "light",
-        eyebrow: "Publishing",
-        title: "Latest articles",
-        description:
-          "This block proves the seeded post appears in article lists.",
-        buttons: [
-          button("starter-latest-button", "Open Blog", "blogIndex", "outline"),
-        ],
-        fallbackImage: imageRef,
+        _key: "starter-home-scaffold",
+        _type: "scaffold",
+        name: "Reader quotes",
+        proposedSectionShape:
+          "Two or three short quotes with the reader's name and role.",
+        richText: simpleText(
+          "starter-home-scaffold-copy",
+          "The sample content made every editing surface easy to find. Example Reader, seed content reviewer.",
+        ),
       },
     ],
     meta: meta(

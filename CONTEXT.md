@@ -42,7 +42,15 @@ The ordered section editor used to compose a page.
 
 **Section**
 
-One reusable Page Builder content and layout unit.
+One Page Builder unit with a Sanity schema, a GROQ projection, and a React renderer. The Starter ships a minimal section library: Rich Text and Scaffold. Every other section belongs to its own project copy.
+
+**Scaffold**
+
+A placeholder section that holds a page's intended content before a real section exists for it. It has a name, rich text, and a proposed section shape. The Website renders it with a visible internal marker during Building, and the launch check fails while one is published.
+
+**Blocks Archive**
+
+The `blocksArchive` array on a page document. A replaced Scaffold moves here instead of being deleted. The Website never queries or renders it.
 
 **Draft**
 

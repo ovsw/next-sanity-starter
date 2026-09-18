@@ -1,5 +1,4 @@
 import Blocks from "@/components/blocks";
-import FaqPageJsonLd from "@/components/faq-json-ld";
 import VideoJsonLd from "@/components/video-json-ld";
 import WebsiteJsonLd from "@/components/website-json-ld";
 import { siteUrl } from "@/lib/site-url";
@@ -49,14 +48,11 @@ async function CachedIndexPage({ perspective, stega }: DynamicFetchOptions) {
     return MissingSanityPage({ document: "homePage", documentId: "homePage" });
   }
 
-  const hasLeadingHero = page.blocks?.[0]?._type === "hero";
-
   return (
     <>
       <WebsiteJsonLd siteUrl={siteUrl} />
-      <FaqPageJsonLd blocks={page.blocks ?? []} />
       <VideoJsonLd content={page.blocks ?? []} />
-      {!hasLeadingHero && stegaClean(page.title)?.trim() ? (
+      {stegaClean(page.title)?.trim() ? (
         <header>
           <h1>{page.title}</h1>
           {stegaClean(page.description)?.trim() ? (

@@ -1,7 +1,11 @@
 import { defineField, defineType } from "sanity";
 import { Files } from "lucide-react";
 import meta from "../blocks/shared/meta";
-import { blocksField } from "../blocks/page-builder";
+import {
+  blocksArchiveField,
+  blocksArchiveFieldset,
+  blocksField,
+} from "../blocks/page-builder";
 import { uniqueRoutedSlug } from "../validation/routed-slug";
 
 export default defineType({
@@ -47,6 +51,7 @@ export default defineType({
       subtitle: "slug.current",
     },
   },
+  fieldsets: [blocksArchiveFieldset],
   groups: [
     {
       name: "content",
@@ -87,6 +92,7 @@ export default defineType({
       validation: (Rule) => Rule.required().custom(uniqueRoutedSlug),
     }),
     blocksField,
+    blocksArchiveField,
     meta,
   ],
 });

@@ -14,7 +14,6 @@ export type SectionSceneProps = {
 export type SectionDescriptor = {
   key: string;
   theme?: string | null;
-  kind?: "hero" | "content";
   edgeTreatment?: SectionEdgeTreatment;
 };
 
@@ -60,7 +59,7 @@ function resolveTreatment(
 }
 
 function resolveJoin(upper: SectionDescriptor, lower: SectionDescriptor): SectionBoundary {
-  if (upper.kind === "hero" || lower.kind === "hero") return "edge";
+  // A section without a theme, such as a Scaffold, never shares a surface.
   if (!upper.theme || !lower.theme) return "edge";
   return resolveSectionTheme(upper.theme) === resolveSectionTheme(lower.theme)
     ? "seam"

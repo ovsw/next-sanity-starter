@@ -16,6 +16,22 @@ The Website reads structured content from one Sanity project and dataset.
 - `settings`, `navigation`, `footer`, and `blogPostSettings` are global documents.
 - `author`, `faq`, `teamMember`, and `testimonial` are reusable records.
 - Pages compose top-level sections through their `blocks` array.
+- `homePage`, `page`, and `blogIndex` also carry a `blocksArchive` array that
+  accepts the same section types. Replaced Scaffolds move there. The Website
+  reads only `blocks`.
+
+## Section library
+
+The Starter ships two sections and presumes no design:
+
+- `richTextBlock` is a finished long-form section and a valid final match for a
+  Scaffold.
+- `scaffold` is a placeholder with `name`, `richText`, and
+  `proposedSectionShape`. It renders its rich text with a visible internal
+  marker so nobody mistakes it for a finished section.
+
+Every other section belongs to its own project copy. Generate one with
+`pnpm page-builder:new`.
 
 ## Page Builder path
 

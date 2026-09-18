@@ -1,6 +1,10 @@
 import { House } from "lucide-react";
 import { defineField, defineType } from "sanity";
-import { homePageBlocksField } from "../blocks/page-builder";
+import {
+  blocksArchiveFieldset,
+  homePageBlocksArchiveField,
+  homePageBlocksField,
+} from "../blocks/page-builder";
 import meta from "../blocks/shared/meta";
 
 export default defineType({
@@ -8,6 +12,7 @@ export default defineType({
   title: "Home Page",
   type: "document",
   icon: House,
+  fieldsets: [blocksArchiveFieldset],
   groups: [
     { name: "content", title: "Content" },
     { name: "seo", title: "SEO" },
@@ -27,6 +32,7 @@ export default defineType({
       group: "content",
     }),
     homePageBlocksField,
+    homePageBlocksArchiveField,
     meta,
   ],
   preview: {

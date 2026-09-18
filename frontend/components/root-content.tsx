@@ -3,7 +3,6 @@ import { createDataAttribute, stegaClean } from "next-sanity";
 import Blocks from "@/components/blocks";
 import BlogPostingJsonLd from "@/components/blog-posting-json-ld";
 import BreadcrumbJsonLd from "@/components/breadcrumb-json-ld";
-import FaqPageJsonLd from "@/components/faq-json-ld";
 import { siteUrl } from "@/lib/site-url";
 import VideoJsonLd from "@/components/video-json-ld";
 import PostHero from "@/components/blocks/post-hero";
@@ -33,8 +32,7 @@ function PageContent({
   stega: boolean;
 }) {
   const blocks = page.blocks ?? [];
-  const needsTitleHeader =
-    blocks[0]?._type !== "hero" && stegaClean(page.title)?.trim();
+  const needsTitleHeader = stegaClean(page.title)?.trim();
   const rootDataAttribute = stega
     ? (path: "description" | "title") =>
         createDataAttribute({
@@ -57,7 +55,6 @@ function PageContent({
         ]}
         siteUrl={siteUrl}
       />
-      <FaqPageJsonLd blocks={blocks} />
       <VideoJsonLd content={blocks} />
       {needsTitleHeader ? (
         <PageHeading

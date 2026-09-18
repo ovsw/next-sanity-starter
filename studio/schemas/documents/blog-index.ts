@@ -1,6 +1,10 @@
 import { Newspaper } from "lucide-react";
 import { defineField, defineType } from "sanity";
-import { contentBlocksField } from "../blocks/page-builder";
+import {
+  blocksArchiveFieldset,
+  contentBlocksArchiveField,
+  contentBlocksField,
+} from "../blocks/page-builder";
 import meta from "../blocks/shared/meta";
 
 export default defineType({
@@ -8,6 +12,7 @@ export default defineType({
   title: "Blog Index",
   type: "document",
   icon: Newspaper,
+  fieldsets: [blocksArchiveFieldset],
   groups: [
     { name: "content", title: "Content" },
     { name: "seo", title: "SEO" },
@@ -32,6 +37,7 @@ export default defineType({
           .warning(),
     }),
     contentBlocksField,
+    contentBlocksArchiveField,
     meta,
   ],
   preview: {

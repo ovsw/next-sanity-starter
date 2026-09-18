@@ -60,6 +60,8 @@ const CATEGORY_STATIC_PARAMS_QUERY = `
 `;
 
 const forbiddenMarkers = [
+  // A Scaffold is a Building-phase placeholder; see components/blocks/scaffold.tsx.
+  ["page builder scaffold", /<section\b[^>]*\sdata-scaffold(?:=|\s|>)/i],
   ["aria-busy loader", /\saria-busy(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?(?:\s|>)/i],
   ["page loader label", /Page content loading/i],
   ["blog loader label", /Blog content loading/i],
@@ -233,7 +235,7 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exitCode = 1;
 } else {
-  console.log(`PASS: ${knownRoutes.size} known routes returned 200 with real header/footer HTML and no route/layout fallback markers.`);
+  console.log(`PASS: ${knownRoutes.size} known routes returned 200 with real header/footer HTML, no Scaffold sections, and no route/layout fallback markers.`);
   console.log(`PASS: ${unknownRoutes.size} unknown routes returned 404 with no route/layout fallback markers.`);
   console.log(
     `Route inventory: ${[...familyCounts].map(([family, count]) => `${family}=${count}`).join(", ")}.`,

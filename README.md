@@ -91,7 +91,7 @@ The seed is manual. It never runs during install, setup, development, build, or 
 
 Seeding needs a Sanity write token in `SANITY_AUTH_TOKEN`, either in the shell or in `studio/.env.local`.
 
-The sample content creates global settings, navigation, footer, the homepage, a normal `/about/` page, Blog settings, authors, categories, a Blog Post, FAQ, Team Member, Testimonial, relevant SEO values, and every retained Page Builder section. Use it to confirm Website rendering and Studio editing, then remove it before adding real project content:
+The sample content creates global settings, navigation, footer, the homepage, a normal `/about/` page, Blog settings, authors, categories, a Blog Post, FAQ, Team Member, Testimonial, relevant SEO values, and every retained Page Builder section. The homepage shows one live Scaffold and the About page archives one, so a seeded dataset fails the launch check on purpose. Use it to confirm Website rendering and Studio editing, then remove it before adding real project content:
 
 ```bash
 pnpm unseed
@@ -99,10 +99,10 @@ pnpm unseed
 
 Unseed removes only marked Starter sample documents and the bundled Starter sample assets. Replacement images uploaded by editors are preserved. It refuses partial or unmarked targets instead of emptying a dataset generally.
 
-The section library includes testimonials, stacked feature rows with optional
-links, and a timeline. These sections use existing shared content types and
-neutral styles. Add a section with `pnpm page-builder:new <name>`; see
-`docs/agents/page-builder.md` for generation, previews, and registration.
+The section library is minimal on purpose: a Rich Text section and a Scaffold
+placeholder. Each project copy adds its own sections with
+`pnpm page-builder:new <name>`; see `docs/agents/page-builder.md` for
+generation, previews, registration, and the Scaffold workflow.
 
 Pages accept nested slugs such as `about/our-team`. Blog routes stay reserved.
 SEO sharing uses an editor-selected image when present, then a generated card.

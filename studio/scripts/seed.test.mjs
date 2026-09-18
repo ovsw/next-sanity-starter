@@ -147,31 +147,32 @@ test("seed covers every section and uses only the bundled PNG assets", async () 
     for (const child of Object.values(value)) check(child);
   }
   check(starterDocuments);
-  const story = blocks.find((block) => block._type === "storyFeature");
-  assert.ok(story.description);
-  assert.equal(story.richText, undefined);
-  assert.equal(story.keyDetails, undefined);
 });
 
-test("homepage seed demonstrates a seam, a straight edge, a wave tuck, and a suppressed wave", () => {
+test("seed archives one Scaffold and renders another", () => {
+  const about = starterDocuments.find(
+    (document) => document._id === "starter-page-about",
+  );
+  assert.deepEqual(
+    about.blocksArchive.map((block) => block._type),
+    ["scaffold"],
+  );
+  assert.equal(about.blocks.some((block) => block._type === "scaffold"), false);
   const home = starterDocuments.find((document) => document._id === "homePage");
-  const joins = home.blocks.slice(1).map((block, index) => {
-    const upper = home.blocks[index];
-    return {
-      upper: upper._type,
-      lower: block._type,
-      match: upper._type !== "hero" && upper.theme === block.theme,
-    };
-  });
-  for (const block of home.blocks.slice(1)) {
+  const scaffold = home.blocks.find((block) => block._type === "scaffold");
+  assert.ok(scaffold.name);
+  assert.ok(scaffold.richText.length);
+});
+
+test("homepage seed demonstrates a seam and a straight edge", () => {
+  const home = starterDocuments.find((document) => document._id === "homePage");
+  const themed = home.blocks.filter((block) => block._type !== "scaffold");
+  for (const block of themed) {
     assert.ok(["light", "dark"].includes(block.theme), block._key);
   }
-  assert.ok(joins.some((join) => join.match && join.lower !== "ctaBanner"));
-  assert.ok(
-    joins.some(
-      (join) => !join.match && join.upper !== "hero" && join.lower !== "ctaBanner",
-    ),
-  );
-  assert.ok(joins.some((join) => !join.match && join.lower === "ctaBanner"));
-  assert.ok(joins.some((join) => join.match && join.lower === "ctaBanner"));
+  const joins = themed.slice(1).map((block, index) => ({
+    match: themed[index].theme === block.theme,
+  }));
+  assert.ok(joins.some((join) => join.match));
+  assert.ok(joins.some((join) => !join.match));
 });

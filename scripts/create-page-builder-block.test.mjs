@@ -259,7 +259,7 @@ test("lock, malformed names, reserved words and missing markers refuse without p
 
 test("existing registration refuses even when generated files are absent", async (t) => {
   const f = await fixture(t);
-  await assert.rejects(f.run("hero"), /already registered/);
+  await assert.rejects(f.run("richTextBlock"), /already registered/);
 });
 
 test("write failure restores own registrations and removes own generated files", async (t) => {
