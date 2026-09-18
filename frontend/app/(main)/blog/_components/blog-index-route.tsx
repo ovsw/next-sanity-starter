@@ -1,7 +1,6 @@
 import { PageHeading } from "@/components/shadcnblocks/page-heading";
 import Blocks from "@/components/blocks";
 import BreadcrumbJsonLd from "@/components/breadcrumb-json-ld";
-import FaqPageJsonLd from "@/components/faq-json-ld";
 import { LatestPostCard, RegularPostCard } from "@/components/blog-card";
 import BlogPagination from "@/components/blog-pagination";
 import {
@@ -75,7 +74,6 @@ export async function BlogIndexRoute({
         ]}
         siteUrl={siteUrl}
       />
-      <FaqPageJsonLd blocks={blogIndex.blocks ?? []} />
       <PageHeading
         title={blogIndex.title}
         description={blogIndex.description}

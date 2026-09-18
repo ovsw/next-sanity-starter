@@ -33,17 +33,8 @@ import {
   blogPostSidebarAction,
 } from "./schemas/blocks/shared/blog-post-sidebar";
 // Schema UI objects
-import hero from "./schemas/blocks/hero";
-import latestArticles from "./schemas/blocks/latest-articles";
-import faqAccordion from "./schemas/blocks/faq-accordion";
-import storyFeature from "./schemas/blocks/story-feature";
-import teamMembers from "./schemas/blocks/team-members";
 import richTextBlock from "./schemas/blocks/rich-text-block";
-import ctaBanner from "./schemas/blocks/cta-banner";
-import benefitCards from "./schemas/blocks/benefit-cards";
-import testimonials from "./schemas/blocks/testimonials";
-import stackedFeatureRows from "./schemas/blocks/stacked-feature-rows";
-import stackedTimeline from "./schemas/blocks/stacked-timeline";
+import scaffold from "./schemas/blocks/scaffold";
 // page-builder-generator:block-imports
 
 export const schemaTypes = [
@@ -80,16 +71,7 @@ export const schemaTypes = [
   blogPostSidebarAction,
   blogPostSidebar,
   // blocks
-  hero,
-  latestArticles,
-  faqAccordion,
-  storyFeature,
-  teamMembers,
   richTextBlock,
-  ctaBanner,
-  benefitCards,
-  testimonials,
-  stackedFeatureRows,
-  stackedTimeline,
+  scaffold,
   // page-builder-generator:block-types
 ];

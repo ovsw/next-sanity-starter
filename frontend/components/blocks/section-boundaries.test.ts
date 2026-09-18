@@ -22,14 +22,14 @@ describe("Page Builder section boundaries", () => {
         { key: "same", theme: "light" },
         { key: "different", theme: "dark" },
         { key: "unknown", theme: null },
-        { key: "hero", kind: "hero" },
+        { key: "untitled" },
       ]),
     ).toEqual([
       { key: "first", theme: "light", top: "outer", bottom: "seam", topTreatment: "none", topTuck: false },
       { key: "same", theme: "light", top: "seam", bottom: "edge", topTreatment: "none", topTuck: false },
       { key: "different", theme: "dark", top: "edge", bottom: "edge", topTreatment: "none", topTuck: false },
       { key: "unknown", theme: null, top: "edge", bottom: "edge", topTreatment: "none", topTuck: false },
-      { key: "hero", theme: null, top: "edge", bottom: "outer", topTreatment: "none", topTuck: false },
+      { key: "untitled", theme: null, top: "edge", bottom: "outer", topTreatment: "none", topTuck: false },
     ]);
   });
 
@@ -62,7 +62,7 @@ describe("Page Builder section boundaries", () => {
     expect(
       resolveSectionBands(
         resolveSectionBoundaries([
-          { key: "hero", kind: "hero" },
+          { key: "lead" },
           { key: "a", theme: "light" },
           { key: "b", theme: "light" },
           { key: "c", theme: "dark", edgeTreatment: "wave" },
@@ -72,7 +72,7 @@ describe("Page Builder section boundaries", () => {
         ]),
       ),
     ).toEqual([
-      { keys: ["hero"], theme: null, tuck: false },
+      { keys: ["lead"], theme: null, tuck: false },
       { keys: ["a", "b"], theme: "light", tuck: false },
       { keys: ["c", "d", "e"], theme: "dark", tuck: true },
       { keys: ["f"], theme: "light", tuck: false },

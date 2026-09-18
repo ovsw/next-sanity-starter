@@ -1,23 +1,14 @@
 import { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from "@/sanity.types";
 import { type LivePerspective } from "next-sanity/live";
 import { createDataAttribute, stegaClean } from "next-sanity";
-import LatestArticles from "@/components/blocks/latest-articles";
-import FaqAccordion from "@/components/blocks/faq-accordion";
-import StoryFeature from "@/components/blocks/story-feature";
-import TeamMembers from "@/components/blocks/team-members";
 import RichTextBlock from "@/components/blocks/rich-text-block";
-import CtaBanner from "@/components/blocks/cta-banner";
-import BenefitCards from "@/components/blocks/benefit-cards";
-import Hero from "@/components/blocks/hero";
-import Testimonials from "@/components/blocks/testimonials";
-import StackedFeatureRows from "@/components/blocks/stacked-feature-rows";
-import StackedTimeline from "@/components/blocks/stacked-timeline";
 import {
   resolveSectionBands,
   resolveSectionBoundaries,
   type SectionBand,
   type SectionEdgeTreatment,
 } from "@/components/blocks/section-boundaries";
+import Scaffold, { hasScaffoldContent } from "@/components/blocks/scaffold";
 // page-builder-generator:component-imports
 import { dataset, projectId } from "@/sanity/lib/env";
 
@@ -27,27 +18,11 @@ type Block =
 
 type BlockEditingProps = {
   dataAttribute?: (path: string) => string | undefined;
-  memberDataAttribute?: (
-    documentId: string,
-    path: string,
-  ) => string | undefined;
-  testimonialDataAttribute?: (
-    documentId: string,
-    path: string,
-  ) => string | undefined;
 };
 
 const serverFieldEditingBlockTypes = new Set<Block["_type"]>([
-  "faqAccordion",
-  "storyFeature",
-  "teamMembers",
   "richTextBlock",
-  "ctaBanner",
-  "benefitCards",
-  "hero",
-  "testimonials",
-  "stackedFeatureRows",
-  "stackedTimeline",
+  "scaffold",
   // page-builder-generator:editing-types
 ]);
 
@@ -56,27 +31,16 @@ const componentMap: Partial<{
     Extract<Block, { _type: K }> & BlockEditingProps
   >;
 }> = {
-  latestArticles: LatestArticles,
-  faqAccordion: FaqAccordion,
-  storyFeature: StoryFeature,
-  teamMembers: TeamMembers,
   richTextBlock: RichTextBlock,
-  ctaBanner: CtaBanner,
-  benefitCards: BenefitCards,
-  hero: Hero,
-  testimonials: Testimonials,
-  stackedFeatureRows: StackedFeatureRows,
-  stackedTimeline: StackedTimeline,
+  scaffold: Scaffold,
   // page-builder-generator:component-map
 };
 
 // Code owns irregular top edges. A section listed here overlaps the section
 // above it at a different-background join; the renderer must pass
-// `topTreatment` to `sectionSceneClassName`.
+// `topTreatment` to `sectionSceneClassName`. The Starter registers none.
 const sectionEdgeTreatments: Partial<Record<Block["_type"], SectionEdgeTreatment>> =
-  {
-    ctaBanner: "wave",
-  };
+  {};
 
 export default function Blocks({
   blocks,
@@ -96,7 +60,6 @@ export default function Blocks({
       {
         key: block._key,
         theme: "theme" in block ? (block.theme as string | null) : null,
-        kind: block._type === "hero" ? ("hero" as const) : ("content" as const),
         edgeTreatment: sectionEdgeTreatments[block._type] ?? "none",
       },
     ];
@@ -146,32 +109,11 @@ export default function Blocks({
             type: documentType,
           }).toString()
       : undefined;
-    const editingProps: BlockEditingProps =
-      block._type === "teamMembers" || block._type === "testimonials"
-        ? {
-            dataAttribute,
-            [block._type === "teamMembers"
-              ? "memberDataAttribute"
-              : "testimonialDataAttribute"]: stega
-              ? (memberId: string, path: string) =>
-                  createDataAttribute({
-                    baseUrl:
-                      process.env.NEXT_PUBLIC_STUDIO_URL ||
-                      "http://localhost:3333",
-                    dataset,
-                    id: memberId,
-                    path,
-                    projectId,
-                    type:
-                      block._type === "teamMembers"
-                        ? "teamMember"
-                        : "testimonial",
-                  }).toString()
-              : undefined,
-          }
-        : serverFieldEditingBlockTypes.has(block._type)
-          ? { dataAttribute }
-        : {};
+    const editingProps: BlockEditingProps = serverFieldEditingBlockTypes.has(
+      block._type,
+    )
+      ? { dataAttribute }
+      : {};
     const boundary = resolvedBoundaries.find(({ key }) => key === block._key);
 
     return (
@@ -206,26 +148,7 @@ function isRenderableBlock(block: Block) {
         block.richText?.length,
     );
   }
-  if (block._type === "ctaBanner" || block._type === "hero") {
-    return Boolean(stegaClean(block.title)?.trim());
-  }
-  if (block._type === "benefitCards") return Boolean(block.cards?.length);
-  if (block._type === "stackedFeatureRows") return Boolean(block.rows?.length);
-  if (block._type === "latestArticles") return Boolean(block.articles?.length);
-  if (block._type === "faqAccordion") return Boolean(block.faqs?.length);
-  if (block._type === "teamMembers") {
-    return Boolean(block.members?.some((member) => member.document));
-  }
-  if (block._type === "testimonials") {
-    return Boolean(block.testimonials?.some((item) => item.document?.body?.length));
-  }
-  if (block._type === "stackedTimeline") {
-    return Boolean(
-      block.items?.some(
-        (item) => stegaClean(item.title)?.trim() && stegaClean(item.text)?.trim(),
-      ),
-    );
-  }
+  if (block._type === "scaffold") return hasScaffoldContent(block);
   // page-builder-generator:visible-blocks
   return true;
 }

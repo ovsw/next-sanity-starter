@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const routeGroups = [
   [
-    { heading: "Neutral sample content for a clean project.", path: "/" },
+    { heading: "Starter Example", path: "/" },
     { heading: "Starter Home", path: "/" },
   ],
   [
@@ -73,16 +73,6 @@ test("supports keyboard access on starter routes", async ({ page }) => {
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: /home page/i }).first()).toBeFocused();
 
-  const faqButton = page.getByRole("button", {
-    name: "What should this sample content prove?",
-  });
-  if (await faqButton.count()) {
-    await faqButton.focus();
-    await page.keyboard.press("Enter");
-    await expect(faqButton).toHaveAttribute("aria-expanded", "true");
-    await page.keyboard.press("Enter");
-    await expect(faqButton).toHaveAttribute("aria-expanded", "false");
-  }
 });
 
 test("keeps reduced-motion visitors out of starter animation", async ({ page }) => {
@@ -121,10 +111,10 @@ test("keeps the starter page free of horizontal overflow", async ({ page }) => {
   }
 });
 
-test("homepage sections join with seams, edges, and a wave tuck", async ({ page }) => {
+test("homepage sections join with seams and edges", async ({ page }) => {
   await page.goto("/");
   const homepage = page.getByRole("heading", {
-    level: 1,
+    level: 2,
     name: "Neutral sample content for a clean project.",
   });
   test.skip(!(await homepage.isVisible()), "Starter homepage sample content is not seeded");
@@ -134,30 +124,24 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
       elements.map((element) => {
         const rect = element.getBoundingClientRect();
         const style = getComputedStyle(element);
-        const heading = element.querySelector("h2");
         return {
           top: rect.top + window.scrollY,
           bottom: rect.bottom + window.scrollY,
           paddingTop: parseFloat(style.paddingTop),
           paddingBottom: parseFloat(style.paddingBottom),
           background: style.backgroundColor,
-          wave: element.classList.contains("section-scene-wave-top"),
-          cta: Boolean(element.getAttribute("aria-labelledby")?.startsWith("cta-banner-")),
-          contentTop:
-            (heading?.getBoundingClientRect().top ?? rect.top) + window.scrollY,
+          scaffold: element.hasAttribute("data-scaffold"),
         };
       }),
   );
-  expect(sections.length).toBeGreaterThanOrEqual(6);
+  expect(sections.length).toBeGreaterThanOrEqual(4);
 
   const joins = sections.slice(1).map((lower, index) => {
     const upper = sections[index];
     return { upper, lower, match: upper.background === lower.background };
   });
-  const seam = joins.find((join) => join.match && !join.lower.wave);
-  const edge = joins.find((join) => !join.match && !join.lower.wave);
-  const tuck = joins.find((join) => !join.match && join.lower.wave);
-  const flatWave = joins.find((join) => join.match && join.lower.cta);
+  const seam = joins.find((join) => join.match && !join.lower.scaffold);
+  const edge = joins.find((join) => !join.match && !join.lower.scaffold);
 
   // Seam: both sides contribute half padding. Edge: full padding on both sides.
   expect(seam).toBeDefined();
@@ -167,36 +151,33 @@ test("homepage sections join with seams, edges, and a wave tuck", async ({ page 
   expect(seam!.lower.top).toBeCloseTo(seam!.upper.bottom, 0);
   expect(edge!.lower.top).toBeCloseTo(edge!.upper.bottom, 0);
 
-  // Wave tuck: the lower section overlaps the upper one and keeps content clear.
-  expect(tuck).toBeDefined();
-  expect(tuck!.lower.top).toBeLessThan(tuck!.upper.bottom);
-  expect(tuck!.lower.contentTop).toBeGreaterThan(tuck!.upper.bottom);
-
-  // A wave section on a matching background stays flat.
-  expect(flatWave).toBeDefined();
-  expect(flatWave!.lower.wave).toBe(false);
-  expect(flatWave!.lower.paddingTop).toBe(seam!.lower.paddingTop);
-  expect(flatWave!.lower.top).toBeCloseTo(flatWave!.upper.bottom, 0);
-
-  // Seam-joined dark sections share one band, and a wave section leads a
-  // tucked band whose overlay reaches above the band box.
-  const bands = await page.locator("main [data-band='dark']").evaluateAll((elements) =>
-    elements.map((element) => {
-      const first = element.querySelector("section.section-scene");
-      const overlayTop = parseFloat(getComputedStyle(element, "::before").top);
-      return {
-        sections: element.querySelectorAll("section.section-scene").length,
-        tuck: element.hasAttribute("data-band-tuck"),
-        leadsWithWave: Boolean(first?.classList.contains("section-scene-wave-top")),
-        overlayTop,
-      };
-    }),
+  // Seam-joined sections share one band; a themeless Scaffold never joins one.
+  const bands = await page.locator("main [data-band]").evaluateAll((elements) =>
+    elements.map((element) => ({
+      theme: element.getAttribute("data-band"),
+      sections: element.querySelectorAll("section.section-scene").length,
+      scaffolds: element.querySelectorAll("section[data-scaffold]").length,
+    })),
   );
   expect(bands.some((band) => band.sections > 1)).toBe(true);
-  expect(bands.some((band) => band.tuck)).toBe(true);
   for (const band of bands) {
-    expect(band.tuck).toBe(band.leadsWithWave);
-    if (band.tuck) expect(band.overlayTop).toBeLessThan(0);
-    else expect(band.overlayTop).toBe(0);
+    if (band.scaffolds) expect(band.sections).toBe(band.scaffolds);
   }
+});
+
+test("a Scaffold renders its marker on the page and nothing from the archive", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const scaffold = page.locator("section[data-scaffold]");
+  test.skip(!(await scaffold.count()), "Starter homepage sample content is not seeded");
+
+  await expect(scaffold).toHaveCount(1);
+  await expect(scaffold).toContainText("Scaffold:");
+  await expect(scaffold).toContainText("Reader quotes");
+  await expect(scaffold).toContainText("Proposed shape:");
+
+  await page.goto("/about");
+  await expect(page.locator("section[data-scaffold]")).toHaveCount(0);
+  await expect(page.getByText("About page intro")).toHaveCount(0);
 });

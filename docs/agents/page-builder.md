@@ -2,6 +2,29 @@
 
 Read this guide before adding or changing a section in a page's `blocks` array.
 
+## What the Starter ships
+
+The Starter ships two sections and presumes no design:
+
+- **Rich Text** (`richTextBlock`): a finished long-form section. It is a valid
+  final match for a Scaffold.
+- **Scaffold** (`scaffold`): a placeholder with three fields, `name`,
+  `richText`, and `proposedSectionShape`. The AI page-build workflow drafts a
+  whole page as Scaffolds, then replaces each one with a section from the
+  project's own library. The renderer shows the rich text under a visible
+  internal marker with the name and proposed shape, and sets `data-scaffold`
+  on the section. `frontend/scripts/verify-no-skeleton.mjs` fails when a
+  published route contains one. A Scaffold has no theme, so it always joins
+  its neighbours at an edge and never shares a band.
+
+Every page document also has a `blocksArchive` array. It accepts the same
+section types as `blocks` and sits in a collapsed **Archived sections**
+fieldset. Move a replaced Scaffold there instead of deleting it. The Website
+never queries or renders `blocksArchive`, so nothing in it reaches a visitor.
+
+Every other section belongs to its own project copy. There is no central
+library to import from.
+
 The [Schema UI starter guide](https://schemaui.com/docs/how-to-use) is useful for upstream examples. This repository and this guide are authoritative when they differ from the starter documentation.
 
 ## How a section reaches the page
@@ -15,8 +38,8 @@ A top-level section passes through this flow:
 5. The frontend block dispatcher selects its React renderer.
 
 The section's Sanity `_type` is the shared identifier across every step. Use
-camelCase for the type and kebab-case for filenames, as in `stackedFeatureRows`
-and `stacked-feature-rows.ts`.
+camelCase for the type and kebab-case for filenames, as in `richTextBlock`
+and `rich-text-block.ts`.
 
 ## Add a top-level section
 
@@ -48,7 +71,7 @@ For a manual addition, preserve the mirrored folder structure:
 
 1. Define the Studio schema in `studio/schemas/blocks/`.
 2. Register the schema and any supporting object schemas in `studio/schema-types.ts`.
-3. Add the type to the correct scope in `studio/schemas/blocks/page-builder.ts`. Insert-menu groups derive from those lists.
+3. Add the type to the correct scope in `studio/schemas/blocks/page-builder.ts`. The `blocks` and `blocksArchive` fields derive from those lists.
 4. If a preview is available, add `studio/static/images/preview/<type>.jpg` and register its type in the preview set in that file.
 5. Create its GROQ projection in `frontend/sanity/queries/`.
 6. Register the projection in `frontend/sanity/queries/page-builder.ts`.
@@ -60,11 +83,12 @@ For a manual addition, preserve the mirrored folder structure:
 
 Editors choose which content belongs together. Code owns the visual rules.
 
-- **Theme.** Every non-hero section includes the shared field from
+- **Theme.** Every finished section includes the shared field from
   `studio/schemas/blocks/shared/section-theme.ts` as its first field and
   projects `theme` in its GROQ query. The Website resolves a missing or
-  unexpected value to Light with `resolveSectionTheme`. Heroes have no theme
-  field and keep their own treatment.
+  unexpected value to Light with `resolveSectionTheme`. A section without a
+  theme field, such as the Scaffold or a project's hero, joins every
+  neighbour at an edge. Give a hero no theme field and keep its own treatment.
 - **Spacing.** The renderer's outer element uses
   `sectionSceneClassName(theme, top, bottom)` and accepts `SectionSceneProps`.
   Do not add unrelated outer vertical padding. Internal content spacing stays
@@ -72,8 +96,8 @@ Editors choose which content belongs together. Code owns the visual rules.
 - **Seams and edges.** The Page Builder in `frontend/components/blocks/index.tsx`
   compares each pair of visible neighbors. Matching backgrounds form a seam and
   each side contributes half its section padding. Different backgrounds, and
-  every join below a hero, form an edge with full padding. The first and last
-  visible sections keep full outer spacing.
+  every join next to a themeless section, form an edge with full padding. The
+  first and last visible sections keep full outer spacing.
 - **Bands.** `resolveSectionBands` in `section-boundaries.ts` groups
   seam-joined sections into bands, and the Page Builder wraps each band in a
   div with `data-band="<theme>"` and `data-band-tuck` when its first section
@@ -98,7 +122,7 @@ Editors choose which content belongs together. Code owns the visual rules.
 Code supplies an irregular top edge; there is no editor shape selector.
 
 1. Register the section type in `sectionEdgeTreatments` in
-   `frontend/components/blocks/index.tsx`, for example `ctaBanner: "wave"`.
+   `frontend/components/blocks/index.tsx`, for example `callToAction: "wave"`.
 2. Have the renderer accept `topTreatment` and pass it as the fourth argument
    of `sectionSceneClassName`.
 3. Give the treatment a class in `frontend/app/globals.css` that paints the
@@ -112,8 +136,9 @@ The resolver enables a treatment only at a different-background join. At a
 seam it suppresses the treatment so no gap or third color appears. A later
 section paints above the earlier one, so when both neighbors have treatments,
 the lower one wins. A wave after a hero tucks the hero underneath. The Starter
-ships one shallow wave on the CTA banner; add more shapes only when a project
-needs them. Footer tucks are not shipped, but a project copy may add one.
+ships one shallow wave shape and registers no section for it; add more shapes
+only when a project needs them. Footer tucks are not shipped, but a project
+copy may add one.
 
 ## Add a nested block
 
@@ -140,7 +165,7 @@ For visual changes, treat the existing design system as the default:
 ## Definition of done
 
 - The same `_type` is present at every required top-level registration point.
-- The GROQ projection returns every field the renderer uses, including `theme` for non-hero sections.
+- The GROQ projection returns every field the renderer uses, including `theme` for themed sections.
 - The renderer uses `sectionSceneClassName`, targets its theme field, and has a matching empty-content rule in the dispatcher.
 - The Studio preview and frontend renderer work with realistic content.
 - Generated files are current and are not manually edited.

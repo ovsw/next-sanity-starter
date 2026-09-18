@@ -2,9 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  blocksArchiveField,
   blocksField,
+  contentBlocksArchiveField,
   contentBlocksField,
   contentPageBuilderBlockTypes,
+  homePageBlocksArchiveField,
+  homePageBlocksField,
   pageBuilderBlockTypes,
 } from "./schemas/blocks/page-builder.ts";
 import {
@@ -19,19 +23,7 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
   );
   assert.deepEqual(
     [...pageBuilderBlockTypes],
-    [
-      "hero",
-      "richTextBlock",
-      "benefitCards",
-      "storyFeature",
-      "latestArticles",
-      "faqAccordion",
-      "teamMembers",
-      "ctaBanner",
-      "testimonials",
-      "stackedFeatureRows",
-      "stackedTimeline",
-    ],
+    ["richTextBlock", "scaffold"],
   );
   assert.equal(
     blocksField.of.some(({ hidden }) => hidden),
@@ -43,6 +35,21 @@ test("the shared blocks field exactly matches its authoritative inventory", () =
   );
 });
 
+test("every blocks archive accepts exactly the block types of its blocks field", () => {
+  for (const [blocks, archive] of [
+    [blocksField, blocksArchiveField],
+    [contentBlocksField, contentBlocksArchiveField],
+    [homePageBlocksField, homePageBlocksArchiveField],
+  ]) {
+    assert.equal(archive.name, "blocksArchive");
+    assert.deepEqual(
+      archive.of.map(({ type }) => type),
+      blocks.of.map(({ type }) => type),
+    );
+    assert.equal(archive.fieldset, "blocksArchive");
+  }
+});
+
 test("blogIndex uses the singleton configuration", () => {
   assert.deepEqual(
     contentBlocksField.of
@@ -50,7 +57,6 @@ test("blogIndex uses the singleton configuration", () => {
       .map(({ type }) => type),
     [...contentPageBuilderBlockTypes],
   );
-  assert.equal(contentPageBuilderBlockTypes.includes("hero"), false);
   assert.equal(singletonDocumentTypes.has("blogIndex"), true);
   assert.equal(singletonDocumentActions.has("duplicate"), false);
   assert.equal(singletonDocumentActions.has("delete"), false);

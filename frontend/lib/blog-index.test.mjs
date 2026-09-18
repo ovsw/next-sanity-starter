@@ -59,17 +59,6 @@ test("the regular-post GROQ excludes the one latest post and uses deterministic 
   assert.match(source, /order\(\$\{blogPostOrder\}\)\[0\]/);
 });
 
-test("latest-posts sections use the same published-post rule as blog archives", () => {
-  const source = readFileSync(
-    new URL("../sanity/queries/latest-articles.ts", import.meta.url),
-    "utf8",
-  );
-
-  assert.match(source, /publishedPostFilter/);
-  assert.doesNotMatch(source, /coalesce\(publishedAt, _createdAt\)/);
-  assert.match(source, /publishedAt,/);
-});
-
 test("listing cards expose every visible post field to Presentation", () => {
   const cardSource = readFileSync(
     new URL("../components/blog-card.tsx", import.meta.url),
@@ -89,19 +78,6 @@ test("listing cards expose every visible post field to Presentation", () => {
   assert.match(querySource, /category->\{_id, title, slug\}/);
   assert.match(cardSource, /stegaClean\(category\?\.slug\?\.current\)/);
 
-  const latestArticlesSource = readFileSync(
-    new URL("../components/blocks/latest-articles.tsx", import.meta.url),
-    "utf8",
-  );
-  const articleCardSource = latestArticlesSource.slice(
-    latestArticlesSource.indexOf("function ArticleCard"),
-    latestArticlesSource.indexOf("function SectionLink"),
-  );
-  assert.match(latestArticlesSource, /stegaClean\(slug\)/);
-  assert.match(latestArticlesSource, /postPath\(cleanSlug\)/);
-  assert.match(latestArticlesSource, /categoryPath\(cleanSlug\)/);
-  assert.match(articleCardSource, /return \(\s*<PostCard/);
-  assert.doesNotMatch(articleCardSource, /return \(\s*<Link\s/);
 });
 
 test("accepts only pagination route segments greater than one", () => {
