@@ -7,7 +7,7 @@ minimumReleaseAge: 1440
 blockExoticSubdeps: true
 
 patchedDependencies:
-  sanity-plugin-media@6.1.8: patches/sanity-plugin-media@6.1.8.patch
+  sanity-plugin-media@6.3.0: patches/sanity-plugin-media@6.3.0.patch
 
 allowBuilds:
   esbuild: true

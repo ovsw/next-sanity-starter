@@ -132,13 +132,13 @@ traces. If Chrome is missing, install it with
 
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
 
-The Studio uses the `media-6.1.8-drag.1` prerelease from the `ovsw/plugins`
-fork. It adds drag-to-folder moves and Ctrl/Cmd-click asset picking from
-`sanity-io/plugins#2014`. Switch back to the npm package after upstream merges
-and publishes the change.
+The Studio uses `sanity-plugin-media@6.3.0` from npm. It includes
+drag-to-folder moves and Ctrl/Cmd-click asset picking from
+`sanity-io/plugins#2014`.
 
-The workspace also patches this build to restore its tag icon. Check that fix
-before removing or replacing the patch.
+The workspace patches this version to restore its tag icon, so the version is
+pinned. When upgrading the plugin, check that fix before removing or replacing
+the patch.
 
 ## Deploy your copy
 
