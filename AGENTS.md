@@ -80,12 +80,14 @@ off.
 
 ## Reviews
 
-Review agents and review tools are explicit opt-in. Invoke review subagents,
-review skills, CodeRabbit, or an adversarial review loop only when the user asks
-for that review in the current task.
+CodeRabbit is not opt-in. Route it with the budget and routing rule in the
+user-level instructions, and run the route you pick without asking, in HITL and
+AFK mode alike. One review for each pull request, never two. Never request a
+second review after applying the first review's fixes.
 
-Use at most one CodeRabbit review per pull request. Never request a second
-review after applying the first review's fixes.
+Review subagents, review skills, and adversarial review loops are different:
+they burn context and time rather than money, and they stay explicit opt-in.
+Do not invoke one unless the user asks for it in the current task.
 
 ## Repository scanning
 
