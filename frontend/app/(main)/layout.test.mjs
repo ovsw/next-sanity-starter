@@ -20,7 +20,9 @@ test("draft mode gets live drafts and click-to-edit without exposing drafts publ
 
 test("published visitors keep Sanity cache invalidation active", () => {
   const mainContent = mustFind(/<main id="main-content"/);
-  const sanityLive = mustFind(/<SanityLive includeDrafts=\{isDraftMode\} \/>/);
+  const sanityLive = mustFind(
+    /<SanityLive\s+includeDrafts=\{isDraftMode\}\s+waitFor=\{process\.env\.VERCEL_ENV === "production" \? "function" : undefined\}\s+\/>/,
+  );
   const draftControls = mustFind(/\{isDraftMode && \(/);
 
   assert.ok(mainContent < sanityLive);

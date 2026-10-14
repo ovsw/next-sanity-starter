@@ -36,3 +36,9 @@ yarn-error.log*
 next-env.d.ts
 
 /dist
+
+# local function builds (`sanity functions test` and `dev`)
+/functions/*/.build/
+
+# blueprint stack link for this checkout (`sanity blueprints init` or `config`)
+/.sanity/blueprint.config.json
