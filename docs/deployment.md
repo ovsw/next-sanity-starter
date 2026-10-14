@@ -72,9 +72,15 @@ pnpm --dir studio exec sanity functions env add invalidate-tags REVALIDATE_TAGS_
 pnpm --dir studio exec sanity functions env add invalidate-tags SANITY_REVALIDATE_SECRET <secret>
 ```
 
+`init` writes the stack link to `studio/.sanity/blueprint.config.json`, which
+Git ignores. Another checkout links to the same stack with
+`pnpm --dir studio exec sanity blueprints config --edit --project-id <project id> --stack production`.
+
 Test the function locally, then check its log after a publish. The log must
 show that the Website expired the sync tags and that `done()` returned HTTP
-2xx.
+2xx. The local test sends no sync tags and only simulates `done()`, so it
+proves only that the function loads; the log after a real publish is the
+real check.
 
 ```bash
 pnpm --dir studio exec sanity functions test invalidate-tags --data '{"syncTags":["test"]}' --timeout 20
