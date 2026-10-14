@@ -25,7 +25,14 @@ export const handler = syncTagInvalidateEventHandler(
     // open pages from refreshing.
     try {
       const response = await done(syncTags);
-      console.log("Released the change to open pages: HTTP", response.status);
+      if (response.ok) {
+        console.log("Released the change to open pages: HTTP", response.status);
+      } else {
+        console.error(
+          "Sanity did not release the change to open pages: HTTP",
+          response.status,
+        );
+      }
     } catch (error) {
       console.error("Sanity did not accept done()", error);
     }
