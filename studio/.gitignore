@@ -36,3 +36,6 @@ yarn-error.log*
 next-env.d.ts
 
 /dist
+
+# local function builds (`sanity functions test` and `dev`)
+/functions/*/.build/
