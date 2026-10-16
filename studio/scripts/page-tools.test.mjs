@@ -19,6 +19,36 @@ test("section text keeps rich text and nested labels", () => {
   assert.equal(sectionText({ title: "Intro", body: [{ _type: "block", children: [{ text: "First" }, { text: " second" }] }], buttons: [{ text: "Read more" }] }), "title: Intro\nFirst second\ntext: Read more");
 });
 
+test("section text preserves mixed rich-text item order and table cells", () => {
+  const block = (text) => ({ _type: "block", children: [{ text }] });
+  const section = {
+    body: [
+      block("Before"),
+      { _type: "callout", title: "Note", body: [block("Inside note")] },
+      block("Between"),
+      {
+        _type: "table",
+        rows: [
+          { _type: "tableRow", cells: ["Name", "Price"] },
+          { _type: "tableRow", cells: ["Camp", "$25"] },
+        ],
+      },
+      block("After"),
+    ],
+  };
+  assert.equal(
+    sectionText(section),
+    "Before\ntitle: Note\nInside note\nBetween\nName | Price\nCamp | $25\nAfter",
+  );
+});
+
+test("table text keeps empty cell positions without printing non-text metadata", () => {
+  assert.equal(
+    sectionText({ rows: [{ cells: ["First", "", "Third"] }], tags: ["internal"], _key: "hidden" }),
+    "First |  | Third",
+  );
+});
+
 test("array keys are stable and existing keys remain", () => {
   const value = [{ _type: "section", children: [{ text: "Example" }] }, { _key: "keep" }];
   assert.deepEqual(withKeys(value), withKeys(value));

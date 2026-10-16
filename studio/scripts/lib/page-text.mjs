@@ -44,15 +44,18 @@ function portableText(blocks) {
 
 function walk(value, out) {
   if (Array.isArray(value)) {
-    const blocks = value.filter((item) => item?._type === "block");
-    if (blocks.length) out.push(portableText(blocks));
-    value.filter((item) => item?._type !== "block").forEach((item) => walk(item, out));
+    for (const item of value) {
+      if (item?._type === "block") out.push(portableText([item]));
+      else walk(item, out);
+    }
     return;
   }
   if (!value || typeof value !== "object") return;
   for (const [key, item] of Object.entries(value)) {
     if (key.startsWith("_")) continue;
-    if (typeof item === "string" && TEXT_FIELDS.has(key)) out.push(`${key}: ${item}`);
+    if (key === "cells" && Array.isArray(item)) {
+      out.push(item.filter((cell) => typeof cell === "string").join(" | "));
+    } else if (typeof item === "string" && TEXT_FIELDS.has(key)) out.push(`${key}: ${item}`);
     else walk(item, out);
   }
 }
