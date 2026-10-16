@@ -22,7 +22,7 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
       useCdn: false,
     });
 
-    const [rawRedirects, rawLiveRoutes] = await Promise.all([
+    const [rawRedirects, rawLiveRoutes, pendingRedirectIds] = await Promise.all([
       client.fetch<FetchedRedirect[]>(`
         *[
           _type == "redirect" &&
@@ -39,7 +39,9 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
             _type,
             "slug": slug.current
           },
-          permanent
+          permanent,
+          utmSource,
+          utmCampaign
         }
       `),
       client.fetch<{ _id: string; _type: string; slug: string }[]>(
@@ -55,7 +57,18 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
         }`,
         { documentId: event.data.documentId ?? "" },
       ),
+      client.fetch<string[]>(
+        `*[
+          _type == "redirect" &&
+          (_id in path("drafts.**") || _id in path("versions.**"))
+        ]._id`,
+        {},
+        { perspective: "raw" },
+      ),
     ]);
+    const pendingEdits = new Set(
+      pendingRedirectIds.map((id) => id.replace(/^(drafts|versions\.[^.]+)\./, "")),
+    );
     const liveRoutes = rawLiveRoutes.map((route) => ({
       _id: route._id,
       path: getPresentationPath(route._type, route.slug) ?? undefined,
@@ -63,6 +76,7 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
     const redirects = rawRedirects.map((redirect) => ({
       ...redirect,
       destination: resolveFetchedRedirectDestination(redirect),
+      hasPendingEdits: pendingEdits.has(redirect._id ?? ""),
     }));
 
     const plan = planAutoRedirect({
@@ -77,7 +91,8 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
     if (
       !plan.create &&
       plan.retarget.length === 0 &&
-      plan.retire.length === 0
+      plan.retire.length === 0 &&
+      plan.remove.length === 0
     ) {
       console.info(`Auto redirect already exists: ${plan.source}`);
       return;
@@ -95,6 +110,16 @@ export const handler = documentEventHandler<AutoRedirectEventData>(
       _ref: plan.destinationDocumentId,
     };
     const transaction = client.transaction();
+    for (const redirect of plan.remove) {
+      // A delete cannot carry a revision check, so a guarded patch goes first:
+      // if the redirect changed since it was read, the whole transaction fails.
+      if (redirect._rev) {
+        transaction.patch(redirect._id, (patch) =>
+          patch.ifRevisionId(redirect._rev as string).set({ status: "inactive" }),
+        );
+      }
+      transaction.delete(redirect._id);
+    }
     for (const redirect of plan.retire) {
       transaction.patch(redirect._id, (patch) => {
         const guardedPatch = redirect._rev

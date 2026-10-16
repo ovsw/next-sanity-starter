@@ -22,7 +22,9 @@ export default defineBlueprint({
       memory: 2,
       timeout: 30,
       event: {
-        on: ["publish"],
+        on: ["create", "update"],
+        includeDrafts: false,
+        includeAllVersions: false,
         filter:
           '_type in ["page", "post", "category"] && delta::changedAny(slug.current)',
         projection: `{
