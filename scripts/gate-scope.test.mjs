@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { decide, isDocsOnly, parseChangedFiles } from "./gate-scope.mjs";
 
 test("documentation-only changes skip the code gate", () => {
@@ -87,7 +88,7 @@ test("the CLI skips code only with a complete, counted documentation list", () =
     ["1", "README.md\t\n", true],
     ["0", "", true],
   ]) {
-    const result = spawnSync(process.execPath, [new URL("./gate-scope.mjs", import.meta.url).pathname], {
+    const result = spawnSync(process.execPath, [fileURLToPath(new URL("./gate-scope.mjs", import.meta.url))], {
       input,
       encoding: "utf8",
       env: {...process.env, EXPECTED_FILES: expected, GITHUB_OUTPUT: ""},

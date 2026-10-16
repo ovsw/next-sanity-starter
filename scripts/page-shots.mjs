@@ -11,7 +11,7 @@
 // mistaken for the draft.
 
 import { createRequire } from "node:module";
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import path from "node:path";
 import { tmpdir } from "node:os";
 import { getPageToolsClient } from "../studio/scripts/lib/page-tools-client.mjs";
@@ -36,6 +36,16 @@ export function parseArgs(args) {
     throw new Error("--only must be desktop or phone.");
   }
   return options;
+}
+
+/** This tool's own section images: `<nn>-<sectionKey>.png`. */
+export const SECTION_SHOT_PATTERN = /^\d{2,}-.+\.png$/;
+
+/** Removes earlier section images so a shorter page leaves no stale shots. */
+export function removeSectionShots(directory) {
+  for (const file of readdirSync(directory)) {
+    if (SECTION_SHOT_PATTERN.test(file)) rmSync(path.join(directory, file));
+  }
 }
 
 export function assertDraftSections(expected, rendered, draftActive, documentId) {
@@ -148,6 +158,7 @@ async function main() {
       const renderedKeys = sections.map((s) => s.key);
       assertDraftSections(expectedKeys, renderedKeys, draftActive, pageDoc._id);
       mkdirSync(out, { recursive: true });
+      removeSectionShots(out);
       const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
       let index = 0;
       for (const section of sections) {

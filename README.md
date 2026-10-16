@@ -290,7 +290,8 @@ preview read token. Install Chrome with
 
 Images go to the system temporary folder under
 `page-shots/<slug>/<viewport>/<nn>-<sectionKey>.png` by default. `--out` changes
-the output folder. Matching image names are replaced; other files are kept.
+the output folder. Earlier section images (`<nn>-<sectionKey>.png`) are
+removed; other files are kept.
 Desktop is 1440 × 1000; phone is 390 × 844. `--only` selects one viewport.
 Each viewport prints a JSON line with the output folder, page height, and
 section keys and heights. The command stops before writing that viewport's

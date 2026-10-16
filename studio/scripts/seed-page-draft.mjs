@@ -78,8 +78,9 @@ async function loadSeed(file) {
   const seed = module.default;
   if (!seed?.page?._id) usage("The seed must default-export { page: { _id, ... } }.");
   if (/^(drafts|versions)\./.test(seed.page._id)) usage("Use the published page ID, without a drafts. or versions. prefix.");
-  if (!Array.isArray(seed.page.blocks)) usage("page.blocks must be an array of sections.");
-  for (const block of seed.page.blocks) {
+  // An existing page keeps its sections when the seed omits blocks.
+  if ("blocks" in seed.page && !Array.isArray(seed.page.blocks)) usage("page.blocks must be an array of sections.");
+  for (const block of seed.page.blocks ?? []) {
     if (!block?._type) usage("Every section needs a _type.");
   }
   const ids = new Set([seed.page._id]);
@@ -126,6 +127,11 @@ export async function main(args = process.argv.slice(2), clientFactory = getPage
   const documents = (seed.documents ?? []).map((document) =>
     withKeys({ ...document, _id: `drafts.${document._id}` }),
   );
+  const existingDocuments = await Promise.all(
+    documents.map((document) =>
+      client.fetch(`*[_id == $id][0]{_id, _rev}`, { id: document._id }, { perspective: "raw" }),
+    ),
+  );
 
   const plan = {
     mode: apply ? "apply" : "dry-run",
@@ -139,7 +145,10 @@ export async function main(args = process.argv.slice(2), clientFactory = getPage
       fieldsSet: Object.keys(pageFields),
       sections: summarizeBlocks(pageDocument.blocks),
     },
-    documents: documents.map((document) => `${document._id} (${document._type})`),
+    documents: documents.map(
+      (document, index) =>
+        `${document._id} (${document._type}, ${existingDocuments[index] ? "replace existing draft" : "new draft"})`,
+    ),
   };
   console.log(JSON.stringify(plan, null, 2));
   if (!apply) {
@@ -154,14 +163,26 @@ export async function main(args = process.argv.slice(2), clientFactory = getPage
   } else {
     transaction.create(pageDocument);
   }
-  for (const document of documents) transaction.createOrReplace(document);
+  documents.forEach((document, index) => {
+    const existing = existingDocuments[index];
+    if (!existing) {
+      transaction.create(document);
+      return;
+    }
+    // createOrReplace cannot carry a revision check, so a guarded patch goes
+    // first: if this draft changed since it was read, the whole seed fails.
+    transaction.patch(document._id, (patch) =>
+      patch.ifRevisionId(existing._rev).unset(["__pageSeedGuard"]),
+    );
+    transaction.createOrReplace(document);
+  });
 
   try {
     await transaction.commit({ visibility: "async" });
   } catch (error) {
     if (`${error.message}`.includes("revision")) {
       console.error(
-        `The draft ${draftId} changed while this seed ran (another session?). Re-read it and run again.`,
+        `A draft in this seed changed while it ran (another session?). Re-read ${draftId} and its supporting drafts, then run again.`,
       );
       process.exit(3);
     }
