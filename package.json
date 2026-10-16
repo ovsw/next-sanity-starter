@@ -29,6 +29,7 @@
     "verify": "pnpm verify:typegen && pnpm typecheck && pnpm lint && pnpm test && pnpm build && PLAYWRIGHT_REUSE_BUILD=1 pnpm test:smoke",
     "setup:redirects": "node --env-file=studio/.env.local scripts/setup-redirects.mjs",
     "sanity:query": "pnpm --dir studio sanity:query",
+    "page:shots": "node scripts/page-shots.mjs",
     "page:text": "pnpm --dir studio page:text",
     "page:seed": "pnpm --dir studio page:seed"
   },

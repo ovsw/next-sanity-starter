@@ -265,3 +265,31 @@ the draft unless `--published` is given. The seed command prints a plan by
 default; `--apply` writes page and supporting drafts without publishing.
 See [the Sanity CLI guide](docs/agents/sanity-cli.md#page-tools) for seed format,
 credentials, replacement rules, and the required backup before a write.
+
+### Page section screenshots
+
+Start the worktree servers with `pnpm dev:worktree`, then run:
+
+```bash
+pnpm page:shots getting-started
+pnpm page:shots getting-started --out /tmp/page-review --only phone
+```
+
+The command requires a saved page draft with Page Builder sections. It reads
+`.worktree-ports.json`, or uses ports 3000 and 3333 when that file is absent.
+It loads Studio credentials from `studio/.env.local`. The token must read drafts
+and create a temporary Sanity preview secret. Follow the backup rules in the
+Sanity CLI guide before the first dataset write. The Website also needs its
+preview read token. Install Chrome with
+`pnpm --dir frontend exec playwright install chrome` if needed.
+
+Images go to the system temporary folder under
+`page-shots/<slug>/<viewport>/<nn>-<sectionKey>.png` by default. `--out` changes
+the output folder. Matching image names are replaced; other files are kept.
+Desktop is 1440 × 1000; phone is 390 × 844. `--only` selects one viewport.
+Each viewport prints a JSON line with the output folder, page height, and
+section keys and heights. The command stops before writing that viewport's
+images if draft mode is off or the rendered section keys differ from the draft
+in number or order. It hides the header and editing controls for the images.
+Section keys do not prove that every text field or referenced document is
+current. Inspect known draft-only content when you review the images.
