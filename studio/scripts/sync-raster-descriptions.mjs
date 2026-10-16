@@ -2,6 +2,13 @@
 import { createClient } from "@sanity/client";
 import { existsSync } from "node:fs";
 import { loadEnvFile } from "node:process";
+
+const IMAGE_ASSETS_QUERY = `*[_type == "sanity.imageAsset"]{
+  _id,
+  _rev,
+  originalFilename,
+  description
+}`;
 import { pathToFileURL } from "node:url";
 
 const RASTER_API_VERSION = "2026-05-20";
@@ -115,9 +122,7 @@ export async function syncRaster({ args = process.argv.slice(2), env = process.e
     descriptionByStem.set(name, description);
   }
 
-  const sanityAssets = await sanity.fetch(
-    `*[_type == "sanity.imageAsset"]{_id, _rev, originalFilename, description}`,
-  );
+  const sanityAssets = await sanity.fetch(IMAGE_ASSETS_QUERY);
 
   // Two Sanity assets can share one stem, for example `cabin.jpg` and
   // `cabin.png`. That is a one-to-many match, so the description could land on an

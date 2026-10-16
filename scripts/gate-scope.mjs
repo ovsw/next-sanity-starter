@@ -3,8 +3,9 @@
 // Decides whether a pull request needs the code half of the release gate.
 //
 // The GitHub workflow pipes the pull request's changed files into this script,
-// one per line as `filename<TAB>previous_filename` (the second field is empty
-// unless the file was renamed). When every path, including the old path of a
+// one per line as a JSON array `["filename", "previous_filename"]` (the second
+// item is empty unless the file was renamed). JSON keeps a filename that holds
+// a tab or a newline in one record. When every path, including the old path of a
 // renamed file, is documentation, the heavy jobs (typegen, types, lint, tests,
 // builds, smoke) are skipped and the "Release gate" check passes on its own.
 // Anything else runs the full gate, and so does an empty or incomplete list.
@@ -30,12 +31,27 @@ export function isDocsOnly(files) {
 export function parseChangedFiles(input) {
   const entries = [];
   for (const line of input.split("\n")) {
-    const [filename = "", previousFilename = ""] = line
-      .split("\t")
-      .map((field) => field.trim());
-    if (!filename) continue;
+    if (!line.trim()) continue;
+    let record;
+    try {
+      record = JSON.parse(line);
+    } catch {
+      record = undefined;
+    }
+    const [filename, previousFilename = ""] = Array.isArray(record) ? record : [];
+    if (
+      !Array.isArray(record) ||
+      record.length > 2 ||
+      typeof filename !== "string" ||
+      !filename.trim() ||
+      typeof previousFilename !== "string"
+    ) {
+      throw new Error(`Malformed changed-file record: ${line}`);
+    }
     entries.push(
-      previousFilename ? { filename, previousFilename } : { filename },
+      previousFilename.trim()
+        ? { filename: filename.trim(), previousFilename: previousFilename.trim() }
+        : { filename: filename.trim() },
     );
   }
   return entries;
@@ -75,12 +91,17 @@ async function readStandardInput() {
 }
 
 if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
-  const entries = parseChangedFiles(await readStandardInput());
   const expected = process.env.EXPECTED_FILES?.trim();
-  const { code, message } = decide(
-    entries,
-    expected === undefined || expected === "" ? Number.NaN : Number(expected),
-  );
+  let result;
+  try {
+    result = decide(
+      parseChangedFiles(await readStandardInput()),
+      expected === undefined || expected === "" ? Number.NaN : Number(expected),
+    );
+  } catch (error) {
+    result = { code: true, message: `${error.message}; running the code gate.` };
+  }
+  const { code, message } = result;
   console.log(message);
 
   const output = `code=${code}\n`;

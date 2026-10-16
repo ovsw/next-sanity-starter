@@ -34,8 +34,9 @@ The read token powers Sanity Presentation draft previews. The auth token powers 
 
 The Studio uses `studio/.env.local` to preview the local Website. A production
 Studio build uses the deployed Website URL in `studio/.env.production`. Before
-deploying, add SANITY_STUDIO_APP_ID from Sanity Manage to that production
-file and commit it so every checkout updates the same hosted Studio.
+deploying again, add SANITY_STUDIO_APP_ID to that production file and commit
+it so every checkout updates the same hosted Studio. The first deployment of a
+new project creates the ID: run `pnpm deploy:studio --first` once.
 
 Start both apps:
 
@@ -158,8 +159,9 @@ For Vercel, import your repository and set the root directory to `frontend`. Cop
 Deploy the Studio manually after confirming that `SANITY_STUDIO_PREVIEW_URL`
 in `studio/.env.production` contains the deployed Website origin. Set
 `SANITY_STUDIO_APP_ID` in the same file and `SANITY_AUTH_TOKEN` in
-`studio/.env.local`. Deployment rejects missing values, local addresses, IP
-addresses, and extra arguments. The preview URL must be a public HTTPS origin:
+`studio/.env.local`. For the first deployment of a new project, run
+`pnpm deploy:studio --first` and save the app ID it prints. Deployment rejects
+missing values, local addresses, IP addresses, and other arguments. The preview URL must be a public HTTPS origin:
 
 ```bash
 pnpm setup:sanity-cors

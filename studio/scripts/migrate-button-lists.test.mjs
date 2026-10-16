@@ -53,6 +53,38 @@ test("apply patches each exact draft, published and release ID with revision gua
   assert.ok(writes.every(({ paths }) => paths.length === 3));
 });
 
+test("reads in pages and commits in bounded batches", async () => {
+  const documents = Array.from({ length: 1201 }, (_, index) => ({
+    ...document,
+    _id: `page-${String(index).padStart(4, "0")}`,
+  }));
+  const reads = [];
+  const batches = [];
+  const client = {
+    fetch: async (_query, { after }) => {
+      reads.push(after);
+      return documents.filter(({ _id }) => _id > after).slice(0, 500);
+    },
+    transaction: () => {
+      const batch = [];
+      batches.push(batch);
+      return {
+        patch(id, build) {
+          batch.push(id);
+          build({ ifRevisionId() { return this; }, unset() { return this; } });
+        },
+        async commit() { return { transactionId: "batch" }; },
+      };
+    },
+  };
+  const changes = await migrate(client, { apply: true, log() {} });
+  assert.deepEqual(reads, ["", "page-0499", "page-0999"]);
+  assert.equal(changes.length, 1201);
+  assert.equal(batches.length, 13);
+  assert.ok(batches.every((batch) => batch.length <= 100));
+  assert.deepEqual(batches.flat(), documents.map(({ _id }) => _id));
+});
+
 test("a clean dataset needs no transaction on a repeat run", async () => {
   await migrate({ fetch: async () => starterDocuments, transaction: () => assert.fail("nothing to write") }, { apply: true, log() {} });
 });

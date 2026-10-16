@@ -25,27 +25,47 @@ export function migrationPlan(documents) {
   });
 }
 
+// Sanity caps a query's working set and a mutation request's size, so the
+// migration reads documents in pages and commits patches in bounded batches.
+const PAGE_SIZE = 500;
+const BATCH_SIZE = 100;
+const DOCUMENTS_QUERY = `*[
+  !(_type match "sanity.*") &&
+  _id > $after
+] | order(_id) [0...${PAGE_SIZE}]`;
+
+async function fetchDocuments(client) {
+  const documents = [];
+  let after = "";
+  for (;;) {
+    const page = await client.fetch(DOCUMENTS_QUERY, { after }, { perspective: "raw" });
+    documents.push(...page);
+    if (page.length < PAGE_SIZE) return documents;
+    after = page.at(-1)._id;
+  }
+}
+
 export async function migrate(client, { apply = false, log = console.log } = {}) {
-  const documents = await client.fetch(
-    '*[!(_type match "sanity.*")]',
-    {},
-    { perspective: "raw" },
-  );
+  const documents = await fetchDocuments(client);
   const changes = migrationPlan(documents);
   for (const change of changes) {
     log(`${apply ? "patch" : "would patch"} ${change.id}: remove ${change.unset.join(", ")}`);
   }
   log(`${changes.length} of ${documents.length} documents need changes.`);
   if (!apply || !changes.length) return changes;
-  const transaction = client.transaction();
   for (const change of changes) {
     if (!change.revision) throw new Error(`Missing revision for ${change.id}`);
-    transaction.patch(change.id, (patch) =>
-      patch.ifRevisionId(change.revision).unset(change.unset),
-    );
   }
-  const result = await transaction.commit();
-  log(`Committed transaction ${result.transactionId}.`);
+  for (let start = 0; start < changes.length; start += BATCH_SIZE) {
+    const transaction = client.transaction();
+    for (const change of changes.slice(start, start + BATCH_SIZE)) {
+      transaction.patch(change.id, (patch) =>
+        patch.ifRevisionId(change.revision).unset(change.unset),
+      );
+    }
+    const result = await transaction.commit();
+    log(`Committed transaction ${result.transactionId}.`);
+  }
   return changes;
 }
 

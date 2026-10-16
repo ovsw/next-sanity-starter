@@ -114,6 +114,30 @@ test("deployment cannot skip the build with extra CLI arguments", (t) => {
   assert.equal(result.stdout, "");
 });
 
+test("the first deployment runs without an app ID only when asked for", (t) => {
+  const production = "SANITY_STUDIO_PREVIEW_URL=https://example.com\n";
+  const first = deploy(t, {
+    production,
+    args: ["--first"],
+    inherited: { SANITY_STUDIO_APP_ID: "inherited-app" },
+  });
+  assert.equal(first.status, 0, first.stderr);
+  const lines = first.stdout.trim().split("\n");
+  const run = JSON.parse(lines.find((line) => line.startsWith("{")));
+  assert.equal(run.appId, undefined);
+  assert.equal(run.preview, "https://example.com");
+  assert.match(first.stdout, /SANITY_STUDIO_APP_ID in studio\/\.env\.production/);
+
+  const missing = deploy(t, { production });
+  assert.equal(missing.status, 1);
+  assert.match(missing.stderr, /--first/);
+
+  const repeated = deploy(t, { args: ["--first"] });
+  assert.equal(repeated.status, 1);
+  assert.equal(repeated.stdout, "");
+  assert.match(repeated.stderr, /without --first/);
+});
+
 test("a failed Sanity deployment returns its failure status", (t) => {
   assert.equal(deploy(t, { exitCode: 7 }).status, 7);
 });

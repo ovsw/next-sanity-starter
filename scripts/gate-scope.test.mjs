@@ -42,14 +42,24 @@ test("an empty or blank file list runs the code gate", () => {
   assert.equal(decide([]).code, true);
 });
 
-test("the workflow's tab-separated lines parse into entries with old paths", () => {
+test("the workflow's JSON lines parse into entries with old paths", () => {
   assert.deepEqual(
-    parseChangedFiles("README.md\t\ndocs/moved.md\tfrontend/lib/moved.ts\n\n  \n"),
+    parseChangedFiles('["README.md",""]\n["docs/moved.md","frontend/lib/moved.ts"]\n\n  \n'),
     [
       { filename: "README.md" },
       { filename: "docs/moved.md", previousFilename: "frontend/lib/moved.ts" },
     ],
   );
+  // A tab inside a filename stays inside that one record.
+  assert.deepEqual(parseChangedFiles('["scripts/README.md\\tfail.test.mjs",""]\n'), [
+    { filename: "scripts/README.md\tfail.test.mjs" },
+  ]);
+});
+
+test("a malformed record cannot be read as documentation", () => {
+  for (const line of ["README.md\t", '["a.md","b.md","c.md"]', '[""]', "{}", "[1]"]) {
+    assert.throws(() => parseChangedFiles(`${line}\n`), /Malformed/, line);
+  }
 });
 
 test("a code file renamed into documentation still runs the code gate", () => {
@@ -69,11 +79,12 @@ test("an incomplete file list runs the code gate", () => {
 
 test("the CLI skips code only with a complete, counted documentation list", () => {
   for (const [expected, input, code] of [
-    ["1", "README.md\t\n", false],
-    ["2", "README.md\t\n", true],
-    ["", "README.md\t\n", true],
-    ["invalid", "README.md\t\n", true],
-    ["1", "docs/moved.md\tfrontend/moved.ts\n", true],
+    ["1", '["README.md",""]\n', false],
+    ["2", '["README.md",""]\n', true],
+    ["", '["README.md",""]\n', true],
+    ["invalid", '["README.md",""]\n', true],
+    ["1", '["docs/moved.md","frontend/moved.ts"]\n', true],
+    ["1", "README.md\t\n", true],
     ["0", "", true],
   ]) {
     const result = spawnSync(process.execPath, [new URL("./gate-scope.mjs", import.meta.url).pathname], {

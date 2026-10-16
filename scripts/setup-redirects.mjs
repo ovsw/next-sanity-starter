@@ -120,7 +120,10 @@ export async function setupRedirects(env, fetcher = fetch) {
   if (!existing.length)
     await request(sanityUrl, env.SANITY_AUTH_TOKEN, expected);
   const confirmed = await request(sanityUrl, env.SANITY_AUTH_TOKEN);
-  if (!confirmed.some((item) => item.name === name && matches(item)))
+  if (
+    !Array.isArray(confirmed) ||
+    !confirmed.some((item) => item.name === name && matches(item))
+  )
     throw new Error(
       "Sanity webhook verification failed. Check its API settings and run setup again.",
     );

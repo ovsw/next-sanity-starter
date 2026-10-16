@@ -47,7 +47,7 @@ jobs:
           fi
           export EXPECTED_FILES
           if ! gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --paginate \
-            --jq '.[] | "\(.filename)\t\(.previous_filename // "")"' > "$RUNNER_TEMP/changed-files"; then
+            --jq '.[] | [.filename, (.previous_filename // "")] | tojson' > "$RUNNER_TEMP/changed-files"; then
             echo "code=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi

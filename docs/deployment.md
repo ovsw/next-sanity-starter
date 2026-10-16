@@ -25,9 +25,11 @@ pnpm deploy:studio
 
 Do not add Studio deployment CI. The Starter also omits one-click Vercel deployment because every copy needs its own Sanity project and credentials.
 
-Before deployment, get the Studio app ID from Sanity Manage. Set
-`SANITY_STUDIO_APP_ID` in `studio/.env.production` and commit the file.
-Deployment requires this ID and the production preview URL from that file,
+Sanity creates the Studio app ID on the first deployment. For a new project,
+run `pnpm deploy:studio --first` once, then save the app ID that Sanity prints
+as `SANITY_STUDIO_APP_ID` in `studio/.env.production` and commit the file.
+`--first` refuses to run when that file already has an app ID. Every later
+deployment requires this ID and the production preview URL from that file,
 and `SANITY_AUTH_TOKEN` from `studio/.env.local`. Shell overrides cannot replace
 these values.
 
