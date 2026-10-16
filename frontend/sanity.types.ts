@@ -148,13 +148,11 @@ export type RichTextContent = Array<
 
 export type ButtonLink = {
   _type: "buttonLink";
-  variant?: "default" | "secondary" | "outline" | "link";
   customLink?: CustomUrl;
 };
 
 export type Button = {
   _type: "button";
-  variant?: "default" | "secondary" | "outline" | "link";
   text?: string;
   url?: CustomUrl;
 };
@@ -219,9 +217,6 @@ export type SectionPadding = {
   bottom?: boolean;
 };
 
-export type ButtonVariant =
-  "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-
 export type ColorVariant =
   | "background"
   | "primary"
@@ -243,7 +238,6 @@ export type Link = {
   title?: string;
   href?: string;
   target?: boolean;
-  buttonVariant?: ButtonVariant;
 };
 
 export type BlockContent = Array<
@@ -859,7 +853,6 @@ export type AllSanitySchemaTypes =
   | BlogIndexReference
   | CustomUrl
   | SectionPadding
-  | ButtonVariant
   | ColorVariant
   | Link
   | BlockContent
@@ -949,7 +942,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -957,7 +949,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -1044,7 +1035,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -1052,7 +1042,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -1225,7 +1214,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -1233,7 +1221,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -1320,7 +1307,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -1328,7 +1314,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -1471,7 +1456,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -1479,7 +1463,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -1566,7 +1549,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                         href: string | null | "/" | "/blog";
                         openInNewTab: boolean | null;
@@ -1574,7 +1556,6 @@ export type BLOG_INDEX_QUERY_RESULT =
                     | {
                         _key: string;
                         _type: "buttonLink";
-                        variant?: "default" | "link" | "outline" | "secondary";
                         customLink?: CustomUrl;
                       }
                     | {
@@ -2005,7 +1986,6 @@ export type HOME_PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                     href: string | null | "/" | "/blog";
                     openInNewTab: boolean | null;
@@ -2013,7 +1993,6 @@ export type HOME_PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                   }
                 | {
@@ -2100,7 +2079,6 @@ export type HOME_PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                     href: string | null | "/" | "/blog";
                     openInNewTab: boolean | null;
@@ -2108,7 +2086,6 @@ export type HOME_PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                   }
                 | {
@@ -2311,7 +2288,6 @@ export type PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                     href: string | null | "/" | "/blog";
                     openInNewTab: boolean | null;
@@ -2319,7 +2295,6 @@ export type PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                   }
                 | {
@@ -2406,7 +2381,6 @@ export type PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                     href: string | null | "/" | "/blog";
                     openInNewTab: boolean | null;
@@ -2414,7 +2388,6 @@ export type PAGE_QUERY_RESULT = {
                 | {
                     _key: string;
                     _type: "buttonLink";
-                    variant?: "default" | "link" | "outline" | "secondary";
                     customLink?: CustomUrl;
                   }
                 | {
@@ -2571,7 +2544,6 @@ export type POST_QUERY_RESULT = {
           | {
               _key: string;
               _type: "buttonLink";
-              variant?: "default" | "link" | "outline" | "secondary";
               customLink?: CustomUrl;
               href: string | null | "/" | "/blog";
               openInNewTab: boolean | null;
@@ -2579,7 +2551,6 @@ export type POST_QUERY_RESULT = {
           | {
               _key: string;
               _type: "buttonLink";
-              variant?: "default" | "link" | "outline" | "secondary";
               customLink?: CustomUrl;
             }
           | {
@@ -2740,7 +2711,6 @@ export type PUBLISHED_POST_QUERY_RESULT = {
           | {
               _key: string;
               _type: "buttonLink";
-              variant?: "default" | "link" | "outline" | "secondary";
               customLink?: CustomUrl;
               href: string | null | "/" | "/blog";
               openInNewTab: boolean | null;
@@ -2748,7 +2718,6 @@ export type PUBLISHED_POST_QUERY_RESULT = {
           | {
               _key: string;
               _type: "buttonLink";
-              variant?: "default" | "link" | "outline" | "secondary";
               customLink?: CustomUrl;
             }
           | {

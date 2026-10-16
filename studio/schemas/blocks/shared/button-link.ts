@@ -8,21 +8,6 @@ export default defineType({
   icon: LinkIcon,
   fields: [
     defineField({
-      name: "variant",
-      title: "Button Style",
-      type: "string",
-      initialValue: "default",
-      options: {
-        layout: "radio",
-        list: [
-          { title: "Default", value: "default" },
-          { title: "Secondary", value: "secondary" },
-          { title: "Outline", value: "outline" },
-          { title: "Link", value: "link" },
-        ],
-      },
-    }),
-    defineField({
       name: "customLink",
       title: "Button Destination",
       type: "customUrl",

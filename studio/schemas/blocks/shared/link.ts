@@ -46,10 +46,5 @@ export default defineType({
       initialValue: false,
       hidden: ({ parent }) => !parent?.isExternal,
     }),
-    defineField({
-      name: "buttonVariant",
-      type: "button-variant",
-      title: "Button Variant",
-    }),
   ],
 });

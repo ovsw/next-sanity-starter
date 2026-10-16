@@ -20,7 +20,6 @@ import redirect from "./schemas/documents/redirect";
 import blockContent from "./schemas/blocks/shared/block-content";
 import link from "./schemas/blocks/shared/link";
 import { colorVariant } from "./schemas/blocks/shared/color-variant";
-import { buttonVariant } from "./schemas/blocks/shared/button-variant";
 import sectionPadding from "./schemas/blocks/shared/section-padding";
 import customUrl from "./schemas/blocks/shared/custom-url";
 import customLink from "./schemas/blocks/shared/custom-link";
@@ -60,7 +59,6 @@ export const schemaTypes = [
   blockContent,
   link,
   colorVariant,
-  buttonVariant,
   sectionPadding,
   customUrl,
   customLink,

@@ -178,3 +178,28 @@ Before publishing a Starter revision, complete `docs/fresh-clone-proof.md` again
 ## License
 
 The repository is available under the MIT License. Keep the copyright and permission notice in `LICENSE` when copying substantial portions of the software.
+
+## Button styles
+
+Code sets button styles. Button, Button Link, and Link have no style control
+in Studio. Rich Text button links use the primary style. The Starter has no
+Page Builder sections with fixed button links or button lists. When adding a
+section with multiple buttons, use a bounded button list and set each style
+by its position in the renderer.
+
+To remove old stored styles, first follow the backup procedure in
+`docs/agents/sanity-cli.md`. Then run from the Studio workspace:
+
+```bash
+cd studio
+node --env-file=.env.local scripts/migrate-button-lists.mjs
+node --env-file=.env.local scripts/migrate-button-lists.mjs --apply
+```
+
+The first command only reports the target, document IDs, and fields to remove.
+The second command removes those fields. It includes archived sections and
+rich text marks in all content documents. Each document keeps its exact ID,
+so drafts, published documents, and release versions stay separate. Revision
+checks stop the transaction if an editor changes a document after it is read.
+Running the migration again makes no changes. No dataset migration runs during
+setup, build, or deployment.
