@@ -33,8 +33,8 @@ If any target environment file already exists, setup stops instead of replacing 
 The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed environment example files list the supported names.
 
 The Studio uses `studio/.env.local` to preview the local Website. A production
-Studio build uses the deployed Website URL in `studio/.env.production`. After
-the first Studio deployment, add the app ID printed by Sanity to that production
+Studio build uses the deployed Website URL in `studio/.env.production`. Before
+deploying, add SANITY_STUDIO_APP_ID from Sanity Manage to that production
 file and commit it so every checkout updates the same hosted Studio.
 
 Start both apps:
@@ -156,7 +156,10 @@ The Website and Studio deploy separately.
 For Vercel, import your repository and set the root directory to `frontend`. Copy the Website environment values into that project's settings.
 
 Deploy the Studio manually after confirming that `SANITY_STUDIO_PREVIEW_URL`
-in `studio/.env.production` contains the deployed Website origin:
+in `studio/.env.production` contains the deployed Website origin. Set
+`SANITY_STUDIO_APP_ID` in the same file and `SANITY_AUTH_TOKEN` in
+`studio/.env.local`. Deployment rejects missing values, local addresses, IP
+addresses, and extra arguments. The preview URL must be a public HTTPS origin:
 
 ```bash
 pnpm setup:sanity-cors
