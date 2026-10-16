@@ -246,3 +246,22 @@ Set `OG_IMAGE_SECRET` on each deployment. Generated card URLs are signed.
 The Social sharing photo now supplies the photo inside the card, rather than
 replacing the entire card. Existing images need no stored-data migration, but
 check their crop when using this Starter update in an existing site.
+
+### Page query, copy, and draft tools
+
+Run these from the repository root. They load the project, dataset, and
+`SANITY_AUTH_TOKEN` from `studio/.env.local`, with shell values taking precedence.
+
+```bash
+pnpm sanity:query '*[_type == "page"]{_id,title}'
+pnpm page:text getting-started
+pnpm page:text getting-started --published
+pnpm page:seed ./example-seed.mjs
+pnpm page:seed ./example-seed.mjs --apply
+```
+
+The query includes drafts and published documents. The text command prefers
+the draft unless `--published` is given. The seed command prints a plan by
+default; `--apply` writes page and supporting drafts without publishing.
+See [the Sanity CLI guide](docs/agents/sanity-cli.md#page-tools) for seed format,
+credentials, replacement rules, and the required backup before a write.
