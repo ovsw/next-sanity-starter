@@ -46,7 +46,7 @@ export default defineType({
       type: "image",
       title: "Photo",
       description:
-        "A profile photo for this team member. Add alt text that identifies the person.",
+        "A profile photo for this team member.",
       options: { hotspot: true },
       fields: [
         defineField({
@@ -54,14 +54,7 @@ export default defineType({
           type: "string",
           title: "Alt Text",
           description:
-            "The text that identifies this person for screen readers and search engines.",
-          validation: (rule) =>
-            rule.custom((value, context) => {
-              const parent = context.parent as { asset?: unknown } | undefined;
-              return parent?.asset && !value?.trim()
-                ? "Alt text is required when a photo is set"
-                : true;
-            }),
+            "Describe the image for screen readers. Leave empty if the image is decorative or repeats nearby text.",
         }),
       ],
     }),

@@ -112,7 +112,7 @@ export const richTextContentComponents: PortableTextProps["components"] = {
       return (
         <figure className="my-4">
           <Image
-            alt={value.alt || ""}
+            alt={stegaClean(value.alt) || ""}
             blurDataURL={asset.metadata?.lqip || undefined}
             className="h-auto w-full rounded-card"
             height={asset.metadata?.dimensions?.height ?? 900}
