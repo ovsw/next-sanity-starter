@@ -162,6 +162,40 @@ test("retires the active redirect when a document reclaims an old slug", () => {
   );
 });
 
+test("disables editor URL redirects when a page reclaims their source", () => {
+  for (const destination of ["/b", "/elsewhere"]) {
+    assert.deepEqual(
+      planAutoRedirect({
+        event: {
+          beforeSlug: "b",
+          documentId: "page-id",
+          documentType: "page",
+          slug: "a",
+        },
+        liveRoutes: [],
+        redirects: [{
+          _id: "editor-redirect",
+          _rev: "editor-revision",
+          source: "/a",
+          destination,
+          status: "active",
+          permanent: "true",
+        }],
+      }),
+      {
+        action: "apply",
+        create: true,
+        destination: "/a",
+        destinationDocumentId: "page-id",
+        remove: [],
+        retire: [{ _id: "editor-redirect", _rev: "editor-revision" }],
+        retarget: [],
+        source: "/b",
+      },
+    );
+  }
+});
+
 test("deletes its own redirect when a document reclaims an old slug", () => {
   const ownId = autoRedirectId("/a");
   const reclaim = (redirect) =>

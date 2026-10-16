@@ -162,7 +162,10 @@ export function planAutoRedirect({
     (redirect) =>
       normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
   );
-  if (destinationRedirect) {
+  if (destinationRedirect && !destinationRedirect.destinationReference?._ref) {
+    // A URL redirect is editor-owned. The live page now owns this address.
+    retire.push(destinationRedirect);
+  } else if (destinationRedirect) {
     if (!targetsDocument(destinationRedirect, destinationDocumentId)) {
       return {
         action: "skip",
@@ -230,6 +233,8 @@ export function planAutoRedirect({
 
   const incomingAtSource = activeRedirects.filter(
     (redirect) =>
+      !retire.includes(redirect) &&
+      !remove.includes(redirect) &&
       redirect._id &&
       normalizeRedirectPath(readRedirectPath(redirect.destination)) ===
         source &&
