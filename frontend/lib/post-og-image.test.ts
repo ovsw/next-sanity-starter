@@ -39,7 +39,7 @@ describe("post OG image URLs", () => {
     );
 
     expect(url.pathname).toBe(`/api/og/post/${identity.slug}`);
-    expect(url.searchParams.get("v")).toBe("2");
+    expect(url.searchParams.get("v")).toBe("3");
     expect(url.searchParams.get("rev")).toBe(identity.revision);
     expect(
       verifyPostOgImageSignature({

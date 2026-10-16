@@ -24,7 +24,7 @@ export async function createOgImageResponse({
   title,
   photoUrl,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   photoUrl?: string;
 }) {

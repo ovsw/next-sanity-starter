@@ -1,7 +1,7 @@
 import brand from "../public/brand/brand.json";
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
-export const OG_IMAGE_VERSION = "2";
+export const OG_IMAGE_VERSION = "3";
 export const POST_OG_IMAGE_VERSION = OG_IMAGE_VERSION;
 
 const MAX_SLUG_LENGTH = 200;

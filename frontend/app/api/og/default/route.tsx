@@ -7,7 +7,7 @@ import { siteName } from "@/lib/site-name";
 export async function GET() {
   let response: Response;
   try {
-    response = await createOgImageResponse({ eyebrow: "", title: siteName });
+    response = await createOgImageResponse({ title: siteName });
   } catch (error) {
     // Page and post cards redirect here when they fail, so this route must not
     // depend on the same brand files.
