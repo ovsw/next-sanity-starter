@@ -2,7 +2,7 @@ import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { presentationTool } from "sanity/presentation";
-import { media } from "sanity-plugin-media";
+import { media, mediaAssetSource } from "sanity-plugin-media";
 import { requireStudioEnvironmentValue } from "./environment";
 import { schemaTypes } from "./schema-types";
 import { resolve } from "./presentation/resolve";
@@ -46,6 +46,12 @@ export default defineConfig({
     // Filter singletons and read-only compatibility types from global creation.
     templates: (templates) =>
       templates.filter(({ schemaType }) => !nonCreatableTypes.has(schemaType)),
+  },
+  form: {
+    image: {
+      // Replace the default "Uploaded images" picker with the media library.
+      assetSources: () => [mediaAssetSource],
+    },
   },
   document: {
     // For singleton types, filter out actions that are not explicitly included
