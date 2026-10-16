@@ -159,6 +159,7 @@ For visual changes, treat the existing design system as the default:
 
 - Reuse tokens from `frontend/app/globals.css`.
 - Reuse `SectionContainer`, shared buttons, and nearby block patterns before adding a new primitive.
+- Give a section with buttons one `buttons` array with a `max` count. Editors never pick a button style: the renderer sets it by position (first is primary, second is secondary, and so on).
 - Check the full page and mobile layout, not only the section in isolation.
 - Introduce a one-off value or variant only when the design intentionally requires it.
 
