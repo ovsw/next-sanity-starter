@@ -62,8 +62,10 @@ Setup keeps existing environment files. It copies only the Website and Studio
 `.env.local` files and installs locked dependencies. If no worktree has those
 files, run `pnpm setup` first.
 
-T3 runs this setup when it creates a worktree. Its saved command uses Git's
-common directory to select the primary checkout as the environment source.
+In T3, enable the repository's **Setup Worktree** action for worktree creation.
+If T3 asks you to import repository actions, import them first. The saved
+command uses Git's common directory to select the primary checkout and passes
+it as the explicit `--source`.
 Run `pnpm setup` in the primary checkout first if its environment files are missing.
 
 The launcher reserves paired ports in `3000–3009` and `3333–3342`, prints both
