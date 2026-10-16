@@ -28,7 +28,10 @@ export function getPageOgImagePath(target: PageOgImageTarget) {
   if (target.kind === "blog") {
     return target.page && target.page > 1 ? `blog/${target.page}` : "blog";
   }
-  const parts = [target.kind, ...target.slug.split("/").map(encodeURIComponent)];
+  const parts = [
+    target.kind,
+    ...target.slug.split("/").map(encodeURIComponent),
+  ];
   if (target.kind === "category" && target.page && target.page > 1) {
     parts.push(String(target.page));
   }
@@ -46,7 +49,9 @@ function parseCanonicalPageNumber(value: string | undefined) {
     : null;
 }
 
-export function parsePageOgImageTarget(segments: string[]): PageOgImageTarget | null {
+export function parsePageOgImageTarget(
+  segments: string[],
+): PageOgImageTarget | null {
   if (segments.length === 1 && segments[0] === "home") return { kind: "home" };
   if (segments[0] === "blog" && segments.length <= 2) {
     const page = parseCanonicalPageNumber(segments[1]);
@@ -54,9 +59,10 @@ export function parsePageOgImageTarget(segments: string[]): PageOgImageTarget | 
   }
 
   const [kind, ...slugSegments] = segments;
-  const page = kind === "category" && slugSegments.length === 2
-    ? parseCanonicalPageNumber(slugSegments.pop())
-    : 1;
+  const page =
+    kind === "category" && slugSegments.length === 2
+      ? parseCanonicalPageNumber(slugSegments.pop())
+      : 1;
   const slug = slugSegments.join("/");
   if (
     (kind !== "page" && kind !== "category") ||
@@ -69,8 +75,13 @@ export function parsePageOgImageTarget(segments: string[]): PageOgImageTarget | 
   return kind === "category" ? { kind, page: page ?? 1, slug } : { kind, slug };
 }
 
-export function createPageOgImageRevision(title: string) {
-  return createOgImageRevision([title.trim()]);
+// The photo URL carries the asset, crop and hotspot, so changing any of them
+// gives the card a new URL and shared links pick up the new photo.
+export function createPageOgImageRevision(
+  title: string,
+  photoUrl?: string | null,
+) {
+  return createOgImageRevision([title.trim(), photoUrl || ""]);
 }
 
 export function getPageOgImageTitle(title: string) {
@@ -79,11 +90,13 @@ export function getPageOgImageTitle(title: string) {
 
 export function buildPageOgImageUrl({
   origin,
+  photoUrl,
   target,
   title,
   secret = getOgImageSecret(),
 }: {
   origin: string;
+  photoUrl?: string | null;
   target: PageOgImageTarget;
   title: string;
   secret?: string;
@@ -100,7 +113,7 @@ export function buildPageOgImageUrl({
     throw new Error("Cannot build an OG image URL for an invalid page target");
   }
 
-  const revision = createPageOgImageRevision(title);
+  const revision = createPageOgImageRevision(title, photoUrl);
   const key = getPageOgImageKey(target);
   const url = new URL(`/api/og/page/${getPageOgImagePath(target)}`, origin);
   url.searchParams.set("v", OG_IMAGE_VERSION);

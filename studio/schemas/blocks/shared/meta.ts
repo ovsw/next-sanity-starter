@@ -13,8 +13,7 @@ export default defineField({
       name: "title",
       type: "string",
       title: "SEO title override",
-      description:
-        `Optional. Titles without a pipe get “| ${studioSiteName}” automatically. Titles containing a pipe are used as written.`,
+      description: `Optional. Titles without a pipe get “| ${studioSiteName}” automatically. Titles containing a pipe are used as written.`,
       components: { input: SeoTitleInput },
       validation: (rule) =>
         rule
@@ -47,7 +46,9 @@ export default defineField({
     defineField({
       name: "image",
       type: "image",
-      title: "Image",
+      title: "Social sharing photo",
+      description:
+        "Photo inside the generated sharing card. If empty, posts use their main image and pages use a hero photo when available. With no photo, the card shows the logo on the brand colour.",
     }),
   ],
 });

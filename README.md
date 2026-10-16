@@ -111,7 +111,10 @@ placeholder. Each project copy adds its own sections with
 generation, previews, registration, and the Scaffold workflow.
 
 Pages accept nested slugs such as `about/our-team`. Blog routes stay reserved.
-SEO sharing uses an editor-selected image when present, then a generated card.
+SEO sharing always uses a generated branded card. The selected sharing photo
+appears inside the card. Posts fall back to their main image. Pages use a hero
+photo when a site adds `homeHero` or `innerHero` sections; this Starter has no
+hero sections. Without a photo, the card uses the logo and brand colour.
 
 ## Workspace commands
 
@@ -225,3 +228,21 @@ SANITY_STUDIO_DATASET=issue-63-smoke NEXT_PUBLIC_SANITY_DATASET=issue-63-smoke P
 This mode fails if seed content is absent, runs both seed-dependent smoke tests,
 and checks the migrated link destination in Chrome. Leave port 3000 free for
 the test server. No screenshots, traces, or videos are recorded.
+
+## Sharing-card brand
+
+Replace the files in `frontend/public/brand/` to set the sharing-card brand:
+
+- `mark.svg`: the site mark, also used as the browser favicon.
+- `wordmark.svg`: a light logo for dark backgrounds. Use SVG paths, not text.
+- `font.woff`: the card font, served as weight 600. Include its licence.
+- `brand.json`: the background `color` and a `version` string.
+
+Increase `version` whenever a logo or font changes. This gives shared cards new
+URLs instead of reusing immutable cached cards. Deploy after changing these
+files. The build includes this folder in every sharing-card route.
+
+Set `OG_IMAGE_SECRET` on each deployment. Generated card URLs are signed.
+The Social sharing photo now supplies the photo inside the card, rather than
+replacing the entire card. Existing images need no stored-data migration, but
+check their crop when using this Starter update in an existing site.

@@ -1,3 +1,4 @@
+import { archiveSharingPhotoQuery } from "./shared/sharing-photo";
 import { groq } from "next-sanity";
 import { pageBuilderQuery } from "./page-builder";
 import { imageQuery } from "./shared/image";
@@ -11,7 +12,10 @@ export type CategoryReference = {
   slug?: { current?: string | null } | null;
 };
 
-export type BlogPost = Omit<NonNullable<LATEST_POST_QUERY_RESULT>, "category"> & {
+export type BlogPost = Omit<
+  NonNullable<LATEST_POST_QUERY_RESULT>,
+  "category"
+> & {
   category?: CategoryReference | null;
 };
 
@@ -32,6 +36,7 @@ export const BLOG_INDEX_QUERY = groq`
     title,
     description,
     ${pageBuilderQuery},
+    ${archiveSharingPhotoQuery},
     ${metaQuery}
   }
 `;

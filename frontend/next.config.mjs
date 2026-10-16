@@ -12,6 +12,9 @@ function requiredEnvironmentValue(name) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingIncludes: {
+    "/api/og/**/*": ["./public/brand/**/*"],
+  },
   cacheComponents: true,
   cacheLife: { default: sanity },
   async redirects() {

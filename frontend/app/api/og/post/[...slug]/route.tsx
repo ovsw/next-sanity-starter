@@ -1,3 +1,4 @@
+import { sharingCardPhotoUrl } from "@/sanity/lib/image";
 import {
   createOgImageResponse,
   ogImageFallbackResponse,
@@ -69,19 +70,23 @@ export async function GET(
   })) as { data: POST_OG_IMAGE_QUERY_RESULT };
 
   const title = post?.title?.trim();
+  const photoUrl = sharingCardPhotoUrl(post?.sharingPhoto);
   const date = post?.publishedAt && formatPostOgDate(post.publishedAt);
   if (
     !title ||
     !post?.publishedAt ||
     !date ||
-    createPostOgImageRevision({ publishedAt: post.publishedAt, title }) !==
-      revision
+    createPostOgImageRevision({
+      photoUrl,
+      publishedAt: post.publishedAt,
+      title,
+    }) !== revision
   ) {
     return notFound();
   }
 
   try {
-    return await createOgImageResponse({ eyebrow: date, title });
+    return await createOgImageResponse({ eyebrow: date, title, photoUrl });
   } catch (error) {
     return ogImageFallbackResponse(error, "Post");
   }

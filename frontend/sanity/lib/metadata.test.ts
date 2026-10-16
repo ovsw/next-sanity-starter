@@ -84,15 +84,16 @@ const category = {
 
 describe("generatePageMetadata", () => {
   it("uses one signed generated card for post Open Graph and Twitter metadata", () => {
-    const metadata = generatePageMetadata({ page: post, path: "/blog/market-trends" });
+    const metadata = generatePageMetadata({
+      page: post,
+      path: "/blog/market-trends",
+    });
     const image = metadata.openGraph.images[0];
     const url = new URL(image.url);
 
     expect(metadata.openGraph.type).toBe("article");
     expect(metadata.title).toBe("Market trends");
-    expect(metadata.openGraph.title).toBe(
-      "Market trends | Example Company",
-    );
+    expect(metadata.openGraph.title).toBe("Market trends | Example Company");
     expect(metadata.openGraph).toHaveProperty(
       "publishedTime",
       post.publishedAt,
@@ -165,35 +166,27 @@ describe("generatePageMetadata", () => {
     });
 
     expect(metadata.title).toBe("About");
-    expect(metadata.openGraph.title).toBe(
-      "About | Example Company",
-    );
+    expect(metadata.openGraph.title).toBe("About | Example Company");
   });
 
-  it("prefers an editor-selected sharing image for Open Graph and Twitter", () => {
-    const pageWithImage = {
-      ...page,
-      meta: {
-        ...page.meta,
-        image: {
-          asset: {
-            url: "https://cdn.sanity.io/images/project/production/social.jpg",
-            metadata: { dimensions: { width: 1600, height: 900 } },
-          },
-        },
-      },
-    } as unknown as NonNullable<PAGE_QUERY_RESULT>;
-
-    const metadata = generatePageMetadata({ page: pageWithImage, path: "/about" });
-    const image = {
-      url: "https://cdn.sanity.io/images/project/production/social.jpg",
-      width: 1600,
-      height: 900,
-      alt: "About | About Example Company",
+  it("puts the sharing photo inside a signed generated card", () => {
+    const sharingPhoto = {
+      asset: { _type: "reference" as const, _ref: "image-abc123-1200x630-jpg" },
+      crop: null,
+      hotspot: null,
     };
-
-    expect(metadata.openGraph.images).toEqual([image]);
-    expect(metadata.twitter.images).toEqual([image]);
+    const withPhoto = generatePageMetadata({
+      page: { ...page, sharingPhoto },
+      path: "/about",
+    });
+    const withoutPhoto = generatePageMetadata({ page, path: "/about" });
+    expect(new URL(withPhoto.openGraph.images[0].url).pathname).toBe(
+      "/api/og/page/page/about",
+    );
+    expect(withPhoto.openGraph.images[0].url).not.toBe(
+      withoutPhoto.openGraph.images[0].url,
+    );
+    expect(withPhoto.twitter.images).toEqual(withPhoto.openGraph.images);
   });
 
   it("uses one absolute, branded homepage title", () => {

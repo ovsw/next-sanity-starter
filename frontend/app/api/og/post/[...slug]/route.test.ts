@@ -1,7 +1,11 @@
+import { sharingCardPhotoUrl } from "@/sanity/lib/image";
 import { buildPostOgImageUrl } from "@/lib/post-og-image";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const routeState = vi.hoisted(() => ({ renderFails: false }));
+const routeState = vi.hoisted(() => ({
+  renderFails: false,
+  props: {} as Record<string, unknown>,
+}));
 const sanityFetchMetadata = vi.hoisted(() => vi.fn());
 
 vi.mock("@/sanity/lib/live", () => ({ sanityFetchMetadata }));
@@ -14,9 +18,10 @@ vi.mock("@/components/post-og-image", () => ({
 }));
 vi.mock("next/og", () => ({
   ImageResponse: function MockImageResponse(
-    _element: unknown,
+    _element: { props: Record<string, unknown> },
     options: { headers?: HeadersInit },
   ) {
+    routeState.props = _element.props;
     if (routeState.renderFails) throw new Error("render failed");
     return new Response("png", { headers: options.headers, status: 200 });
   },
@@ -28,8 +33,9 @@ const title = "Why Market Trends Change";
 const publishedAt = "2026-08-15T12:00:00Z";
 const slug = "market-trends";
 
-function signedUrl() {
+function signedUrl(photoUrl?: string) {
   return buildPostOgImageUrl({
+    photoUrl,
     origin: "https://example.test",
     publishedAt,
     secret: "test-only-og-image-secret",
@@ -49,6 +55,27 @@ describe("post OG image route", () => {
     sanityFetchMetadata.mockResolvedValue({
       data: { title, publishedAt },
     });
+  });
+
+  it("renders a logo-on-colour card when there is no photo", async () => {
+    expect((await get(signedUrl())).status).toBe(200);
+    expect(routeState.props.photoUrl).toBeUndefined();
+    expect(routeState.props.logo).toMatch(/^data:image\/svg\+xml;base64,/);
+    expect(routeState.props.mark).toMatch(/^data:image\/svg\+xml;base64,/);
+    expect(routeState.props.title).toBe(title);
+  });
+
+  it("renders the selected photo and rejects its stale revision", async () => {
+    const sharingPhoto = {
+      asset: { _ref: "image-abc123-1200x630-jpg", _type: "reference" },
+    };
+    const photoUrl = sharingCardPhotoUrl(sharingPhoto);
+    sanityFetchMetadata.mockResolvedValue({
+      data: { title, publishedAt, sharingPhoto },
+    });
+    expect((await get(signedUrl(photoUrl))).status).toBe(200);
+    expect(routeState.props.photoUrl).toBe(photoUrl);
+    expect((await get(signedUrl())).status).toBe(404);
   });
 
   it("rejects bad signatures and extra inputs before fetching Sanity", async () => {
@@ -94,15 +121,17 @@ describe("post OG image route", () => {
     expect((await get(signedUrl())).status).toBe(404);
   });
 
-  it("redirects render failures to the prebuilt local fallback", async () => {
+  it("redirects render failures to the default branded card", async () => {
     routeState.renderFails = true;
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     const response = await get(signedUrl());
 
     expect(response.status).toBe(302);
     expect(response.headers.get("location")).toBe(
-      "https://example.test/images/og-post-fallback.png",
+      "https://example.test/api/og/default",
     );
     consoleError.mockRestore();
   });

@@ -1,3 +1,4 @@
+import { archiveSharingPhotoQuery } from "./shared/sharing-photo";
 import { groq } from "next-sanity";
 import { type BLOG_INDEX_QUERY_RESULT } from "@/sanity.types";
 import { blogPostOrder, publishedPostFilter } from "./blog-post-listing";
@@ -9,6 +10,7 @@ export type CategoryArchive = {
   _type: "category";
   description?: string | null;
   meta?: NonNullable<BLOG_INDEX_QUERY_RESULT>["meta"];
+  sharingPhoto?: NonNullable<BLOG_INDEX_QUERY_RESULT>["sharingPhoto"];
   publishedPostCount: number;
   slug?: { current?: string | null } | null;
   title?: string | null;
@@ -36,6 +38,7 @@ export const CATEGORY_QUERY = groq`
     title,
     slug,
     description,
+    ${archiveSharingPhotoQuery},
     ${metaQuery},
     "publishedPostCount": count(*[${publishedPostFilter} && category._ref == ^._id])
   }

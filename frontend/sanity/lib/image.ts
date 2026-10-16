@@ -20,3 +20,15 @@ export const urlFor = (source: SanityImageSource) => {
 
   return imageBuilder.format("webp").fit("crop");
 };
+
+// JPEG is supported by the sharing-card renderer. Preserve the crop and hotspot.
+export function sharingCardPhotoUrl(source?: SanityImageSource | null) {
+  if (!source) return undefined;
+  return builder
+    .image(source)
+    .width(1200)
+    .height(630)
+    .fit("crop")
+    .format("jpg")
+    .url();
+}
