@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assertDraftSections, parseArgs } from "./page-shots.mjs";
+import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { assertDraftSections, parseArgs, removeSectionShots } from "./page-shots.mjs";
 
 test("page shots parses nested slugs and options in either order", () => {
   assert.deepEqual(parseArgs(["--only", "phone", "/about/team/", "--out", "/tmp/review"]), {
@@ -24,4 +27,17 @@ test("missing, extra, reordered and empty sections stop screenshots", () => {
   }
   assert.throws(() => assertDraftSections([], [], true, "drafts.page"));
   assert.doesNotThrow(() => assertDraftSections(["a", "b"], ["a", "b"], true, "drafts.page"));
+});
+
+test("a new capture removes earlier section images and keeps other files", () => {
+  const directory = mkdtempSync(path.join(tmpdir(), "page-shots-"));
+  try {
+    for (const file of ["01-hero.png", "02-old.png", "100-last.png", "notes.png", "readme.txt"]) {
+      writeFileSync(path.join(directory, file), "");
+    }
+    removeSectionShots(directory);
+    assert.deepEqual(readdirSync(directory).sort(), ["notes.png", "readme.txt"]);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

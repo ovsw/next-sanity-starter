@@ -68,7 +68,11 @@ export function sectionText(section) {
 }
 
 export function normalizeSlug(input) {
-  return `${input ?? ""}`.trim().replace(/^https?:\/\/[^/]+/, "").replace(/^\/+|\/+$/g, "");
+  return `${input ?? ""}`
+    .trim()
+    .replace(/^https?:\/\/[^/]+/, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "");
 }
 
 /** GROQ filter matching a page by slug with or without leading or trailing slashes. */

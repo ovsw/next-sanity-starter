@@ -123,7 +123,7 @@ export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).to
     studioProduction: [
       `SANITY_STUDIO_PREVIEW_URL=${config.siteUrl}`,
       "",
-      "# Before deploying, add and commit the app ID from Sanity Manage:",
+      "# After the first `pnpm deploy:studio --first`, add and commit the app ID it prints:",
       "# SANITY_STUDIO_APP_ID=your-sanity-studio-app-id",
       "",
     ].join("\n"),
