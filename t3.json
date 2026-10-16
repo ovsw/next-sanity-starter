@@ -3,7 +3,7 @@
   "scripts": [
     {
       "name": "Setup Worktree",
-      "command": "pnpm setup:worktree",
+      "command": "pnpm setup:worktree --source \"$(dirname \"$(git rev-parse --path-format=absolute --git-common-dir)\")\"",
       "icon": "configure",
       "runOnWorktreeCreate": true
     },
