@@ -16,4 +16,11 @@ const draftModeHandler = token
       },
     };
 
-export const { GET } = draftModeHandler;
+// Keep draft cookies unpartitioned so Presentation's "Open preview" tab can
+// use them too. Chromium must allow third-party cookies; Safari is unsupported.
+// The Sanity handler still validates the preview secret.
+export async function GET(request: Request) {
+  const headers = new Headers(request.headers);
+  headers.delete("sec-fetch-dest");
+  return draftModeHandler.GET(new Request(request.url, { headers }));
+}

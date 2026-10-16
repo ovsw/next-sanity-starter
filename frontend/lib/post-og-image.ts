@@ -1,6 +1,7 @@
+import brand from "../public/brand/brand.json";
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
-export const OG_IMAGE_VERSION = "1";
+export const OG_IMAGE_VERSION = "2";
 export const POST_OG_IMAGE_VERSION = OG_IMAGE_VERSION;
 
 const MAX_SLUG_LENGTH = 200;
@@ -28,17 +29,20 @@ function signaturePayload({
 }
 
 export function createPostOgImageRevision({
+  photoUrl,
   publishedAt,
   title,
 }: {
+  photoUrl?: string | null;
   publishedAt: string;
   title: string;
 }) {
-  return createOgImageRevision([title.trim(), publishedAt]);
+  return createOgImageRevision([title.trim(), publishedAt, photoUrl || ""]);
 }
 
 export function createOgImageRevision(parts: string[]) {
   return createHash("sha256")
+    .update(JSON.stringify(brand))
     .update(parts.join("\n"))
     .digest("base64url")
     .slice(0, 22);
@@ -55,10 +59,7 @@ export function isValidOgSlug(slug: string) {
 
 export const isValidPostOgSlug = isValidOgSlug;
 
-export function signPostOgImage(
-  identity: PostOgImageIdentity,
-  secret: string,
-) {
+export function signPostOgImage(identity: PostOgImageIdentity, secret: string) {
   return signOgImage(
     {
       key: identity.slug,
@@ -130,12 +131,14 @@ export const getPostOgImageSecret = getOgImageSecret;
 
 export function buildPostOgImageUrl({
   origin,
+  photoUrl,
   publishedAt,
   slug,
   title,
   secret = getPostOgImageSecret(),
 }: {
   origin: string;
+  photoUrl?: string | null;
   publishedAt: string;
   secret?: string;
   slug: string;
@@ -146,14 +149,11 @@ export function buildPostOgImageUrl({
   }
 
   const encodedSlug = slug.split("/").map(encodeURIComponent).join("/");
-  const revision = createPostOgImageRevision({ publishedAt, title });
+  const revision = createPostOgImageRevision({ photoUrl, publishedAt, title });
   const url = new URL(`/api/og/post/${encodedSlug}`, origin);
   url.searchParams.set("v", POST_OG_IMAGE_VERSION);
   url.searchParams.set("rev", revision);
-  url.searchParams.set(
-    "sig",
-    signPostOgImage({ slug, revision }, secret),
-  );
+  url.searchParams.set("sig", signPostOgImage({ slug, revision }, secret));
   return url.toString();
 }
 

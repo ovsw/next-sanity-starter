@@ -20,11 +20,16 @@ import {
   type PageOgImageTarget,
 } from "@/lib/page-og-image";
 import { resolveSeoTitle } from "../../../shared/seo-title";
+import { sharingCardPhotoUrl } from "./image";
 const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 
 const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-function sharingImage(url: string, title: string, alt = `${title} | ${siteName}`) {
+function sharingImage(
+  url: string,
+  title: string,
+  alt = `${title} | ${siteName}`,
+) {
   return {
     url,
     width: 1200,
@@ -35,24 +40,9 @@ function sharingImage(url: string, title: string, alt = `${title} | ${siteName}`
 
 function fallbackSharingImage() {
   return sharingImage(
-    `${siteOrigin}/images/og-post-fallback.png`,
+    `${siteOrigin}/api/og/default`,
     "Helpful website content",
   );
-}
-
-function configuredSharingImage(
-  page: HOME_PAGE_QUERY_RESULT | PAGE_QUERY_RESULT | POST_QUERY_RESULT,
-  title: string,
-) {
-  const image = page?.meta?.image;
-  if (!image?.asset?.url) return null;
-
-  return {
-    url: image.asset.url,
-    width: image.asset.metadata?.dimensions?.width || 1200,
-    height: image.asset.metadata?.dimensions?.height || 630,
-    alt: title,
-  };
 }
 
 function resolveArchiveTitles({
@@ -74,7 +64,9 @@ function resolveArchiveTitles({
   const pageTitleResolution = resolveSeoTitle({
     fallbackTitle: getBlogPageTitle(baseTitleResolution.pageTitle, page),
     ...(overrideTitle?.includes("|")
-      ? { overrideTitle: getBlogPageTitle(baseTitleResolution.finalTitle, page) }
+      ? {
+          overrideTitle: getBlogPageTitle(baseTitleResolution.finalTitle, page),
+        }
       : {}),
     siteName,
   });
@@ -105,20 +97,23 @@ export function generatePageMetadata({
   // Slugs the signed OG routes cannot represent fall through to the generic
   // sharing image instead of turning the page request into a server error.
   const postImage =
-    isPost && postTitle && page.publishedAt && isValidOgSlug(page.slug?.current || "")
+    isPost &&
+    postTitle &&
+    page.publishedAt &&
+    isValidOgSlug(page.slug?.current || "")
       ? buildPostOgImageUrl({
           origin: siteOrigin,
+          photoUrl: sharingCardPhotoUrl(page.sharingPhoto),
           publishedAt: page.publishedAt,
           slug: page.slug?.current || "",
           title: postTitle,
         })
       : null;
-  const rawPageTitle =
-    isHomepage
-      ? page.title || seoTitle.pageTitle
-      : page?._type === "page"
-        ? page.title || page.meta?.title
-        : undefined;
+  const rawPageTitle = isHomepage
+    ? page.title || seoTitle.pageTitle
+    : page?._type === "page"
+      ? page.title || page.meta?.title
+      : undefined;
   const pageTitle = rawPageTitle
     ? getPageOgImageTitle(rawPageTitle)
     : undefined;
@@ -134,18 +129,18 @@ export function generatePageMetadata({
       ? buildPageOgImageUrl({
           origin: siteOrigin,
           target: pageTarget,
+          photoUrl: sharingCardPhotoUrl(page?.sharingPhoto),
           title: pageTitle,
         })
       : null;
   // The generated card uses the visible content title. Its alt text uses the
   // final social title, including any complete suffix supplied by the editor.
   const image =
-    configuredSharingImage(page, seoTitle.finalTitle) ||
-    (postImage && postTitle
+    postImage && postTitle
       ? sharingImage(postImage, postTitle)
       : pageImage && pageTitle
         ? sharingImage(pageImage, pageTitle, seoTitle.finalTitle)
-        : fallbackSharingImage());
+        : fallbackSharingImage();
 
   return {
     title: seoTitle.metadataTitle,
@@ -194,6 +189,7 @@ export function generateBlogIndexMetadata({
     buildPageOgImageUrl({
       origin: siteOrigin,
       target: { kind: "blog", page },
+      photoUrl: sharingCardPhotoUrl(blogIndex?.sharingPhoto),
       title: cardTitle,
     }),
     cardTitle,
@@ -220,8 +216,7 @@ export function generateBlogIndexMetadata({
         ? "noindex"
         : "index, follow",
     alternates: {
-      canonical:
-        process.env.NEXT_PUBLIC_SITE_URL + getBlogCanonicalPath(page),
+      canonical: process.env.NEXT_PUBLIC_SITE_URL + getBlogCanonicalPath(page),
     },
   };
 }
@@ -239,7 +234,8 @@ export function generateCategoryMetadata({
     overrideTitle: category.meta?.title,
     page,
   });
-  const description = category.meta?.description || category.description || undefined;
+  const description =
+    category.meta?.description || category.description || undefined;
   const slug = category.slug?.current || "";
   const image =
     isValidOgSlug(slug) && !slug.includes("/")
@@ -247,6 +243,7 @@ export function generateCategoryMetadata({
           buildPageOgImageUrl({
             origin: siteOrigin,
             target: { kind: "category", page, slug },
+            photoUrl: sharingCardPhotoUrl(category.sharingPhoto),
             title: cardTitle,
           }),
           cardTitle,

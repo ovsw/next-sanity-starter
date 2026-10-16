@@ -42,7 +42,13 @@ export default defineType({
       icon: ImageIcon,
       options: { hotspot: true },
       fields: [
-        defineField({ name: "alt", title: "Alternative Text", type: "string" }),
+        defineField({
+          name: "alt",
+          title: "Alternative Text",
+          type: "string",
+          description:
+            "Describe the image for screen readers. Leave empty if the image is decorative or repeats nearby text.",
+        }),
         defineField({ name: "caption", title: "Caption Text", type: "string" }),
       ],
     }),

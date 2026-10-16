@@ -32,7 +32,6 @@ export default function PostHero({ post, readTime, stega }: PostHeroProps) {
     "",
   );
   const categoryHref = categoryPath(categorySlug);
-  const authorName = stegaClean(author?.name)?.trim();
   const postDataAttribute = documentDataAttribute({
     id: post._id,
     stega,
@@ -79,11 +78,7 @@ export default function PostHero({ post, readTime, stega }: PostHeroProps) {
                 {author.image?.asset?._id ? (
                   <span data-sanity={authorDataAttribute?.("image")}>
                     <Image
-                      alt={
-                        stegaClean(author.image.alt) ||
-                        authorName ||
-                        "Post author"
-                      }
+                      alt={stegaClean(author.image.alt) || ""}
                       blurDataURL={
                         author.image.asset.metadata?.lqip || undefined
                       }

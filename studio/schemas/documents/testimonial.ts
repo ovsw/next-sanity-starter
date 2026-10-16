@@ -35,13 +35,8 @@ export default defineType({
           name: "alt",
           type: "string",
           title: "Alt Text",
-          validation: (rule) =>
-            rule.custom((value, context) => {
-              const parent = context.parent as { asset?: unknown } | undefined;
-              return parent?.asset && !value?.trim()
-                ? "Alt text is required when an image is set"
-                : true;
-            }),
+          description:
+            "Describe the image for screen readers. Leave empty if the image is decorative or repeats nearby text.",
         }),
       ],
     }),

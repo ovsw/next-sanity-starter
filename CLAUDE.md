@@ -68,3 +68,8 @@ Before adding or changing a Page Builder section, read `docs/agents/page-builder
 ### Development workflow
 
 Before changing workspace dependencies, Sanity schemas, GROQ queries, or development scripts, consult the relevant section of `README.md`.
+
+### Raster image descriptions
+
+Before syncing Raster descriptions or configuring Raster credentials, read
+`docs/agents/raster-descriptions.md`.

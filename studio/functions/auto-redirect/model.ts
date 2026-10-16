@@ -38,6 +38,10 @@ export type FetchedRedirect = RedirectRecord & {
     _type: string;
     slug?: string;
   };
+  /** An editor has an unpublished draft or release version of this redirect. */
+  hasPendingEdits?: boolean;
+  utmSource?: string;
+  utmCampaign?: string;
 };
 
 type AutoRedirectPlan =
@@ -47,6 +51,7 @@ type AutoRedirectPlan =
       create: boolean;
       destination: string;
       destinationDocumentId: string;
+      remove: { _id: string; _rev?: string }[];
       retire: { _id: string; _rev?: string }[];
       retarget: { _id: string; _rev?: string }[];
       source: string;
@@ -76,6 +81,27 @@ function isActive(record: RedirectRecord) {
   return !record.status || record.status === "active";
 }
 
+/**
+ * A redirect this function created that still holds only what the function
+ * writes: its id matches its source, it is active and permanent, it has no
+ * UTM tags, and no draft or release version is waiting. A published editor
+ * change to any of these keeps the redirect. (The destination reference is
+ * checked by the caller.) Deleting a record that matches loses nothing an
+ * editor chose.
+ */
+function isOwnRedirect(record: FetchedRedirect) {
+  const source = normalizeRedirectPath(readRedirectPath(record.source));
+  return (
+    !!source &&
+    !record.hasPendingEdits &&
+    record._id === autoRedirectId(toStoredRedirectPath(source)) &&
+    record.status === "active" &&
+    (record.permanent === "true" || record.permanent === true) &&
+    !record.utmSource &&
+    !record.utmCampaign
+  );
+}
+
 function targetsDocument(record: RedirectRecord, documentId: string) {
   return (
     record.destinationReference?._ref?.replace(/^drafts\./, "") === documentId
@@ -89,13 +115,17 @@ export function planAutoRedirect({
 }: {
   event: AutoRedirectEventData;
   liveRoutes: LiveRoute[];
-  redirects: RedirectRecord[];
+  redirects: FetchedRedirect[];
 }): AutoRedirectPlan {
   if (!event.documentType || !ROUTED_DOCUMENT_TYPES.has(event.documentType)) {
     return { action: "skip", reason: "Document type is not routed by a slug" };
   }
 
-  const destinationDocumentId = event.documentId?.replace(/^drafts\./, "");
+  if (/^(drafts|versions)\./.test(event.documentId ?? "")) {
+    return { action: "skip", reason: "The document is not live" };
+  }
+
+  const destinationDocumentId = event.documentId;
   if (!destinationDocumentId) {
     return { action: "skip", reason: "The publish event has no document id" };
   }
@@ -123,23 +153,34 @@ export function planAutoRedirect({
   }
 
   const activeRedirects = redirects.filter(isActive);
+  // When a document takes back an old slug, the redirect at that slug goes.
+  // Redirects this function made are deleted; editors' redirects are only
+  // switched off, so their work is kept.
+  const remove: FetchedRedirect[] = [];
   const retire: FetchedRedirect[] = [];
   const destinationRedirect = activeRedirects.find(
     (redirect) =>
       normalizeRedirectPath(readRedirectPath(redirect.source)) === destination,
   );
-  if (destinationRedirect) {
-    if (!targetsDocument(destinationRedirect, destinationDocumentId)) {
-      return {
-        action: "skip",
-        reason: "A redirect at the new route targets another document",
-      };
-    }
+  if (destinationRedirect && !destinationRedirect.destinationReference?._ref) {
+    // A URL redirect is editor-owned. The live page now owns this address.
+    retire.push(destinationRedirect);
+  } else if (
+    destinationRedirect &&
+    !targetsDocument(destinationRedirect, destinationDocumentId)
+  ) {
+    // A redirect to another document no longer owns this address either.
+    (isOwnRedirect(destinationRedirect) ? remove : retire).push(
+      destinationRedirect,
+    );
+  } else if (destinationRedirect) {
     const flattenedDestination = normalizeRedirectPath(
       readRedirectPath(destinationRedirect.destination),
     );
     if (flattenedDestination === destination) {
-      retire.push(destinationRedirect);
+      (isOwnRedirect(destinationRedirect) ? remove : retire).push(
+        destinationRedirect,
+      );
     } else if (!flattenedDestination || flattenedDestination === source) {
       return {
         action: "skip",
@@ -194,6 +235,8 @@ export function planAutoRedirect({
 
   const incomingAtSource = activeRedirects.filter(
     (redirect) =>
+      !retire.includes(redirect) &&
+      !remove.includes(redirect) &&
       redirect._id &&
       normalizeRedirectPath(readRedirectPath(redirect.destination)) ===
         source &&
@@ -212,7 +255,9 @@ export function planAutoRedirect({
   const incoming = incomingAtSource;
 
   const simulated = activeRedirects
-    .filter((redirect) => !retire.includes(redirect))
+    .filter(
+      (redirect) => !retire.includes(redirect) && !remove.includes(redirect),
+    )
     .map((redirect) =>
       incoming.includes(redirect)
         ? { ...redirect, destination: toStoredRedirectPath(destination) }
@@ -235,6 +280,10 @@ export function planAutoRedirect({
     create: !directRedirect,
     destination: toStoredRedirectPath(destination),
     destinationDocumentId,
+    remove: remove.map((redirect) => ({
+      _id: redirect._id as string,
+      _rev: redirect._rev,
+    })),
     retire: retire.map((redirect) => ({
       _id: redirect._id as string,
       _rev: redirect._rev,

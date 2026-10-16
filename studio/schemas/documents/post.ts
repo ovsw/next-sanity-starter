@@ -91,6 +91,8 @@ export default defineType({
           name: "alt",
           type: "string",
           title: "Alternative Text",
+          description:
+            "Describe the image for screen readers. Leave empty if the image is decorative or repeats nearby text.",
         }),
         defineField({
           name: "caption",

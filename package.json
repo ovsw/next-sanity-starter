@@ -26,7 +26,15 @@
     "test:setup": "node --test scripts/setup.test.mjs",
     "test:e2e": "pnpm --dir frontend test:e2e",
     "test:smoke": "pnpm --dir frontend test:smoke",
-    "verify": "pnpm verify:typegen && pnpm typecheck && pnpm lint && pnpm test && pnpm build && PLAYWRIGHT_REUSE_BUILD=1 pnpm test:smoke"
+    "verify": "pnpm verify:typegen && pnpm typecheck && pnpm lint && pnpm test && pnpm build && PLAYWRIGHT_REUSE_BUILD=1 pnpm test:smoke",
+    "setup:redirects": "node --env-file=studio/.env.local scripts/setup-redirects.mjs",
+    "sanity:query": "pnpm --dir studio sanity:query",
+    "page:shots": "node scripts/page-shots.mjs",
+    "page:text": "pnpm --dir studio page:text",
+    "page:seed": "pnpm --dir studio page:seed",
+    "raster:sync": "pnpm --dir studio raster:sync",
+    "sync:main": "node scripts/merge-refs.mjs origin/main",
+    "merge:refs": "node scripts/merge-refs.mjs"
   },
   "engines": {
     "node": "24.x",

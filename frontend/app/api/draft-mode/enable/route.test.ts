@@ -42,17 +42,44 @@ describe("draft mode enable route", () => {
     errorSpy.mockRestore();
   });
 
-  it("uses the Sanity draft-mode handler when the read token is configured", async () => {
-    const handler = vi.fn(() => new Response("enabled"));
-    defineEnableDraftMode.mockReturnValue({ GET: handler });
-    tokenState.value = "read-token";
+  it.each(["iframe", "document", undefined])(
+    "forwards the preview request without the iframe signal (%s)",
+    async (destination) => {
+      const result = new Response(null, {
+        status: 307,
+        headers: { location: "/preview" },
+      });
+      const handler = vi.fn((request: Request) => {
+        void request;
+        return result;
+      });
+      defineEnableDraftMode.mockReturnValue({ GET: handler });
+      tokenState.value = "read-token";
 
-    const { GET } = await loadRoute();
+      const { GET } = await loadRoute();
+      const headers = new Headers({
+        "sec-fetch-site": "cross-site",
+        cookie: "example=value",
+      });
+      if (destination) headers.set("sec-fetch-dest", destination);
+      const request = new Request(
+        "https://example.com/api/draft-mode/enable?sanity-preview-secret=abc&sanity-preview-pathname=%2Fpreview",
+        { headers },
+      );
+      const response = await GET(request);
 
-    expect(withConfig).toHaveBeenCalledWith({ token: "read-token" });
-    expect(defineEnableDraftMode).toHaveBeenCalledWith({
-      client: { configured: true },
-    });
-    expect(GET).toBe(handler);
-  });
+      expect(withConfig).toHaveBeenCalledWith({ token: "read-token" });
+      expect(defineEnableDraftMode).toHaveBeenCalledWith({
+        client: { configured: true },
+      });
+      expect(response).toBe(result);
+      expect(handler).toHaveBeenCalledTimes(1);
+      const forwarded = handler.mock.calls[0][0];
+      expect(forwarded.url).toBe(request.url);
+      expect(forwarded.headers.get("sec-fetch-dest")).toBeNull();
+      expect(forwarded.headers.get("sec-fetch-site")).toBe("cross-site");
+      expect(forwarded.headers.get("cookie")).toBe("example=value");
+      expect(request.headers.get("sec-fetch-dest")).toBe(destination ?? null);
+    },
+  );
 });

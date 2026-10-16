@@ -66,6 +66,27 @@ describe("RichTextContent", () => {
     expect(screen.getByText("At sunrise")).toBeInTheDocument();
   });
 
+  it.each([undefined, ""])("treats an image with alt %s as decorative", (alt) => {
+    const { container } = render(
+      <RichTextContent
+        value={[
+          {
+            _key: "decorative",
+            _type: "image",
+            alt,
+            resolvedAsset: {
+              _id: "image-abc123-2400x1800-jpg",
+              url: "https://cdn.sanity.io/images/test-project/test/abc123-2400x1800.jpg",
+              metadata: { dimensions: { width: 2400, height: 1800 } },
+            },
+          },
+        ]}
+      />,
+    );
+    expect(container.querySelector("img")).toHaveAttribute("alt", "");
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
   it("preserves SVG format in bounded rich-text image requests", () => {
     render(
       <RichTextContent

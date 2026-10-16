@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/og-image.jpg`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/og/default`,
         width: 1200,
         height: 630,
       },
@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/brand/mark.svg" type="image/svg+xml" />
       <body>
         {children}
         <Toaster position="top-center" richColors />

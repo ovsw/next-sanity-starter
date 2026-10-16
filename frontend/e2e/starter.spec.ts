@@ -39,7 +39,9 @@ async function gotoAvailableRoute(
 async function expectAccessibleRoute(page: import("@playwright/test").Page) {
   await expect(page.locator("main")).toHaveCount(1);
   await expect(page.locator("h1")).toHaveCount(1);
-  await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeVisible();
+  await expect(
+    page.getByRole("navigation", { name: "Main navigation" }),
+  ).toBeVisible();
   await expect(page.getByRole("contentinfo")).toBeVisible();
   await expect(
     page.getByRole("button", { name: /theme|color mode|dark|light/i }),
@@ -64,32 +66,35 @@ test("supports keyboard access on starter routes", async ({ page }) => {
   await page.goto("/");
 
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await expect(
+    page.getByRole("link", { name: "Skip to content" }),
+  ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#main-content$/);
 
   await page.goto("/");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: /home page/i }).first()).toBeFocused();
-
+  await expect(
+    page.getByRole("link", { name: /home page/i }).first(),
+  ).toBeFocused();
 });
 
-test("keeps reduced-motion visitors out of starter animation", async ({ page }) => {
+test("keeps reduced-motion visitors out of starter animation", async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
 
-  const runningAnimations = await page
-    .locator("body *")
-    .evaluateAll((elements) =>
+  const runningAnimations = await page.locator("body *").evaluateAll(
+    (elements) =>
       elements.filter((element) => {
         const style = getComputedStyle(element);
         return (
-          style.animationName !== "none" ||
-          style.transitionDuration !== "0s"
+          style.animationName !== "none" || style.transitionDuration !== "0s"
         );
       }).length,
-    );
+  );
 
   expect(runningAnimations).toBe(0);
 });
@@ -117,10 +122,16 @@ test("homepage sections join with seams and edges", async ({ page }) => {
     level: 2,
     name: "Neutral sample content for a clean project.",
   });
-  test.skip(!(await homepage.isVisible()), "Starter homepage sample content is not seeded");
+  if (process.env.PLAYWRIGHT_REQUIRE_SEED) await expect(homepage).toBeVisible();
+  else
+    test.skip(
+      !(await homepage.isVisible()),
+      "Starter homepage sample content is not seeded",
+    );
 
-  const sections = await page.locator("main section.section-scene").evaluateAll(
-    (elements) =>
+  const sections = await page
+    .locator("main section.section-scene")
+    .evaluateAll((elements) =>
       elements.map((element) => {
         const rect = element.getBoundingClientRect();
         const style = getComputedStyle(element);
@@ -133,7 +144,7 @@ test("homepage sections join with seams and edges", async ({ page }) => {
           scaffold: element.hasAttribute("data-scaffold"),
         };
       }),
-  );
+    );
   expect(sections.length).toBeGreaterThanOrEqual(4);
 
   const joins = sections.slice(1).map((lower, index) => {
@@ -170,7 +181,13 @@ test("a Scaffold renders its marker on the page and nothing from the archive", a
 }) => {
   await page.goto("/");
   const scaffold = page.locator("section[data-scaffold]");
-  test.skip(!(await scaffold.count()), "Starter homepage sample content is not seeded");
+  if (process.env.PLAYWRIGHT_REQUIRE_SEED)
+    await expect(scaffold).toHaveCount(1);
+  else
+    test.skip(
+      !(await scaffold.count()),
+      "Starter homepage sample content is not seeded",
+    );
 
   await expect(scaffold).toHaveCount(1);
   await expect(scaffold).toContainText("Scaffold:");
@@ -180,4 +197,25 @@ test("a Scaffold renders its marker on the page and nothing from the archive", a
   await page.goto("/about");
   await expect(page.locator("section[data-scaffold]")).toHaveCount(0);
   await expect(page.getByText("About page intro")).toHaveCount(0);
+});
+
+if (process.env.PLAYWRIGHT_REQUIRE_SEED) {
+  test("keeps the migrated button destination", async ({ page }) => {
+    await page.goto("/about");
+    await expect(
+      page.getByRole("link", { name: "Migration example link" }),
+    ).toHaveAttribute("href", "https://example.com/");
+  });
+}
+
+test("serves the branded sharing fallback and favicon", async ({ request }) => {
+  const card = await request.get("/api/og/default");
+  expect(card.ok()).toBe(true);
+  expect(card.headers()["content-type"]).toBe("image/png");
+  expect([...(await card.body()).subarray(0, 8)]).toEqual([
+    137, 80, 78, 71, 13, 10, 26, 10,
+  ]);
+  const mark = await request.get("/brand/mark.svg");
+  expect(mark.ok()).toBe(true);
+  expect(mark.headers()["content-type"]).toContain("image/svg+xml");
 });

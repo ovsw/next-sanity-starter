@@ -13,10 +13,50 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
-  release-gate:
-    name: Release gate
+  scope:
+    name: Classify changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Decide whether the change needs the code gate
+        id: classify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A failed or incomplete API response must never skip verification.
+          if ! EXPECTED_FILES="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '.changed_files')"; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          export EXPECTED_FILES
+          if ! gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --paginate \
+            --jq '.[] | [.filename, (.previous_filename // "")] | tojson' > "$RUNNER_TEMP/changed-files"; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node scripts/gate-scope.mjs < "$RUNNER_TEMP/changed-files"
+
+  code:
+    name: Code checks
+    needs: scope
+    if: needs.scope.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -56,3 +96,27 @@ jobs:
 
       - name: Verify repository
         run: pnpm verify
+
+  release-gate:
+    name: Release gate
+    needs: [scope, code]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require the selected checks to pass
+        env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          CODE_REQUIRED: ${{ needs.scope.outputs.code }}
+          CODE_RESULT: ${{ needs.code.result }}
+        run: |
+          if [ "$SCOPE_RESULT" = "success" ]; then
+            if [ "$CODE_REQUIRED" = "false" ] && [ "$CODE_RESULT" = "skipped" ]; then
+              exit 0
+            fi
+            if [ "$CODE_REQUIRED" = "true" ] && [ "$CODE_RESULT" = "success" ]; then
+              exit 0
+            fi
+          fi
+          echo "::error::Release gate failed: scope=$SCOPE_RESULT code=$CODE_RESULT required=$CODE_REQUIRED"
+          exit 1

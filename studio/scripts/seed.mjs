@@ -88,12 +88,11 @@ const internalUrl = (_ref) => ({
   internal: ref(_ref),
   openInNewTab: false,
 });
-const button = (key, text, _ref, variant = "default") => ({
+const button = (key, text, _ref) => ({
   _key: key,
   _type: "button",
   text,
   url: internalUrl(_ref),
-  variant,
 });
 const meta = (title, description) => ({
   title,

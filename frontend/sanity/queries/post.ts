@@ -1,3 +1,4 @@
+import { postSharingPhotoQuery } from "./shared/sharing-photo";
 import { groq } from "next-sanity";
 import { ROOT_SLUG_FILTER } from "../../../shared/root-slug-filter";
 import { publishedPostFilter } from "./blog-post-listing";
@@ -48,6 +49,7 @@ const POST_PROJECTION = groq`{
     },
     _createdAt,
     _updatedAt,
+    ${postSharingPhotoQuery},
     ${metaQuery},
 }`;
 
@@ -61,7 +63,8 @@ export const POST_OG_IMAGE_QUERY = groq`*[
   _type == "post" && ${ROOT_SLUG_FILTER}
 ][0]{
   title,
-  publishedAt
+  publishedAt,
+  ${postSharingPhotoQuery}
 }`;
 
 export const POSTS_QUERY = groq`*[_type == "post" && defined(slug)] | order(_createdAt desc){

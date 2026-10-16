@@ -25,9 +25,17 @@ pnpm deploy:studio
 
 Do not add Studio deployment CI. The Starter also omits one-click Vercel deployment because every copy needs its own Sanity project and credentials.
 
-The first deployment creates a Sanity app. Add its printed app ID to
-`studio/.env.production` and commit the file. Later deployments then update the
-same hosted Studio from every checkout.
+Sanity creates the Studio app ID on the first deployment. For a new project,
+run `pnpm deploy:studio --first` once, then save the app ID that Sanity prints
+as `SANITY_STUDIO_APP_ID` in `studio/.env.production` and commit the file.
+`--first` refuses to run when that file already has an app ID. Every later
+deployment requires this ID and the production preview URL from that file,
+and `SANITY_AUTH_TOKEN` from `studio/.env.local`. Shell overrides cannot replace
+these values.
+
+The preview URL must be a public HTTPS origin. Local hostnames, IP addresses,
+credentials, paths, query strings, and fragments are refused. The deploy
+command accepts no extra arguments. A missing setting stops deployment.
 
 ## Content goes live on publish
 
@@ -99,3 +107,62 @@ uses one.
 - Confirm the Vercel root directory is `frontend`.
 - Confirm the GitHub `Release gate` check is required on `main`.
 - Confirm the Studio hostname belongs to this copy of the Starter.
+
+## Published redirects go live in minutes
+
+Redirects compile during the frontend build. Run this setup once for each
+site, before editors use Redirects. A published Redirect create, update, or
+delete then starts a production deploy. Draft edits and release versions do
+not start deploys. The change is live after the deployment succeeds, usually
+in a few minutes. A failed deployment leaves the previous redirects in place.
+
+Set these values in the ignored `studio/.env.local`, or export them in your
+shell. Shell values take precedence. Check the project IDs and dataset before
+running the command.
+
+- `VERCEL_TOKEN`: a token with permission to manage the site's project.
+- `VERCEL_PROJECT_ID`: the site's Vercel project ID.
+- `VERCEL_TEAM_ID`: the owning team ID, if the project belongs to a team.
+- `SANITY_AUTH_TOKEN`: a token with permission to manage project webhooks.
+- `SANITY_STUDIO_PROJECT_ID`: the site's Sanity project ID.
+- `SANITY_STUDIO_DATASET`: the production dataset used by the frontend.
+
+Connect Vercel to the Git repository and set the production branch to `main`.
+Then run from the repository root:
+
+```bash
+pnpm setup:redirects
+```
+
+This creates two settings through the APIs:
+
+- Vercel Settings > Git > Deploy Hooks: `sanity-redirects`, branch `main`.
+- Sanity Manage > API > Webhooks: `sanity-redirects`, the configured dataset,
+  POST, enabled, create/update/delete, filter `_type == "redirect"`, projection
+  `{_id}`, API version `v2025-02-19`. Drafts and all versions are disabled.
+
+The command passes the deploy hook URL directly to Sanity. It does not print
+it or save it in the repository. Anyone with that URL can trigger a deploy.
+Keep it out of logs, issue comments, and git. Matching settings are reused.
+Conflicting settings stop setup without overwriting the existing hook. Fix
+those settings in the service dashboard, then run the command again. If
+Sanity creation fails after Vercel succeeds, rerun to reuse the Vercel hook.
+
+Confirm the behavior on the configured site:
+
+1. Publish a temporary Redirect with an unused source and a published target.
+   Check the Sanity webhook delivery log and the Vercel production deployment.
+   After it succeeds, confirm the source URL redirects to the target.
+2. Change the Redirect draft without publishing. Confirm that no webhook
+   delivery or deployment starts for that edit.
+3. Publish the change. Confirm another deployment starts and the changed
+   redirect takes effect after it succeeds.
+4. Delete the test Redirect, including any draft. Confirm a deployment starts
+   and the test redirect is gone after it succeeds.
+
+Deploy Studio to show the new Redirect description to editors.
+The setup command does not publish test content or trigger a deployment.
+
+API references: [Sanity webhooks](https://www.sanity.io/docs/http-reference/webhooks),
+[Vercel deploy hooks](https://vercel.com/docs/deploy-hooks), and
+[Vercel's hook API client](https://github.com/vercel/terraform-provider-vercel/blob/main/client/deploy_hooks.go).

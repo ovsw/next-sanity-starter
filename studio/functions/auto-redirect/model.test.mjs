@@ -45,6 +45,7 @@ test("creates a canonical permanent redirect for a page rename", () => {
       create: true,
       destination: "/new-page",
       destinationDocumentId: "page-id",
+      remove: [],
       retire: [],
       retarget: [],
       source: "/old-page",
@@ -108,6 +109,7 @@ test("flattens incoming redirects after repeated renames", () => {
       create: true,
       destination: "/c",
       destinationDocumentId: "page-id",
+      remove: [],
       retire: [],
       retarget: [{ _id: "redirect-a", _rev: "rev-a" }],
       source: "/b",
@@ -152,11 +154,138 @@ test("retires the active redirect when a document reclaims an old slug", () => {
       create: true,
       destination: "/a",
       destinationDocumentId: "page-id",
+      remove: [],
       retire: [{ _id: "redirect-a", _rev: "rev-a" }],
       retarget: [],
       source: "/b",
     },
   );
+});
+
+test("disables editor URL redirects when a page reclaims their source", () => {
+  for (const destination of ["/b", "/elsewhere"]) {
+    assert.deepEqual(
+      planAutoRedirect({
+        event: {
+          beforeSlug: "b",
+          documentId: "page-id",
+          documentType: "page",
+          slug: "a",
+        },
+        liveRoutes: [],
+        redirects: [{
+          _id: "editor-redirect",
+          _rev: "editor-revision",
+          source: "/a",
+          destination,
+          status: "active",
+          permanent: "true",
+        }],
+      }),
+      {
+        action: "apply",
+        create: true,
+        destination: "/a",
+        destinationDocumentId: "page-id",
+        remove: [],
+        retire: [{ _id: "editor-redirect", _rev: "editor-revision" }],
+        retarget: [],
+        source: "/b",
+      },
+    );
+  }
+});
+
+test("deletes its own redirect when a document reclaims an old slug", () => {
+  const ownId = autoRedirectId("/a");
+  const reclaim = (redirect) =>
+    planAutoRedirect({
+      event: {
+        beforeSlug: "b",
+        documentId: "page-id",
+        documentType: "page",
+        slug: "a",
+      },
+      liveRoutes: [],
+      redirects: [
+        {
+          _id: ownId,
+          _rev: "rev-a",
+          source: "/a",
+          destination: "/a",
+          destinationReference: { _ref: "page-id" },
+          permanent: "true",
+          status: "active",
+          ...redirect,
+        },
+      ],
+    });
+
+  const plan = reclaim({});
+  assert.equal(plan.action, "apply");
+  assert.equal(plan.create, true);
+  assert.equal(plan.source, "/b");
+  assert.deepEqual(plan.remove, [{ _id: ownId, _rev: "rev-a" }]);
+  assert.deepEqual(plan.retire, []);
+
+  // An editor has a pending or published change: keep it, only switch it off.
+  for (const change of [
+    { hasPendingEdits: true },
+    { status: undefined },
+    { permanent: "false" },
+    { utmSource: "flyer" },
+    { utmCampaign: "spring" },
+  ]) {
+    const edited = reclaim(change);
+    assert.deepEqual(edited.remove, [], JSON.stringify(change));
+    assert.deepEqual(edited.retire, [{ _id: ownId, _rev: "rev-a" }]);
+  }
+});
+
+test("renaming back and forth leaves one active redirect each time", () => {
+  const page = { documentId: "page-id", documentType: "page" };
+  const toB = planAutoRedirect({
+    event: { ...page, beforeSlug: "a", slug: "b" },
+    liveRoutes: [],
+    redirects: [],
+  });
+  assert.equal(toB.source, "/a");
+
+  // Back to A: the A -> B redirect now resolves to A through its reference.
+  const aToB = {
+    _id: autoRedirectId("/a"),
+    source: "/a",
+    destination: "/a",
+    destinationReference: { _ref: "page-id" },
+    permanent: "true",
+    status: "active",
+  };
+  const toA = planAutoRedirect({
+    event: { ...page, beforeSlug: "b", slug: "a" },
+    liveRoutes: [],
+    redirects: [aToB],
+  });
+  assert.deepEqual(toA.remove, [{ _id: aToB._id, _rev: undefined }]);
+  assert.equal(toA.source, "/b");
+
+  // To B again: A has no redirect left in the way, so it gets one.
+  const bToA = {
+    _id: autoRedirectId("/b"),
+    source: "/b",
+    destination: "/b",
+    destinationReference: { _ref: "page-id" },
+    permanent: "true",
+    status: "active",
+  };
+  const toBAgain = planAutoRedirect({
+    event: { ...page, beforeSlug: "a", slug: "b" },
+    liveRoutes: [],
+    redirects: [bToA],
+  });
+  assert.equal(toBAgain.action, "apply");
+  assert.equal(toBAgain.create, true);
+  assert.equal(toBAgain.source, "/a");
+  assert.deepEqual(toBAgain.remove, [{ _id: bToA._id, _rev: undefined }]);
 });
 
 test("repairs out-of-order rename delivery without creating a chain", () => {
@@ -209,28 +338,48 @@ test("does not flatten redirects that cannot prove the same destination document
   }
 });
 
-test("does not follow an out-of-order redirect for another document", () => {
-  const plan = planAutoRedirect({
-    event: {
-      beforeSlug: "a",
-      documentId: "page-id",
-      documentType: "page",
-      slug: "b",
-    },
-    liveRoutes: [],
-    redirects: [
-      {
-        _id: "redirect-b",
-        source: "/b",
-        destination: "/c",
-        destinationReference: { _ref: "other-page" },
-        status: "active",
+test("clears a redirect to another document when a page takes its source", () => {
+  const takeB = (redirect) =>
+    planAutoRedirect({
+      event: {
+        beforeSlug: "a",
+        documentId: "page-id",
+        documentType: "page",
+        slug: "b",
       },
-    ],
-  });
+      liveRoutes: [],
+      redirects: [
+        {
+          _rev: "rev-b",
+          source: "/b",
+          destination: "/c",
+          destinationReference: { _ref: "other-page" },
+          permanent: "true",
+          status: "active",
+          ...redirect,
+        },
+      ],
+    });
 
-  assert.equal(plan.action, "skip");
-  assert.match(plan.reason, /targets another document/);
+  // An editor's redirect is kept, only switched off.
+  const editor = takeB({ _id: "editor-redirect" });
+  assert.equal(editor.action, "apply");
+  assert.equal(editor.create, true);
+  assert.equal(editor.source, "/a");
+  assert.equal(editor.destination, "/b");
+  assert.deepEqual(editor.remove, []);
+  assert.deepEqual(editor.retire, [{ _id: "editor-redirect", _rev: "rev-b" }]);
+
+  // A redirect the function made for the other document is deleted.
+  const own = takeB({ _id: autoRedirectId("/b") });
+  assert.equal(own.action, "apply");
+  assert.deepEqual(own.remove, [{ _id: autoRedirectId("/b"), _rev: "rev-b" }]);
+  assert.deepEqual(own.retire, []);
+
+  // The same redirect with pending edits is only switched off.
+  const pending = takeB({ _id: autoRedirectId("/b"), hasPendingEdits: true });
+  assert.deepEqual(pending.remove, []);
+  assert.deepEqual(pending.retire, [{ _id: autoRedirectId("/b"), _rev: "rev-b" }]);
 });
 
 test("is idempotent when Sanity redelivers the same publish event", () => {
@@ -338,5 +487,19 @@ test("rejects reserved, unsafe, unsupported, and first-publish events", () => {
       planAutoRedirect({ event, liveRoutes: [], redirects: [] }).action,
       "skip",
     );
+  }
+});
+
+test("ignores draft and release renames for every routed document type", () => {
+  for (const documentType of ["page", "post", "category"]) {
+    for (const documentId of ["drafts.document-id", "versions.release-id.document-id"]) {
+      const plan = planAutoRedirect({
+        event: { documentId, documentType, beforeSlug: "old", slug: "new" },
+        liveRoutes: [],
+        redirects: [],
+      });
+      assert.equal(plan.action, "skip");
+      assert.match(plan.reason, /not live/);
+    }
   }
 });
