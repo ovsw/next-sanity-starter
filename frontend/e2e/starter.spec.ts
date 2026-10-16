@@ -117,7 +117,8 @@ test("homepage sections join with seams and edges", async ({ page }) => {
     level: 2,
     name: "Neutral sample content for a clean project.",
   });
-  test.skip(!(await homepage.isVisible()), "Starter homepage sample content is not seeded");
+  if (process.env.PLAYWRIGHT_REQUIRE_SEED) await expect(homepage).toBeVisible();
+  else test.skip(!(await homepage.isVisible()), "Starter homepage sample content is not seeded");
 
   const sections = await page.locator("main section.section-scene").evaluateAll(
     (elements) =>
@@ -170,7 +171,8 @@ test("a Scaffold renders its marker on the page and nothing from the archive", a
 }) => {
   await page.goto("/");
   const scaffold = page.locator("section[data-scaffold]");
-  test.skip(!(await scaffold.count()), "Starter homepage sample content is not seeded");
+  if (process.env.PLAYWRIGHT_REQUIRE_SEED) await expect(scaffold).toHaveCount(1);
+  else test.skip(!(await scaffold.count()), "Starter homepage sample content is not seeded");
 
   await expect(scaffold).toHaveCount(1);
   await expect(scaffold).toContainText("Scaffold:");
@@ -181,3 +183,10 @@ test("a Scaffold renders its marker on the page and nothing from the archive", a
   await expect(page.locator("section[data-scaffold]")).toHaveCount(0);
   await expect(page.getByText("About page intro")).toHaveCount(0);
 });
+
+if (process.env.PLAYWRIGHT_REQUIRE_SEED) {
+  test("keeps the migrated button destination", async ({ page }) => {
+    await page.goto("/about");
+    await expect(page.getByRole("link", { name: "Migration example link" })).toHaveAttribute("href", "https://example.com/");
+  });
+}

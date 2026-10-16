@@ -203,3 +203,25 @@ so drafts, published documents, and release versions stay separate. Revision
 checks stop the transaction if an editor changes a document after it is read.
 Running the migration again makes no changes. No dataset migration runs during
 setup, build, or deployment.
+
+To test the migration with real seed content, create an empty disposable dataset
+named `issue-63-smoke` or `issue-63-smoke-<suffix>`. Export and verify its backup
+as described above before writing. From Studio, load `.env.local` and override
+only the dataset:
+
+```bash
+SANITY_STUDIO_DATASET=issue-63-smoke node --env-file=.env.local scripts/prepare-button-smoke.mjs
+```
+
+The fixture script refuses other dataset names and non-empty datasets. It seeds
+sample content, adds a legacy Button Link to a published page and its draft,
+and checks the migration dry run, preserved IDs and destinations, and repeat
+run. From the repository root, run:
+
+```bash
+SANITY_STUDIO_DATASET=issue-63-smoke NEXT_PUBLIC_SANITY_DATASET=issue-63-smoke PLAYWRIGHT_REQUIRE_SEED=1 pnpm verify
+```
+
+This mode fails if seed content is absent, runs both seed-dependent smoke tests,
+and checks the migrated link destination in Chrome. Leave port 3000 free for
+the test server. No screenshots, traces, or videos are recorded.
