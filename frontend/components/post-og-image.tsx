@@ -34,7 +34,7 @@ export function PostOgImage({
           alt=""
           width={1200}
           height={630}
-          style={{ position: "absolute", inset: 0, objectFit: "cover" }}
+          style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
         />
       ) : (
         <img
@@ -50,7 +50,11 @@ export function PostOgImage({
           style={{
             display: "flex",
             position: "absolute",
-            inset: 0,
+            // The card renderer ignores `inset`, so the overlay needs a size.
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
             backgroundImage:
               "linear-gradient(90deg, rgba(0,0,0,0.85), rgba(0,0,0,0.15)), linear-gradient(0deg, rgba(0,0,0,0.5), transparent)",
           }}
