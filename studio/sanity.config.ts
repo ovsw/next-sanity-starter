@@ -64,6 +64,11 @@ export default defineConfig({
   plugins: [
     structureTool({ structure }),
     presentationTool({
+      allowOrigins: [
+        SANITY_STUDIO_PREVIEW_URL,
+        "http://localhost:*",
+        "http://127.0.0.1:*",
+      ],
       previewUrl: {
         origin: SANITY_STUDIO_PREVIEW_URL,
         previewMode: {
