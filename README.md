@@ -296,3 +296,18 @@ images if draft mode is off or the rendered section keys differ from the draft
 in number or order. It hides the header and editing controls for the images.
 Section keys do not prove that every text field or referenced document is
 current. Inspect known draft-only content when you review the images.
+
+### Merge parallel Page Builder work
+
+Commit local changes first, then run `pnpm sync:main` to fetch and merge
+`origin/main` into the current branch. Use `pnpm merge:refs <ref> [<ref>...]`
+to merge other branches in order. Refs under `origin/` trigger a fetch.
+
+The tool keeps both branches' additions immediately before Page Builder
+registration markers. It regenerates the schema extract and Sanity types
+when schema or query inputs change. It commits completed merges and any
+regenerated files. Inspect the merged registrations and run `pnpm typecheck`.
+
+Other conflicts stop the command and leave the merge in progress. The error
+names the files. Resolve them, run `pnpm typegen` and `pnpm typecheck`, then
+stage and commit the result. Run the command again for any remaining refs.
