@@ -165,13 +165,15 @@ export function planAutoRedirect({
   if (destinationRedirect && !destinationRedirect.destinationReference?._ref) {
     // A URL redirect is editor-owned. The live page now owns this address.
     retire.push(destinationRedirect);
+  } else if (
+    destinationRedirect &&
+    !targetsDocument(destinationRedirect, destinationDocumentId)
+  ) {
+    // A redirect to another document no longer owns this address either.
+    (isOwnRedirect(destinationRedirect) ? remove : retire).push(
+      destinationRedirect,
+    );
   } else if (destinationRedirect) {
-    if (!targetsDocument(destinationRedirect, destinationDocumentId)) {
-      return {
-        action: "skip",
-        reason: "A redirect at the new route targets another document",
-      };
-    }
     const flattenedDestination = normalizeRedirectPath(
       readRedirectPath(destinationRedirect.destination),
     );

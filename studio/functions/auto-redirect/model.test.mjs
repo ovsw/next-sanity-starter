@@ -338,28 +338,48 @@ test("does not flatten redirects that cannot prove the same destination document
   }
 });
 
-test("does not follow an out-of-order redirect for another document", () => {
-  const plan = planAutoRedirect({
-    event: {
-      beforeSlug: "a",
-      documentId: "page-id",
-      documentType: "page",
-      slug: "b",
-    },
-    liveRoutes: [],
-    redirects: [
-      {
-        _id: "redirect-b",
-        source: "/b",
-        destination: "/c",
-        destinationReference: { _ref: "other-page" },
-        status: "active",
+test("clears a redirect to another document when a page takes its source", () => {
+  const takeB = (redirect) =>
+    planAutoRedirect({
+      event: {
+        beforeSlug: "a",
+        documentId: "page-id",
+        documentType: "page",
+        slug: "b",
       },
-    ],
-  });
+      liveRoutes: [],
+      redirects: [
+        {
+          _rev: "rev-b",
+          source: "/b",
+          destination: "/c",
+          destinationReference: { _ref: "other-page" },
+          permanent: "true",
+          status: "active",
+          ...redirect,
+        },
+      ],
+    });
 
-  assert.equal(plan.action, "skip");
-  assert.match(plan.reason, /targets another document/);
+  // An editor's redirect is kept, only switched off.
+  const editor = takeB({ _id: "editor-redirect" });
+  assert.equal(editor.action, "apply");
+  assert.equal(editor.create, true);
+  assert.equal(editor.source, "/a");
+  assert.equal(editor.destination, "/b");
+  assert.deepEqual(editor.remove, []);
+  assert.deepEqual(editor.retire, [{ _id: "editor-redirect", _rev: "rev-b" }]);
+
+  // A redirect the function made for the other document is deleted.
+  const own = takeB({ _id: autoRedirectId("/b") });
+  assert.equal(own.action, "apply");
+  assert.deepEqual(own.remove, [{ _id: autoRedirectId("/b"), _rev: "rev-b" }]);
+  assert.deepEqual(own.retire, []);
+
+  // The same redirect with pending edits is only switched off.
+  const pending = takeB({ _id: autoRedirectId("/b"), hasPendingEdits: true });
+  assert.deepEqual(pending.remove, []);
+  assert.deepEqual(pending.retire, [{ _id: autoRedirectId("/b"), _rev: "rev-b" }]);
 });
 
 test("is idempotent when Sanity redelivers the same publish event", () => {
