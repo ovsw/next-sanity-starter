@@ -144,3 +144,8 @@ development scripts, consult the relevant section of `README.md`.
 Run Sanity CLI commands from the Studio workspace so the CLI loads the local
 credentials. Before an authorized dataset write, read
 `docs/agents/sanity-cli.md`.
+
+### Raster image descriptions
+
+Before syncing Raster descriptions or configuring Raster credentials, read
+`docs/agents/raster-descriptions.md`.

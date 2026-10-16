@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "sanity:query": "node scripts/query.mjs",
     "page:text": "node scripts/print-page-text.mjs",
-    "page:seed": "node scripts/seed-page-draft.mjs"
+    "page:seed": "node scripts/seed-page-draft.mjs",
+    "raster:sync": "node scripts/sync-raster-descriptions.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
