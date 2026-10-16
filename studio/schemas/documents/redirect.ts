@@ -13,7 +13,7 @@ export default defineType({
   type: "document",
   icon: TrendingUpDown,
   description:
-    "Send an old internal path to a current one after the next frontend build.",
+    "Send an old internal path to a current one. Published changes are live in a few minutes.",
   fields: [
     defineField({
       name: "status",
