@@ -140,6 +140,12 @@ real Google Chrome in headless mode. It does not record screenshots, video, or
 traces. If Chrome is missing, install it with
 `pnpm --dir frontend exec playwright install chrome`.
 
+To save time, `pnpm verify` runs the type checks, lint and tests at the same
+time, and the two builds at the same time. `pnpm typegen` skips the slow schema
+extract when no Studio, `shared/` or lockfile input changed since the last
+extract in this checkout. Run `SCHEMA_EXTRACT_FORCE=1 pnpm typegen` to extract
+anyway.
+
 Use plain pnpm commands from the repository root. Add workspace dependencies with `pnpm --dir frontend add <package>` or `pnpm --dir studio add <package>`.
 
 The Studio uses `sanity-plugin-media@6.3.0` from npm. It includes
