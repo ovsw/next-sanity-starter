@@ -43,7 +43,7 @@
   "devDependencies": {
     "@sanity/blueprints": "^0.20.2",
     "@sanity/client": "^7.23.0",
-    "@sanity/eslint-config-studio": "^6.0.0",
+    "@sanity/eslint-config-studio": "^7.0.0",
     "@sanity/types": "^6.19.0",
     "@types/node": "^26.1.0",
     "@types/react": "^19.2.17",
