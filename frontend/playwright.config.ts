@@ -17,7 +17,18 @@ function testPort(): number {
     ".worktree-ports.json",
   );
   if (!existsSync(portsFile)) return 3000;
-  return Number(JSON.parse(readFileSync(portsFile, "utf8")).frontendPort);
+  let frontendPort: unknown;
+  try {
+    ({ frontendPort } = JSON.parse(readFileSync(portsFile, "utf8")));
+  } catch {
+    // Reported below with the file name.
+  }
+  if (!Number.isInteger(frontendPort)) {
+    throw new Error(
+      `${portsFile} has no valid frontendPort; remove it and run \`pnpm test:smoke\` again.`,
+    );
+  }
+  return frontendPort as number;
 }
 
 const port = testPort();
