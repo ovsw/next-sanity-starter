@@ -5,7 +5,10 @@ import test from "node:test";
 const packageJson = JSON.parse(
   await readFile(new URL("../package.json", import.meta.url), "utf8"),
 );
-const releaseGate = await readFile(
+const frontendPackageJson = JSON.parse(
+  await readFile(new URL("../frontend/package.json", import.meta.url), "utf8"),
+);
+const releaseGate =await readFile(
   new URL("../.github/workflows/release-gate.yml", import.meta.url),
   "utf8",
 );
@@ -20,6 +23,15 @@ test("the default verification command includes the headless Chrome smoke test",
     /PLAYWRIGHT_REUSE_BUILD=1 pnpm test:smoke$/,
   );
   assert.equal(packageJson.scripts["verify:browser"], undefined);
+});
+
+test("Playwright runs assign the worktree's port slot first", () => {
+  for (const name of ["test:e2e", "test:smoke"]) {
+    assert.match(
+      frontendPackageJson.scripts[name],
+      /^node \.\.\/scripts\/ensure-worktree-ports\.mjs && playwright test/,
+    );
+  }
 });
 
 test("the release gate installs Chrome before verification", () => {

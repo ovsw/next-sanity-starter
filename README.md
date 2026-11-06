@@ -140,6 +140,13 @@ real Google Chrome in headless mode. It does not record screenshots, video, or
 traces. If Chrome is missing, install it with
 `pnpm --dir frontend exec playwright install chrome`.
 
+Playwright serves the Website on this worktree's own port, the same one
+`pnpm dev:worktree` uses (saved in `.worktree-ports.json`). When another
+worktree or program holds that port, the worktree gets a new free slot. Stop
+this worktree's own dev server (`pnpm dev:stop`) before `pnpm verify`, which
+needs a fresh production server. CI uses port 3000; `PLAYWRIGHT_PORT=<n>`
+overrides the port.
+
 To save time, `pnpm verify` runs the type checks, lint and tests at the same
 time, and the two builds at the same time. `pnpm typegen` skips the slow schema
 extract when no Studio, `shared/` or lockfile input changed since the last

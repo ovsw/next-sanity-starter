@@ -1,21 +1,26 @@
-import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "@playwright/test";
 
-// Playwright reloads this config in every worker, so pick the port once in
-// the main process and hand it to the workers through the environment.
-if (!process.env.PLAYWRIGHT_PORT) {
-  process.env.PLAYWRIGHT_PORT = process.env.CI
-    ? "3000"
-    : execFileSync(
-        process.execPath,
-        [
-          "-e",
-          "const s=require('node:net').createServer().listen(0,()=>{process.stdout.write(String(s.address().port));s.close()})",
-        ],
-        { encoding: "utf8" },
-      );
+// Serve on this worktree's own Website port, the one `pnpm dev:worktree` uses,
+// so the test server stays inside the Sanity CORS pool and never collides with
+// another worktree's server. `pnpm test:smoke` and `pnpm test:e2e` run
+// scripts/ensure-worktree-ports.mjs first to assign it. CI uses 3000, and
+// PLAYWRIGHT_PORT=<n> overrides both.
+function testPort(): number {
+  if (process.env.PLAYWRIGHT_PORT) return Number(process.env.PLAYWRIGHT_PORT);
+  if (process.env.CI) return 3000;
+  const portsFile = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+    ".worktree-ports.json",
+  );
+  if (!existsSync(portsFile)) return 3000;
+  return Number(JSON.parse(readFileSync(portsFile, "utf8")).frontendPort);
 }
-const port = Number(process.env.PLAYWRIGHT_PORT);
+
+const port = testPort();
 const baseURL = `http://localhost:${port}`;
 
 export default defineConfig({

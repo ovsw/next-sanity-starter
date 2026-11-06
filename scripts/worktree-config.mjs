@@ -156,7 +156,7 @@ async function stateIsAvailable(state, probe) {
   return frontendAvailable && studioAvailable;
 }
 
-async function defaultReservationRoot(worktreeRoot) {
+export async function defaultReservationRoot(worktreeRoot) {
   const { stdout } = await execFileAsync("git", [
     "-C",
     worktreeRoot,
