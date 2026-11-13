@@ -18,7 +18,7 @@
 //   pnpm sync:main            # merge origin/main after fetching
 
 import { execFile } from "node:child_process";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -97,7 +97,23 @@ export function unionAtMarkers(conflicted) {
     if (j >= lines.length || base.length > 0) return null;
     const next = lines[j + 1];
     if (next === undefined || !next.includes(MARKER)) return null;
-    out.push(...ours, ...theirs);
+    // diff3 output keeps lines both sides added at the edges of a conflict
+    // (the same import on two branches). Write those once.
+    let prefix = 0;
+    const shortest = Math.min(ours.length, theirs.length);
+    while (prefix < shortest && ours[prefix] === theirs[prefix]) prefix++;
+    let suffix = 0;
+    while (
+      suffix < shortest - prefix &&
+      ours[ours.length - 1 - suffix] === theirs[theirs.length - 1 - suffix]
+    ) {
+      suffix++;
+    }
+    out.push(
+      ...ours.slice(0, ours.length - suffix),
+      ...theirs.slice(prefix, theirs.length - suffix),
+      ...ours.slice(ours.length - suffix),
+    );
     i = j;
   }
   return out.join("\n");
@@ -147,8 +163,28 @@ async function changedFilesBetween(cwd, from, to) {
   return stdout ? stdout.split("\n").filter(Boolean) : [];
 }
 
-async function regenerateTypes(cwd, typegen, reason) {
+// A merge is committed before its types are regenerated. This file in the Git
+// directory records that regeneration is still owed, so a run after a failed
+// `pnpm typegen` finishes it even though the ref is already merged.
+async function pendingTypegenFile(cwd) {
+  const { stdout } = await git(cwd, ["rev-parse", "--git-path", "merge-refs-pending-typegen"]);
+  return path.resolve(cwd, stdout);
+}
+
+async function exists(file) {
+  try {
+    await access(file);
+    return true;
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function regenerateTypes(cwd, typegen, reason, pendingFile) {
+  await writeFile(pendingFile, `${reason}\n`, "utf8");
   await typegen(cwd);
+  await rm(pendingFile, { force: true });
   const { stdout } = await git(cwd, ["status", "--porcelain", "--", ...GENERATED_FILES]);
   if (!stdout) return false;
   await git(cwd, ["add", "--", ...GENERATED_FILES]);
@@ -199,11 +235,14 @@ export async function mergeRef({ cwd, ref, typegen, log = () => {} }) {
   report.merged = true;
 
   const after = (await git(cwd, ["rev-parse", "HEAD"])).stdout;
-  if (after !== before) {
-    const changed = await changedFilesBetween(cwd, before, after);
-    if (touchesTypegenInputs(changed) || report.union.length > 0) {
-      report.regenerated = await regenerateTypes(cwd, typegen, ref);
-    }
+  const pendingFile = await pendingTypegenFile(cwd);
+  const needsTypes =
+    (await exists(pendingFile)) ||
+    report.union.length > 0 ||
+    (after !== before &&
+      touchesTypegenInputs(await changedFilesBetween(cwd, before, after)));
+  if (needsTypes) {
+    report.regenerated = await regenerateTypes(cwd, typegen, ref, pendingFile);
   }
   log(
     `Merged ${ref}` +

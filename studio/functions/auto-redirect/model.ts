@@ -51,6 +51,8 @@ type AutoRedirectPlan =
       create: boolean;
       destination: string;
       destinationDocumentId: string;
+      /** Switched-off redirects at the source, switched on again toward the document. */
+      reactivate: { _id: string; _rev?: string }[];
       remove: { _id: string; _rev?: string }[];
       retire: { _id: string; _rev?: string }[];
       retarget: { _id: string; _rev?: string }[];
@@ -210,18 +212,27 @@ export function planAutoRedirect({
     };
   }
 
-  const sourceRedirect = redirects.find(
-    (redirect) =>
-      normalizeRedirectPath(readRedirectPath(redirect.source)) === source,
-  );
+  const usesSource = (redirect: FetchedRedirect) =>
+    normalizeRedirectPath(readRedirectPath(redirect.source)) === source;
+  const sourceRedirect =
+    activeRedirects.find(usesSource) ?? redirects.find(usesSource);
+  // A switched-off redirect at the previous route is one this function retired
+  // when the document took that address, or one an editor switched off. It
+  // could not serve while the document lived there, and a second redirect
+  // with the same source would break the Studio's one-source rule. So it is
+  // switched on again, pointing at the document, and keeps its other fields.
+  const reactivate: FetchedRedirect[] = [];
   if (sourceRedirect && !isActive(sourceRedirect)) {
-    return {
-      action: "skip",
-      reason: "An inactive redirect already uses the previous route",
-    };
+    if (!sourceRedirect._id || sourceRedirect.hasPendingEdits) {
+      return {
+        action: "skip",
+        reason: "An inactive redirect with unpublished edits already uses the previous route",
+      };
+    }
+    reactivate.push(sourceRedirect);
   }
 
-  const directRedirect = sourceRedirect;
+  const directRedirect = reactivate.length ? undefined : sourceRedirect;
   if (
     directRedirect &&
     normalizeRedirectPath(readRedirectPath(directRedirect.destination)) !==
@@ -277,9 +288,13 @@ export function planAutoRedirect({
 
   return {
     action: "apply",
-    create: !directRedirect,
+    create: !directRedirect && reactivate.length === 0,
     destination: toStoredRedirectPath(destination),
     destinationDocumentId,
+    reactivate: reactivate.map((redirect) => ({
+      _id: redirect._id as string,
+      _rev: redirect._rev,
+    })),
     remove: remove.map((redirect) => ({
       _id: redirect._id as string,
       _rev: redirect._rev,

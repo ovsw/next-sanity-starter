@@ -193,3 +193,66 @@ test("two actual generator runs retain every registration", async (t) => {
   }
   assert.equal(await git(cwd, "status", "--porcelain"), "");
 });
+
+test("unionAtMarkers writes lines both sides added only once", () => {
+  const conflict = (ours, theirs) =>
+    ["head", "<<<<<<< ours", ...ours, "||||||| base", "=======", ...theirs, ">>>>>>> theirs", "// page-builder-generator:x", ""].join("\n");
+  const merged = (lines) => ["head", ...lines, "// page-builder-generator:x", ""].join("\n");
+
+  assert.equal(unionAtMarkers(conflict(["shared", "alpha"], ["shared", "beta"])), merged(["shared", "alpha", "beta"]));
+  assert.equal(unionAtMarkers(conflict(["alpha", "shared"], ["beta", "shared"])), merged(["alpha", "beta", "shared"]));
+  assert.equal(unionAtMarkers(conflict(["shared"], ["shared"])), merged(["shared"]));
+  assert.equal(unionAtMarkers(conflict(["shared"], ["shared", "beta"])), merged(["shared", "beta"]));
+});
+
+test("branches that add the same registration plus their own keep it once", async (t) => {
+  const cwd = await repoWithTwoBranches(t);
+  const registry = (own) =>
+    `import a from './a';\nimport shared from './shared';\nimport ${own} from './${own}';\n// page-builder-generator:block-imports\nexport const label = 'base';\n`;
+  await write(cwd, REGISTRY, registry("c"));
+  await git(cwd, "commit", "--quiet", "-am", "shared on c");
+  await git(cwd, "checkout", "--quiet", "page-b");
+  await write(cwd, REGISTRY, registry("b"));
+  await git(cwd, "commit", "--quiet", "-am", "shared on b");
+  await git(cwd, "checkout", "--quiet", "page-c");
+
+  const report = await mergeRef({ cwd, ref: "page-b", typegen: fakeTypegen });
+
+  assert.deepEqual(report.union, [REGISTRY]);
+  assert.equal(
+    await readFile(path.join(cwd, REGISTRY), "utf8"),
+    "import a from './a';\nimport shared from './shared';\nimport c from './c';\nimport b from './b';\n// page-builder-generator:block-imports\nexport const label = 'base';\n",
+  );
+});
+
+test("a run after failed type generation regenerates, though the ref is already merged", async (t) => {
+  const cwd = await repoWithTwoBranches(t);
+  await assert.rejects(
+    mergeRef({
+      cwd,
+      ref: "page-b",
+      typegen: async () => {
+        throw new Error("typegen failed");
+      },
+    }),
+    /typegen failed/,
+  );
+  // The merge is committed, with the generated files still stale.
+  assert.equal(await git(cwd, "status", "--porcelain"), "");
+  assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), '{"types":["a","b"]}\n');
+
+  const retry = await mergeRef({ cwd, ref: "page-b", typegen: fakeTypegen });
+
+  assert.equal(retry.merged, true);
+  assert.equal(retry.regenerated, true);
+  assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), '{"types":["a","b","c"]}\n');
+  assert.equal(await git(cwd, "status", "--porcelain"), "");
+
+  // Nothing is owed any more: a further run leaves the types alone.
+  const again = await mergeRef({
+    cwd,
+    ref: "page-b",
+    typegen: () => assert.fail("types are already regenerated"),
+  });
+  assert.equal(again.regenerated, false);
+});

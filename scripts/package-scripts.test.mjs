@@ -25,11 +25,11 @@ test("the default verification command includes the headless Chrome smoke test",
   assert.equal(packageJson.scripts["verify:browser"], undefined);
 });
 
-test("Playwright runs assign the worktree's port slot first", () => {
+test("Playwright runs inside the worktree's port slot reservation", () => {
   for (const name of ["test:e2e", "test:smoke"]) {
     assert.match(
       frontendPackageJson.scripts[name],
-      /^node \.\.\/scripts\/ensure-worktree-ports\.mjs && playwright test/,
+      /^node \.\.\/scripts\/ensure-worktree-ports\.mjs playwright test/,
     );
   }
 });

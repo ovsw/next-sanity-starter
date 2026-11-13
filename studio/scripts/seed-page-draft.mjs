@@ -26,6 +26,16 @@
 // - supporting documents are written as drafts with createOrReplace, so give
 //   them ids scoped to the page (e.g. "faq-example-return-flight");
 // - array items missing a `_key` get a deterministic one.
+//
+// References from the page to a supporting document in the same seed must be
+// weak. The supporting document exists only as a draft, and Sanity refuses a
+// strong reference to an id with no published document: `--apply` then fails
+// at commit, and the dry run does not show it. Write each such reference as
+//   { _type: "reference", _ref: "faq-example-1", _weak: true,
+//     _strengthenOnPublish: { type: "faq" } }
+// (`_ref` is the published id; `type` is the supporting document's `_type`).
+// Sanity makes it strong when the page is published. The script writes each
+// `_ref` as given and does not add these fields.
 
 import { createHash } from "node:crypto";
 import path from "node:path";

@@ -53,8 +53,17 @@ live content updates" setup:
    page is.
 3. The function calls `done()`, also after a failure. Only then does Sanity
    tell open pages about the change (`<SanityLive waitFor="function" />` in
-   production only), so they never reload the old version. Preview
-   deployments and local development keep the default behavior.
+   production only), so they do not reload the old version when step 2
+   worked. Preview deployments and local development keep the default
+   behavior.
+
+When step 2 fails (the Website is down, the URL or secret is wrong, or both
+tries time out), the function still calls `done()`, because Sanity does not
+run it again. Open pages then reload and show the old version, and the pages
+that use the changed content stay old for every visitor. The function log
+shows `The Website did not expire the sync tags`. To recover, fix the cause
+the log names, then publish the document again or redeploy the Website: either
+one refreshes the old pages.
 
 Settings for each copy of the Starter:
 

@@ -6,7 +6,8 @@ import { defineConfig } from "@playwright/test";
 // Serve on this worktree's own Website port, the one `pnpm dev:worktree` uses,
 // so the test server stays inside the Sanity CORS pool and never collides with
 // another worktree's server. `pnpm test:smoke` and `pnpm test:e2e` run
-// scripts/ensure-worktree-ports.mjs first to assign it. CI uses 3000, and
+// Playwright through scripts/ensure-worktree-ports.mjs, which assigns the port
+// and holds its reservation until the run ends. CI uses 3000, and
 // PLAYWRIGHT_PORT=<n> overrides both.
 function testPort(): number {
   if (process.env.PLAYWRIGHT_PORT) return Number(process.env.PLAYWRIGHT_PORT);

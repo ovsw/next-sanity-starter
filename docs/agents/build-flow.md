@@ -39,7 +39,9 @@ or the fact that a component renders. The user gives the visual verdict.
 - Run the typecheck and focused tests for the changed logic.
 - Reserve `pnpm verify` for the release or pull-request gate. It includes
   functional tests in headless Chrome without capture artifacts.
-- Do not start a review unless the user asks for one in the current task.
+- Run the CodeRabbit review that the routing below picks, without asking. Do
+  not start a review subagent, review skill, or adversarial review loop unless
+  the user asks for one in the current task.
 - Commit on the current ticket branch, then report what changed, what was
   checked, and any open questions.
 
@@ -56,7 +58,8 @@ one pull request. Gate that pull request with a final integration ticket.
 
 ## Review routing
 
-The user decides when to run a review. When requested, route it by risk:
+CodeRabbit is not opt-in: the root `AGENTS.md` requires it on every pull
+request, without asking the user. Route it by risk:
 
 | Work | Review route |
 | --- | --- |
@@ -65,3 +68,5 @@ The user decides when to run a review. When requested, route it by risk:
 | Appearance, copy, or content | User inspection |
 
 Apply the root `AGENTS.md` limit of one CodeRabbit review per pull request.
+Review subagents, review skills, and adversarial review loops stay opt-in: run
+one only when the user asks for it in the current task.
