@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -87,8 +87,40 @@ test("writes local and production env files and refuses to replace them by defau
     );
     await assert.rejects(
       writeSetupFiles(directory, values),
-      /already exists/,
+      /frontend\/\.env\.local already exists/,
     );
+  } finally {
+    await rm(directory, { recursive: true });
+  }
+});
+
+test("a committed production file neither blocks setup nor is replaced", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "starter-setup-"));
+  const production = path.join(directory, "studio", ".env.production");
+  const committed =
+    "SANITY_STUDIO_PREVIEW_URL=https://example.com\nSANITY_STUDIO_APP_ID=saved-app-id\n";
+  try {
+    await mkdir(path.dirname(production), { recursive: true });
+    await writeFile(production, committed);
+
+    // A fresh checkout: only the committed file exists.
+    assert.deepEqual(await writeSetupFiles(directory, values), {
+      keptProduction: true,
+    });
+    await stat(path.join(directory, "frontend", ".env.local"));
+    await stat(path.join(directory, "studio", ".env.local"));
+    assert.equal(await readFile(production, "utf8"), committed);
+
+    await writeSetupFiles(
+      directory,
+      { ...values, siteUrl: "https://changed.example" },
+      { force: true },
+    );
+    assert.match(
+      await readFile(path.join(directory, "frontend", ".env.local"), "utf8"),
+      /NEXT_PUBLIC_SITE_URL=https:\/\/changed\.example/,
+    );
+    assert.equal(await readFile(production, "utf8"), committed);
   } finally {
     await rm(directory, { recursive: true });
   }

@@ -28,7 +28,7 @@ pnpm run setup
 
 Setup asks for the site name, public URL, Sanity project ID, dataset, Sanity API read token, Sanity auth token, and Studio hostname. It writes ignored `frontend/.env.local` and `studio/.env.local` files and a commit-ready `studio/.env.production` file. It does not create or change Sanity projects, datasets, CORS origins, tokens, Vercel projects, GitHub repositories, or other hosted resources.
 
-If any target environment file already exists, setup stops instead of replacing it. Use `pnpm run setup --force` only when you intend to replace all three files.
+If a local environment file already exists, setup stops instead of replacing it. Use `pnpm run setup --force` only when you intend to replace both local files. An existing `studio/.env.production` never stops setup and is never replaced, so a fresh checkout of a site that committed it keeps its saved `SANITY_STUDIO_APP_ID`; edit that file by hand.
 
 The read token powers Sanity Presentation draft previews. The auth token powers Studio-side CLI jobs and repository-scoped Sanity MCP access in Codex. Add optional integration credentials to the local env files only when the matching feature needs them. The committed environment example files list the supported names.
 

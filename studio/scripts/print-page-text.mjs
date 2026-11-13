@@ -8,7 +8,7 @@
 
 import process from "node:process";
 import { getPageToolsClient } from "./lib/page-tools-client.mjs";
-import { normalizeSlug, sectionText, selectPage, SLUG_FILTER } from "./lib/page-text.mjs";
+import { matchedPageId, normalizeSlug, sectionText, selectPage, SLUG_FILTER } from "./lib/page-text.mjs";
 
 const args = process.argv.slice(2);
 const publishedOnly = args.includes("--published");
@@ -20,13 +20,23 @@ if (!slug) {
 
 const client = getPageToolsClient();
 
-const pages = await client.fetch(
-  `*[_type == "page" && ${SLUG_FILTER}]{
-    _id, _updatedAt, title, description, "slug": slug.current, meta, blocks
-  }`,
+// Find the page by slug, then read its draft and published copy by id: the two
+// can carry different slugs, and a slug search alone would miss one of them.
+const matchedIds = await client.fetch(
+  `*[_type == "page" && ${SLUG_FILTER}]._id`,
   { slug },
   { perspective: "raw" },
 );
+const pageId = matchedPageId(matchedIds);
+const pages = pageId
+  ? await client.fetch(
+      `*[_id in [$id, "drafts." + $id]]{
+        _id, _updatedAt, title, description, "slug": slug.current, meta, blocks
+      }`,
+      { id: pageId },
+      { perspective: "raw" },
+    )
+  : [];
 
 const draft = pages.find((page) => page._id.startsWith("drafts."));
 const published = pages.find((page) => !page._id.startsWith("drafts."));

@@ -79,6 +79,18 @@ export function normalizeSlug(input) {
 export const SLUG_FILTER =
   'slug.current in [$slug, "/" + $slug, $slug + "/", "/" + $slug + "/"]';
 
+/**
+ * The published id of the page a slug search found. A page's draft can carry
+ * another slug than its published copy, so the search may match only one of
+ * the two; the caller then reads both by id. A published match wins over a
+ * draft of another page that took the same slug.
+ */
+export function matchedPageId(ids) {
+  const published = ids.find((id) => !/^(drafts|versions)\./.test(id));
+  const draft = ids.find((id) => id.startsWith("drafts."));
+  return published ?? draft?.slice("drafts.".length);
+}
+
 export function selectPage(pages, publishedOnly = false) {
   const published = pages.find((page) => !page._id.startsWith("drafts.") && !page._id.startsWith("versions."));
   return publishedOnly ? published : (pages.find((page) => page._id.startsWith("drafts.")) ?? published);

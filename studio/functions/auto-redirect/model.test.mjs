@@ -45,6 +45,7 @@ test("creates a canonical permanent redirect for a page rename", () => {
       create: true,
       destination: "/new-page",
       destinationDocumentId: "page-id",
+      reactivate: [],
       remove: [],
       retire: [],
       retarget: [],
@@ -109,6 +110,7 @@ test("flattens incoming redirects after repeated renames", () => {
       create: true,
       destination: "/c",
       destinationDocumentId: "page-id",
+      reactivate: [],
       remove: [],
       retire: [],
       retarget: [{ _id: "redirect-a", _rev: "rev-a" }],
@@ -154,6 +156,7 @@ test("retires the active redirect when a document reclaims an old slug", () => {
       create: true,
       destination: "/a",
       destinationDocumentId: "page-id",
+      reactivate: [],
       remove: [],
       retire: [{ _id: "redirect-a", _rev: "rev-a" }],
       retarget: [],
@@ -187,6 +190,7 @@ test("disables editor URL redirects when a page reclaims their source", () => {
         create: true,
         destination: "/a",
         destinationDocumentId: "page-id",
+        reactivate: [],
         remove: [],
         retire: [{ _id: "editor-redirect", _rev: "editor-revision" }],
         retarget: [],
@@ -411,7 +415,57 @@ test("is idempotent when Sanity redelivers the same publish event", () => {
   assert.equal(autoRedirectId(first.source), id);
 });
 
-test("blocks inactive-source conflicts, live routes, and redirect cycles", () => {
+test("switches a retired editor redirect on again when the page moves a second time", () => {
+  const page = { documentId: "page-id", documentType: "page" };
+  const editor = {
+    _id: "editor-redirect",
+    _rev: "rev-1",
+    source: "/b",
+    destination: "/elsewhere",
+    permanent: "false",
+    status: "active",
+  };
+
+  // /a -> /b: the page takes the address of an editor's redirect.
+  const first = planAutoRedirect({
+    event: { ...page, beforeSlug: "a", slug: "b" },
+    liveRoutes: [],
+    redirects: [editor],
+  });
+  assert.deepEqual(first.retire, [{ _id: "editor-redirect", _rev: "rev-1" }]);
+  assert.equal(first.create, true);
+
+  // /b -> /c: the retired record still sits at /b.
+  const second = planAutoRedirect({
+    event: { ...page, beforeSlug: "b", slug: "c" },
+    liveRoutes: [],
+    redirects: [
+      { ...editor, _rev: "rev-2", status: "inactive" },
+      {
+        _id: autoRedirectId("/a"),
+        _rev: "rev-a",
+        source: "/a",
+        destination: "/b",
+        destinationReference: { _ref: "page-id" },
+        permanent: "true",
+        status: "active",
+      },
+    ],
+  });
+  assert.deepEqual(second, {
+    action: "apply",
+    create: false,
+    destination: "/c",
+    destinationDocumentId: "page-id",
+    reactivate: [{ _id: "editor-redirect", _rev: "rev-2" }],
+    remove: [],
+    retire: [],
+    retarget: [{ _id: autoRedirectId("/a"), _rev: "rev-a" }],
+    source: "/b",
+  });
+});
+
+test("blocks pending inactive-source edits, live routes, and redirect cycles", () => {
   assert.match(
     planAutoRedirect({
       event: {
@@ -423,13 +477,15 @@ test("blocks inactive-source conflicts, live routes, and redirect cycles", () =>
       liveRoutes: [],
       redirects: [
         {
+          _id: "editor-redirect",
           source: "/old",
           destination: "/elsewhere",
           status: "inactive",
+          hasPendingEdits: true,
         },
       ],
     }).reason,
-    /inactive redirect already uses/,
+    /inactive redirect with unpublished edits/,
   );
   assert.match(
     planAutoRedirect({

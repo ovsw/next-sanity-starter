@@ -130,31 +130,45 @@ export function buildEnvironmentFiles(values, ogImageSecret = randomBytes(32).to
   };
 }
 
+async function exists(target) {
+  try {
+    await access(target);
+    return true;
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+/**
+ * Write the two local environment files and, when it is missing, the
+ * production Studio file. That file is committed, so a fresh checkout already
+ * has it: it never blocks setup and is never replaced, not even with --force,
+ * because it can hold the saved `SANITY_STUDIO_APP_ID`. Returns whether it
+ * was kept.
+ */
 export async function writeSetupFiles(rootDirectory, values, { force = false } = {}) {
   const files = buildEnvironmentFiles(values);
-  const targets = [
+  const localTargets = [
     [path.join(rootDirectory, "frontend", ".env.local"), files.frontend],
     [path.join(rootDirectory, "studio", ".env.local"), files.studio],
-    [
-      path.join(rootDirectory, "studio", ".env.production"),
-      files.studioProduction,
-    ],
   ];
+  const productionTarget = path.join(rootDirectory, "studio", ".env.production");
 
-  await Promise.all(
-    targets.map(async ([target]) => {
-      try {
-        await access(target);
-        if (!force) {
-          throw new Error(
-            `${path.relative(rootDirectory, target)} already exists. Re-run with --force to replace local setup.`,
-          );
-        }
-      } catch (error) {
-        if (error?.code !== "ENOENT") throw error;
+  if (!force) {
+    for (const [target] of localTargets) {
+      if (await exists(target)) {
+        throw new Error(
+          `${path.relative(rootDirectory, target)} already exists. Re-run with --force to replace local setup.`,
+        );
       }
-    }),
-  );
+    }
+  }
+
+  const keptProduction = await exists(productionTarget);
+  const targets = keptProduction
+    ? localTargets
+    : [...localTargets, [productionTarget, files.studioProduction]];
 
   await Promise.all(
     targets.map(async ([target, contents]) => {
@@ -167,6 +181,7 @@ export async function writeSetupFiles(rootDirectory, values, { force = false } =
       await chmod(target, 0o600);
     }),
   );
+  return { keptProduction };
 }
 
 function parseArguments(argumentsList) {
@@ -234,8 +249,14 @@ async function askSecret(terminal, prompt) {
 async function main() {
   const argumentsMap = parseArguments(process.argv.slice(2));
   const values = await collectValues(argumentsMap);
-  await writeSetupFiles(process.cwd(), values, { force: argumentsMap.force });
-  console.log("Local Website, Studio, and production Studio configuration written.");
+  const { keptProduction } = await writeSetupFiles(process.cwd(), values, {
+    force: argumentsMap.force,
+  });
+  console.log(
+    keptProduction
+      ? "Local Website and Studio configuration written. The existing studio/.env.production was kept."
+      : "Local Website, Studio, and production Studio configuration written.",
+  );
   console.log("No hosted resources were created or changed.");
 }
 

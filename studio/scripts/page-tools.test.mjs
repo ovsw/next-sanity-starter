@@ -4,7 +4,7 @@ import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { main, withKeys } from "./seed-page-draft.mjs";
-import { normalizeSlug, selectPage, sectionText } from "./lib/page-text.mjs";
+import { matchedPageId, normalizeSlug, selectPage, sectionText } from "./lib/page-text.mjs";
 
 test("text selection prefers drafts and supports published-only reads", () => {
   const published = { _id: "page", title: "Live" };
@@ -13,6 +13,15 @@ test("text selection prefers drafts and supports published-only reads", () => {
   assert.equal(selectPage([published, draft], true), published);
   assert.equal(selectPage([published]), published);
   assert.equal(selectPage([draft], true), undefined);
+});
+
+test("a slug match on either copy of a page resolves to its published id", () => {
+  // Published slug "about", draft slug "about-us": each search finds one copy.
+  assert.equal(matchedPageId(["page"]), "page");
+  assert.equal(matchedPageId(["drafts.page"]), "page");
+  assert.equal(matchedPageId(["drafts.other", "page"]), "page");
+  assert.equal(matchedPageId(["versions.release.page"]), undefined);
+  assert.equal(matchedPageId([]), undefined);
 });
 
 test("section text keeps rich text and nested labels", () => {
