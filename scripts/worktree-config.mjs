@@ -213,6 +213,7 @@ async function acquireSlotReservation(
   state,
   worktreeRoot,
   writeReservationOwner,
+  purpose,
 ) {
   await mkdir(reservationRoot, { recursive: true });
   const reservationPath = path.join(reservationRoot, `slot-${state.slot}`);
@@ -232,6 +233,9 @@ async function acquireSlotReservation(
       pid: process.pid,
       hostname: hostname(),
       worktreeRoot: path.resolve(worktreeRoot),
+      // What holds the slot: "dev" for `pnpm dev:worktree`, "test" for a
+      // Playwright run. A test run may reuse a dev server, never another run.
+      purpose,
       createdAt: new Date().toISOString(),
     };
     const ownerFile = path.join(reservationPath, "owner.json");
@@ -283,6 +287,7 @@ export async function allocatePorts({
   overrides,
   probe = isPortAvailable,
   writeReservationOwner = writeFile,
+  purpose = "dev",
 }) {
   const sharedReservationRoot =
     reservationRoot ?? (await defaultReservationRoot(worktreeRoot));
@@ -293,6 +298,7 @@ export async function allocatePorts({
       state,
       worktreeRoot,
       writeReservationOwner,
+      purpose,
     );
     if (!release) return undefined;
     try {

@@ -93,6 +93,20 @@ test("a second run in the same worktree is refused while the first holds the slo
   await first.release();
 });
 
+test("a second run is refused after the first has bound the Website port", async () => {
+  const { options } = await setup({ savedSlot: 4 });
+  const first = await ensureWorktreePorts(options);
+
+  await assert.rejects(
+    ensureWorktreePorts({
+      ...options,
+      probe: async (port) => port !== portsForSlot(4).frontendPort,
+    }),
+    /another run in this worktree/,
+  );
+  await first.release();
+});
+
 test("the reservation is held while the command runs and released after it", async () => {
   const { options, reservationRoot } = await setup();
   let reservedDuringRun;

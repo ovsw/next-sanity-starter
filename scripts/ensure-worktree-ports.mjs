@@ -51,12 +51,13 @@ export async function ensureWorktreePorts({
     reservationRoot ?? (await defaultReservationRoot(root));
   const saved = await readJson(runtimeFile);
 
-  const slotOwner = async (slot) =>
-    (
-      await readJson(
-        path.join(sharedReservationRoot, `slot-${slot}`, "owner.json"),
-      )
-    )?.worktreeRoot;
+  const slotOwner = (slot) =>
+    readJson(path.join(sharedReservationRoot, `slot-${slot}`, "owner.json"));
+  const busyWithOwnRun = (slot, cause) =>
+    new Error(
+      `Port slot ${slot} is reserved by another run in this worktree. Wait for it to finish, or stop it with \`pnpm dev:stop\`, then run again.`,
+      { cause },
+    );
 
   if (saved && Number.isInteger(saved.frontendPort)) {
     if (await probe(saved.frontendPort)) {
@@ -66,21 +67,22 @@ export async function ensureWorktreePorts({
           runtimeFile,
           reservationRoot: sharedReservationRoot,
           probe,
+          purpose: "test",
         });
       } catch (error) {
         // The Website port is free, yet the slot cannot be reserved: another
         // run holds the reservation, or the slot's Studio port is taken.
-        if ((await slotOwner(saved.slot)) === root) {
-          throw new Error(
-            `Port slot ${saved.slot} is reserved by another run in this worktree. Wait for it to finish, or stop it with \`pnpm dev:stop\`, then run again.`,
-            { cause: error },
-          );
+        if ((await slotOwner(saved.slot))?.worktreeRoot === root) {
+          throw busyWithOwnRun(saved.slot, error);
         }
         log(`Port slot ${saved.slot} is taken; picking a new slot.`);
       }
     } else {
       const owner = await slotOwner(saved.slot);
-      if (owner === root) {
+      if (owner?.worktreeRoot === root) {
+        // Another test run serves on the port. Its server stops when that run
+        // ends, so it cannot be shared the way a dev server can.
+        if (owner.purpose === "test") throw busyWithOwnRun(saved.slot);
         // The running dev server holds the reservation already.
         if (allowOwnServer) return withRelease(saved, async () => {});
         throw new Error(
@@ -88,7 +90,7 @@ export async function ensureWorktreePorts({
         );
       }
       log(
-        `Port ${saved.frontendPort} is held by ${owner ?? "another program"}; picking a new slot.`,
+        `Port ${saved.frontendPort} is held by ${owner?.worktreeRoot ?? "another program"}; picking a new slot.`,
       );
     }
     await rm(runtimeFile, { force: true });
@@ -99,6 +101,7 @@ export async function ensureWorktreePorts({
     runtimeFile,
     reservationRoot: sharedReservationRoot,
     probe,
+    purpose: "test",
   });
   log(`Worktree slot ${ports.slot}: Website port ${ports.frontendPort}`);
   return ports;

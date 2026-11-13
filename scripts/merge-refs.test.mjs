@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
-import { GENERATED_FILES, UNION_FILES, mergeRef, unionAtMarkers } from "./merge-refs.mjs";
+import { GENERATED_FILES, UNION_FILES, discardFailedTypegenOutput, mergeRef, unionAtMarkers } from "./merge-refs.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -239,6 +239,13 @@ test("a run after failed type generation regenerates, though the ref is already 
   );
   // The merge is committed, with the generated files still stale.
   assert.equal(await git(cwd, "status", "--porcelain"), "");
+
+  // A failed typegen can leave half-written output; only that is restored.
+  await write(cwd, SCHEMA, "half-written");
+  await write(cwd, "notes.txt", "mine\n");
+  assert.equal(await discardFailedTypegenOutput(cwd), true);
+  assert.equal(await git(cwd, "status", "--porcelain"), "?? notes.txt");
+  await rm(path.join(cwd, "notes.txt"));
   assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), '{"types":["a","b"]}\n');
 
   const retry = await mergeRef({ cwd, ref: "page-b", typegen: fakeTypegen });
@@ -255,4 +262,9 @@ test("a run after failed type generation regenerates, though the ref is already 
     typegen: () => assert.fail("types are already regenerated"),
   });
   assert.equal(again.regenerated, false);
+
+  // With nothing owed, changed generated files are the user's and stay.
+  await write(cwd, SCHEMA, "edited by hand");
+  assert.equal(await discardFailedTypegenOutput(cwd), false);
+  assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), "edited by hand");
 });

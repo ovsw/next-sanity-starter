@@ -181,6 +181,19 @@ async function exists(file) {
   }
 }
 
+/**
+ * A failed `pnpm typegen` can leave half-written generated files behind. When
+ * regeneration is still owed, restore them so the clean-tree check passes and
+ * the retry can run; they are regenerated right after. Other changes stay.
+ */
+export async function discardFailedTypegenOutput(cwd) {
+  if (!(await exists(await pendingTypegenFile(cwd)))) return false;
+  const { stdout } = await git(cwd, ["status", "--porcelain", "--", ...GENERATED_FILES]);
+  if (!stdout) return false;
+  await git(cwd, ["checkout", "HEAD", "--", ...GENERATED_FILES]);
+  return true;
+}
+
 async function regenerateTypes(cwd, typegen, reason, pendingFile) {
   await writeFile(pendingFile, `${reason}\n`, "utf8");
   await typegen(cwd);
@@ -266,6 +279,7 @@ async function main() {
     process.exit(1);
   }
   const cwd = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  await discardFailedTypegenOutput(cwd);
   const dirty = (await git(cwd, ["status", "--porcelain"])).stdout;
   if (dirty) {
     console.error("Commit or discard local changes before merging.");
