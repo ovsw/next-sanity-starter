@@ -40,5 +40,8 @@ next-env.d.ts
 # local function builds (`sanity functions test` and `dev`)
 /functions/*/.build/
 
+# Studio runtime files, rewritten by every `sanity dev` and `sanity build`
+/.sanity/runtime/
+
 # blueprint stack link for this checkout (`sanity blueprints init` or `config`)
 /.sanity/blueprint.config.json
