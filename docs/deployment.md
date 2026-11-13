@@ -63,10 +63,11 @@ run it again. Open pages then reload and show the old version, and the pages
 that use the changed content stay old for every visitor. The function log
 shows `The Website did not expire the sync tags`. To recover, fix the cause
 the log names, then publish the document again: that sends the same sync tags
-once more. A redeploy alone is not a recovery, because Vercel keeps cached
-data across deployments. If publishing again is not possible, purge the
-Website's Data Cache in the Vercel project settings. Then load the page and
-check that it shows the change.
+once more. Redeploying the Website also works, because the cached Sanity
+reads belong to one build and a new deployment starts without them. Start the
+redeploy at least a minute after the publish: a build that starts sooner can
+still read the old content from Sanity. Then load the page and check that it
+shows the change.
 
 Settings for each copy of the Starter:
 
