@@ -240,12 +240,15 @@ test("a run after failed type generation regenerates, though the ref is already 
   // The merge is committed, with the generated files still stale.
   assert.equal(await git(cwd, "status", "--porcelain"), "");
 
-  // A failed typegen can leave half-written output; only that is restored.
+  // A failed typegen can leave half-written output. Nothing is restored while
+  // the tree holds any other change.
   await write(cwd, SCHEMA, "half-written");
   await write(cwd, "notes.txt", "mine\n");
-  assert.equal(await discardFailedTypegenOutput(cwd), true);
-  assert.equal(await git(cwd, "status", "--porcelain"), "?? notes.txt");
+  assert.equal(await discardFailedTypegenOutput(cwd), false);
+  assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), "half-written");
   await rm(path.join(cwd, "notes.txt"));
+  assert.equal(await discardFailedTypegenOutput(cwd), true);
+  assert.equal(await git(cwd, "status", "--porcelain"), "");
   assert.equal(await readFile(path.join(cwd, SCHEMA), "utf8"), '{"types":["a","b"]}\n');
 
   const retry = await mergeRef({ cwd, ref: "page-b", typegen: fakeTypegen });

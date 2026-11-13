@@ -183,13 +183,17 @@ async function exists(file) {
 
 /**
  * A failed `pnpm typegen` can leave half-written generated files behind. When
- * regeneration is still owed, restore them so the clean-tree check passes and
- * the retry can run; they are regenerated right after. Other changes stay.
+ * regeneration is still owed and nothing else is changed, restore them so the
+ * clean-tree check passes and the retry can run; they are regenerated right
+ * after. With any other change in the tree nothing is touched, and the
+ * clean-tree check stops the run.
  */
 export async function discardFailedTypegenOutput(cwd) {
   if (!(await exists(await pendingTypegenFile(cwd)))) return false;
-  const { stdout } = await git(cwd, ["status", "--porcelain", "--", ...GENERATED_FILES]);
-  if (!stdout) return false;
+  const { stdout } = await git(cwd, ["status", "--porcelain", "--untracked-files=all"]);
+  const changed = stdout.split("\n").filter(Boolean).map((line) => line.slice(3));
+  if (changed.length === 0) return false;
+  if (!changed.every((file) => GENERATED_FILES.includes(file))) return false;
   await git(cwd, ["checkout", "HEAD", "--", ...GENERATED_FILES]);
   return true;
 }
